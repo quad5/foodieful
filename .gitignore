@@ -37,7 +37,8 @@ yarn-error.log*
 next-env.d.ts
 
 certificates
-/prisma/migration
+/prisma/migrations
+/data
 
 *.sql
 
