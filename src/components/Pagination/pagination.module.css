@@ -1,0 +1,34 @@
+.listing {
+    border: medium solid black;
+    padding: 2rem
+}
+
+.listings {
+    height: 80vh;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    border: medium solid black;
+    width: max-content;
+    padding: 1rem 0;
+    margin:  0 auto;
+    border-radius: 1rem;
+    position: sticky;
+    
+    left: 0;
+    right: 0;
+}
+
+
+.pageNumber {
+    margin: 0 1rem;
+}
+
+.zeroListing {
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+
+}

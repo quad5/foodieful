@@ -1,0 +1,43 @@
+.vendorHeader {
+    display: flex;
+    justify-content: center;
+}
+
+.menu {
+    background-color: hsla(210, 100%, 50%, 0.8);
+    display: flex;
+}
+
+.menuItem {
+    margin: auto;
+    padding: 1em;
+    text-decoration: none;
+}
+
+.listingContainer {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    margin: 3rem auto;
+}
+
+.createButton {
+    right: 1rem;
+    position: absolute;
+}
+
+@media screen and (max-width: 600px) {
+    .listingContainer {
+        display: block;
+    }
+    .createButton {
+        display: block;
+        margin: auto;
+        position: static;
+    }
+}

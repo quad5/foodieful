@@ -1,0 +1,48 @@
+
+
+.signUpFormContainer {
+    width: 80vh;
+    height: 100vh;
+    margin: 4rem auto;
+}
+
+.addressLabel {
+    font-size: small;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    margin: 1rem auto;
+}
+
+.mailingAddress {
+    margin-top: 2rem;
+}
+
+.required:after {
+    content: " *";
+    font-size: small;
+}
+
+.requiredLegend:before {
+    content: "*";
+}
+
+.requiredLine {
+    margin-top: 1rem;
+    font-size: small;
+    font-style: italic;
+}
+
+.statesDropdownMenu {
+    overflow: scroll;
+    height: 100vh;
+    font: inherit
+}
+
+@media screen and (max-width: 600px) {
+    .signUpFormContainer {
+        width: 100%;
+    }
+}

@@ -1,0 +1,54 @@
+
+
+.container {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width: 110vh;
+    height: 50vh;
+    display: flex;
+    margin: auto;
+    padding: 1rem
+}
+
+.leftContainer {
+    margin: auto;
+}
+
+.rightContainer {
+    margin: auto;
+    display: grid;
+    
+}
+
+
+.nameContainer, .emailContainer {
+    display: inline-flex;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    padding: 2vh;
+    margin: 1vh;
+    width: 80vh;
+}
+
+.label {
+    padding: 0 0.5rem
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        width: 100%;
+        padding: 0;
+        display: block;
+        margin: 4rem 0;
+    }
+
+    .leftContainer {
+        display: flex;
+        justify-content: center;
+        padding: 1rem 0;
+    }
+
+    .rightContainer, .nameContainer, .emailContainer {
+        width: 100%;
+        margin: 1vh 0;
+        padding: 1vh 0;
+    }
+}

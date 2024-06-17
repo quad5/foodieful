@@ -1,0 +1,6 @@
+export const CALENDAR = 'calendar'
+export const ERROR_MSG_MEDIUM = 'errorMedium'
+export const ERROR_MSG_SMALL = 'errorSmall'
+export const FORM_CONTAINER = 'formContainer'
+export const LINEFORM = 'lineForm'
+export const TEXTFIELD = 'textField'

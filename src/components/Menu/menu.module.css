@@ -1,0 +1,41 @@
+.top {
+    display: inline-flex;
+    height: 10rem;
+    width: 100%;
+}
+
+.logo {
+    object-fit:contain;
+}
+
+.menu {
+    background-color: hsla(192, 100%, 50%, 0.8);
+    margin: auto 0;
+    display: flex;
+    flex: 1;
+    height: 4rem;
+}
+
+
+.menuItem {
+    margin: auto 0 auto auto;
+    padding: 0.5em;
+    text-decoration: none;
+    color: black;
+    display: inline-flex;
+} 
+
+
+@media screen and (max-width: 600px) {
+    .logo {
+        width: 30%;
+    }
+
+    .top {
+        display: block
+    }
+    .menu {
+        justify-content: space-evenly;
+        height: 5rem;
+    }
+  }

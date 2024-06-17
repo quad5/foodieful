@@ -1,0 +1,26 @@
+[
+    {
+        "email":        "thispoc@gmail.com",
+        "firstName":    "ABCfirstName",
+        "lastName":     "ABClastName",
+        "vendorProfileId":     1
+    },
+    {
+        "email":        "abunai_ninja@yahoo.com",
+        "firstName":    "DEFfirstName",
+        "lastName":     "DEFlastName",
+        "vendorProfileId":     2
+    },
+    {
+        "email":        "GHI@ghi.com",
+        "firstName":    "GHIfirstName",
+        "lastName":     "GHIlastName",
+        "vendorProfileId":     3
+    },
+    {
+        "email":        "jkl@jkl.com",
+        "firstName":    "JKLfirstName",
+        "lastName":     "JKLlastName",
+        "vendorProfileId":     4
+    }
+]

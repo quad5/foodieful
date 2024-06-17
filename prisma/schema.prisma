@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// TODO 
+//  - add create date
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model VendorUser {
+  id              Int           @id @default(autoincrement())
+  email           String        @unique
+  name            String
+  vendorProfileId Int
+  vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id])
+  createdAt       DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime      @updatedAt
+}
+
+model VendorProfile {
+  id             Int              @id @default(autoincrement())
+  name           String
+  addressLine1   String
+  addressLine2   String?
+  city           String
+  state          String
+  zipCode        String
+  vendorUser     VendorUser[]
+  pitStopAddress PitStopAddress[]
+  createdAt      DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime         @updatedAt
+}
+
+model ZipCode {
+  id             Int     @id @default(autoincrement())
+  zipCode        String
+  decommissioned Boolean
+  city           String
+  state          String
+  county         String
+  timeZone       String
+  latitude       String
+  longitude      String
+}
+
+model Schedule {
+  id               Int            @id @default(autoincrement())
+  eventId          String         @unique
+  startHours       Int
+  startMinutes     Int
+  endHours         Int
+  endMinutes       Int
+  dayOfWeek        Int[]
+  pitStopAddressId Int
+  pitStopAddress   PitStopAddress @relation(fields: [pitStopAddressId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt        DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime       @updatedAt
+}
+
+model PitStopAddress {
+  id              Int           @id @default(autoincrement())
+  vendorProfileId Int
+  vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  addressLine1    String
+  city            String
+  state           String
+  zipCode         String
+  schedule        Schedule[]
+  createdAt       DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime      @updatedAt
+}
