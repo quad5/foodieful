@@ -38,7 +38,7 @@ next-env.d.ts
 
 certificates
 /prisma/migrations
-/data
+/src/data
 
 *.sql
 
