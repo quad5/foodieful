@@ -7,7 +7,8 @@
     "dev": "next dev --experimental-https",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prod": "npx prisma migrate deploy && node server.js"
   },
   "prisma": {
     "seed": "node ./prisma/seed.js"
@@ -21,7 +22,6 @@
     "@hookform/resolvers": "^3.4.2",
     "@prisma/client": "^5.13.0",
     "@reduxjs/toolkit": "^2.2.5",
-    "dotenv": "^16.4.5",
     "next": "latest",
     "next-auth": "beta",
     "pg": "^8.11.5",

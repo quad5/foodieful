@@ -1,0 +1,41 @@
+services:
+  nextjs:
+    image: nextjs:latest
+    container_name: nextjs
+    ports:
+      - "3000:3000"
+    restart: always
+    depends_on:
+      - db_postgres
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    profiles: ["prod", "staging"]
+
+  db_postgres:
+    image: postgres:16-alpine
+    container_name: db_postgres
+    environment:
+      - POSTGRES_USER=${PGSQL_USER}
+      - POSTGRES_PASSWORD=${PGSQL_PASSWORD}
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+     - db_postgres:/var/lib/postgresql/data
+    profiles: ["prod", "staging"]
+
+  
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/ssl:/etc/nginx/ssl:ro
+    restart: always
+    profiles: ["prod", "staging"]
+
+volumes:
+  db_postgres:

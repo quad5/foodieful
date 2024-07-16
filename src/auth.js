@@ -4,12 +4,14 @@ import Auth0 from "next-auth/providers/auth0"
 
 const authOptions = {
   // Configure one or more authentication providers
+  secret: process.env.AUTH_SECRET,
+  redirectProxyUrl: process.env.AUTH_AUTH0_REDIRECT_URL,
+  trustHost: true,
   providers: [
     Auth0({
-      clientId: process.env.AUTH_AUTH0_ID,
-      clientSecret: process.env.AUTH_AUTH0_SECRET,
+      clientId: process.env.AUTH_AUTH0_CLIENT_ID,
+      clientSecret: process.env.AUTH_AUTH0_CLIENT_SECRET,
       issuer: process.env.AUTH_AUTH0_ISSUER_BASE_URL,
-      redirectProxyUrl: process.env.AUTH_AUTH0_REDIRECT_URL,
     }),
   ],
 }
