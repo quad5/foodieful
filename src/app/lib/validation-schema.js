@@ -1,16 +1,17 @@
-import { object, shape, string, number, date, InferType } from 'yup';
+import { mixed, object, shape, string, number, date, InferType } from 'yup';
 import {
     ADDRESS_LINE_1,
     ADDRESS_LINE_2,
     CITY_CC,
     EMAIL_CC,
+    LOGO_FILE,
+    MENU_FILE,
     NAME_CC,
     STATE_CC,
-    ZIP_CODE
-} from "./constants"; 
+    ZIP_CODE_CC
+} from "./constants";
 
 // Thoughts of separating out address so it can be merged but vendor's address can be optional while listing isn't.
-
 
 export const vendorSchema = object().shape({
     [ADDRESS_LINE_1]: string().max(40).notRequired(),
@@ -21,87 +22,129 @@ export const vendorSchema = object().shape({
 
     [EMAIL_CC]: string().max(40).email().required(),
 
+    [LOGO_FILE]: mixed()
+        .notRequired()
+        .test({
+            name: 'logoUpload',
+            skipAbsent: false,
+            test(value, ctx) {
+                if (value && value[0] && value[0].size >= 200000) {
+                    return ctx.createError({
+                        message: "The file is too large. Limit 2MB"
+                    })
+                }
+
+                if (value && value[0] && !(/image\/svg*/.test(value[0].type))) {
+                    return ctx.createError({
+                        message: "We only support SVG file format."
+                    })
+                }
+
+                return true
+            }
+        }),
+
+    [MENU_FILE]: mixed()
+        .notRequired()
+        .test({
+            name: 'menuUpload',
+            skipAbsent: false,
+            test(value, ctx) {
+                if (value && value[0] && value[0].size >= 200000) {
+                    return ctx.createError({
+                        message: "The file is too large. Limit 2MB"
+                    })
+                }
+                if (value && value[0] && !["application/pdf"].includes(value[0].type)) {
+                    return ctx.createError({
+                        message: "We only support PDF."
+                    })
+                }
+                return true
+            }
+        }),
+
     [NAME_CC]: string()
-      .min(2, 'Name must be at least 2 characters long.')
-      .max(50, 'Name limit is 50 characters long.')
-      .required(),
-    
+        .min(2, 'Name must be at least 2 characters long.')
+        .max(50, 'Name limit is 50 characters long.')
+        .required(),
+
     [STATE_CC]: string().notRequired(),
 
-    [ZIP_CODE]: string().notRequired()
-        .when(ADDRESS_LINE_1,  {
+    [ZIP_CODE_CC]: string().notRequired()
+        .when(ADDRESS_LINE_1, {
             is: (value) => value,
             then: (schema) => schema.required(`Please enter zip code for ${ADDRESS_LINE_1}`),
             then: (schema) => schema.length(5, 'Zip code must be 5 digits long.'),
             otherwise: (schema) => schema.optional()
         })
-        .test({name:'zipCodeEntered',
-        skipAbsent: true,
-        test(value, ctx) {
-            console.log("__in zipcode test, value", value)
-            if (value) {
-                if (isNaN(parseInt(value))) {
-                    return ctx.createError({
-                        message: "Zip code must be numerical value."
-                      });
+        .test({
+            name: 'zipCodeEntered',
+            skipAbsent: true,
+            test(value, ctx) {
+                if (value) {
+                    if (isNaN(parseInt(value))) {
+                        return ctx.createError({
+                            message: "Zip code must be numerical value."
+                        });
+                    }
+                    if (value.length != 5) {
+                        return ctx.createError({
+                            message: "Zip code must be 5 digits long."
+                        });
+                    }
                 }
-                if (value.length != 5) {
-                    return ctx.createError({
-                        message: "Zip code must be 5 digits long."
-                    });
-                }
+                return true;
             }
-            return true;
-        }
-    })
+        })
 })
 
 export const listingSchema = object().shape({
     [ADDRESS_LINE_1]: string().max(40).required("Address is required"),
-    [ZIP_CODE]: string().required("Zip code is required")
-        .test({name:'zipCodeEntered',
-        skipAbsent: true,
-        test(value, ctx) {
-            console.log("__in zipcode test, value", value)
-            if (value) {
+    [ZIP_CODE_CC]: string().required("Zip code is required")
+        .test({
+            name: 'zipCodeEntered',
+            skipAbsent: true,
+            test(value, ctx) {
+                if (value) {
 
-                if (isNaN(parseInt(value))) {
-                    return ctx.createError({
-                        message: "Zip code must be numerical value."
-                      });
+                    if (isNaN(parseInt(value))) {
+                        return ctx.createError({
+                            message: "Zip code must be numerical value."
+                        });
+                    }
+                    if (value.length != 5) {
+                        return ctx.createError({
+                            message: "Zip code must be 5 digits long."
+                        });
+                    }
                 }
-                if (value.length != 5) {
-                    return ctx.createError({
-                        message: "Zip code must be 5 digits long."
-                    });
-                }
+                return true;
             }
-            return true;
-        }
-    })
+        })
 })
 
 export const zipCodeSchema = object().shape({
-    [ZIP_CODE]: string()
-        .test({name:'zipCodeEntered',
-        skipAbsent: true,
-        test(value, ctx) {
-            console.log("__in zipcode test, value", value)
-            if (value) {
+    [ZIP_CODE_CC]: string()
+        .test({
+            name: 'zipCodeEntered',
+            skipAbsent: true,
+            test(value, ctx) {
+                if (value) {
 
-                if (isNaN(parseInt(value))) {
-                    return ctx.createError({
-                        message: "Zip code must be numerical value."
-                    });
+                    if (isNaN(parseInt(value))) {
+                        return ctx.createError({
+                            message: "Zip code must be numerical value."
+                        });
+                    }
+                    if (value.length != 5) {
+                        return ctx.createError({
+                            message: "Zip code must be 5 digits long."
+                        });
+                    }
                 }
-                if (value.length != 5) {
-                    return ctx.createError({
-                        message: "Zip code must be 5 digits long."
-                    });
-                }
+                return true;
             }
-            return true;
-        }
-})  
+        })
 })
 

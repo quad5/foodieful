@@ -1,22 +1,21 @@
 
-import prisma  from "../src/app/lib/prisma.js";
-import profile from "../src/data/vendorsProfile.json" assert { type: 'json' }
-import user from "../src/data/vendorsUser.json" assert { type: 'json' }
+import prisma from "../src/app/lib/prisma.js";
+// import profile from "../src/data/vendorsProfile.json" assert { type: 'json' }
+// import user from "../src/data/vendorsUser.json" assert { type: 'json' }
 import fs from "fs"
 import readline from "readline"
 
 
-
 function seedVendorsProfile() {
     Promise.all(profile.map(d => prisma.vendorProfile.create({ data: d })))
-    .then(() => console.info('[SEED] Succussfully create vendors profiles'))
-    .catch(e => console.error('[SEED] Failed to create vendor profiles', e))
+        .then(() => console.info('[SEED] Succussfully create vendors profiles'))
+        .catch(e => console.error('[SEED] Failed to create vendor profiles', e))
 }
 
 function seedVendorsUser() {
     Promise.all(user.map(d => prisma.vendorUser.create({ data: d })))
-    .then(() => console.info('[SEED] Succussfully create vendor user'))
-    .catch(e => console.error('[SEED] Failed to create vendor user', e))
+        .then(() => console.info('[SEED] Succussfully create vendor user'))
+        .catch(e => console.error('[SEED] Failed to create vendor user', e))
 }
 
 function loadZipCodeData() {
@@ -32,11 +31,11 @@ function loadZipCodeData() {
                 data: {
                     zipCode: splitted[0],
                     decommissioned: splitted[1] === 0,
-                    city: splitted[2],        
-                    state: splitted[3],               
-                    county: splitted[4],              
+                    city: splitted[2],
+                    state: splitted[3],
+                    county: splitted[4],
                     timeZone: splitted[5],
-                    latitude: splitted[7],            
+                    latitude: splitted[7],
                     longitude: splitted[8]
                 }
             }).catch(e => console.error('[SEED] Failed to create zip code', e))

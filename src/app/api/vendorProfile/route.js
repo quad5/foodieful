@@ -1,29 +1,45 @@
 import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
+// const nrPino = require('@newrelic/pino-enricher')
+// const pino = require('pino')
+// const logger = pino(nrPino())
 import {
     ADDRESS_LINE_1,
     ADDRESS_LINE_2,
     CITY_CC,
     EMAIL_CC,
     ID,
+    LOGO_FILENAME,
+    MENU_FILENAME,
     NAME_CC,
     STATE_CC,
     TECHNICAL_DIFFICULTIES,
-    ZIP_CODE,
- } from "@/app/lib/constants";
+    ZIP_CODE_CC,
+} from "@/app/lib/constants";
+import {
+    DB_ADDRESS_LINE_1,
+    DB_ADDRESS_LINE_2,
+    DB_CITY,
+    DB_LOGO_FILENAME,
+    DB_MENU_FILENAME,
+    DB_NAME,
+    DB_STATE,
+    DB_ZIP_CODE
+} from "@/app/lib/dbFieldConstants";
 
- export async function GET(request) {
+export async function GET(request) {
     const id = parseInt(request.nextUrl.searchParams.get(ID), 10)
-  
+
     try {
         const result = await prisma.vendorProfile.findFirstOrThrow({
             where: {
-            id: id,
+                id: id,
             },
         })
         return NextResponse.json({ success: true, message: result }, { status: 200 });
-    } catch(error) {
-        return NextResponse.json({ success: false, message: error.message },{ status: 400 });
+    } catch (error) {
+        console.log("POST /vendorProfile", error)
+        return NextResponse.json({ success: false, message: error.message }, { status: 400 });
     }
 }
 
@@ -33,12 +49,14 @@ export async function POST(request) {
         const data = await request.json()
         const result = await prisma.vendorProfile.create({
             data: {
-                addressLine1: data[ADDRESS_LINE_1],
-                addressLine2: data[ADDRESS_LINE_2],
-                city: data[CITY_CC], 
-                name: data[NAME_CC],
-                state: data[STATE_CC],  
-                zipCode: data[ZIP_CODE],
+                [DB_NAME]: data[NAME_CC],
+                [DB_LOGO_FILENAME]: data[LOGO_FILENAME],
+                [DB_MENU_FILENAME]: data[MENU_FILENAME],
+                [DB_ADDRESS_LINE_1]: data[ADDRESS_LINE_1],
+                [DB_ADDRESS_LINE_2]: data[ADDRESS_LINE_2],
+                [DB_CITY]: data[CITY_CC],
+                [DB_STATE]: data[STATE_CC],
+                [DB_ZIP_CODE]: data[ZIP_CODE_CC],
                 vendorUser: {
                     create: {
                         email: data[EMAIL_CC],
@@ -49,11 +67,8 @@ export async function POST(request) {
         });
 
         return NextResponse.json({ success: true }, { status: 200 });
-    } catch(error) {
-        if (error.code === "P2002") {
-            return NextResponse.json({ success: false, message: "User with that email already exists" }, { status: 409 });
-        }
-      
-        return NextResponse.json({ success: false, message: TECHNICAL_DIFFICULTIES }, { status: 500 });
+    } catch (error) {
+        console.log("POST /vendorProfile", error)
+        return NextResponse.json({ success: false }, { status: 500 });
     }
 }

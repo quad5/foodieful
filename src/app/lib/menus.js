@@ -1,25 +1,35 @@
+import {
+    MY_PROFILE_CC,
+    MANAGE_MY_LISTINGS_CC,
+    VENDOR_PROFILE_CC,
+} from "./constants"
 
-export function companyMenu() {
-    return [
-        {
-            title: 'Home Page',
-            link: '/'
-        },
-    ]
-}
+
+// export function companyMenu() {
+//     return [
+//         {
+//             title: 'Home Page',
+//             link: '/'
+//         },
+//         {
+//             title: 'FAQs',
+//             link: '/faq'
+//         }
+//     ]
+// }
 
 export function vendorMenu() {
     return [
         {
-            title: 'My Listings',
+            title: MANAGE_MY_LISTINGS_CC,
             link: '/vendor'
         },
         {
-            title: "Company's Profile",
+            title: VENDOR_PROFILE_CC,
             link: '/vendor/vendorProfile'
         },
         {
-            title: "My Profile",
+            title: MY_PROFILE_CC,
             link: '/vendor/userProfile'
         }
     ]

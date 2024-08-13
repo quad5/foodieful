@@ -1,72 +1,76 @@
 'use client'
 
-import { zipCodeSchema } from '@/app/lib/validation-schema'
-import { useEffect, useState } from 'react';
-import styles from './page.module.css'
-import "./globals.css";
-import Pagination from '@/components/Pagination/Pagination';
-import GenericModal from '@/components/GenericModal/GenericModal';
-import ListingCard from '@/components/ListingCard.js/ListingCard';
 import {
-    SHOW_MODAL,
-    ZIP_CODE
+    Fragment,
+    useEffect,
+    useRef,
+    useState
+} from 'react';
+import {
+    Backdrop,
+    Box,
+    CircularProgress,
+    Container,
+    IconButton,
+    TextField
+} from '@mui/material';
+import Pagination from '@/components/Pagination';
+import ListingCard from '@/components/ListingCard';
+import {
+    ZIP_CODE_CC
 } from './lib/constants';
 import {
     getLocationsURL,
-    getUserLocation,
     getZipCodeDetails
 } from "@/app/lib/apiHelpers"
-
-import {
-    ERROR_MSG_MEDIUM,
-    LINEFORM,
-    TEXTFIELD
-} from './lib/globalClassNames';
-
+import SearchIcon from '@mui/icons-material/Search';
+import { zipCodeSchema } from '@/app/lib/validation-schema'
 
 export default function HomePage() {
+    const inProgressRef = useRef(null)
     const [errorContent, setErrorContent] = useState('')
-    const [modalContent, setModalContent] = useState('');
+    const [isFetching, setIsFetching] = useState(false)
     const [zipCode, setZipCode] = useState('')
 
-    useEffect(() => {
-        const value = localStorage.getItem(SHOW_MODAL)
-        if (value != null) {
-            setModalContent(value)
-        } else {
-            setModalContent('')
-        }
-    }, [])
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const result = await getUserLocation()
+    //         setZipCode(result.postal)
+    //     }
+
+    //     fetchData().catch((e) => {
+    //         console.log("__getUserLocation error", e)
+    //     })
+    // }, [])
 
     useEffect(() => {
-        const fetchData = async () => {
-            const result = await getUserLocation()
-            setZipCode(result.postal)
+        if (isFetching && inProgressRef.current) {
+            inProgressRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-
-        fetchData()
-    }, [])
+    }, [isFetching])
 
     const handleZipCode = async (e) => {
 
         if (e.target.value.length === 5) {
+            setIsFetching(true)
             const result = await getZipCodeDetails(e.target.value)
-
+            setIsFetching(false)
             if (result.success) {
+
                 setErrorContent('')
                 setZipCode(e.target.value)
             } else {
                 setErrorContent('Invalid Zip Code. ')
+
             }
         } else {
             try {
-                await zipCodeSchema.validate({[ZIP_CODE] : e.target.value})
-            } catch(error) {
+                await zipCodeSchema.validate({ [ZIP_CODE_CC]: e.target.value })
+            } catch (error) {
                 const splitted = error.toString().split(':')
                 splitted.shift()
                 setErrorContent(splitted.join(' '))
             }
-            
         }
 
         if (e.target.value.length === 0) {
@@ -74,18 +78,46 @@ export default function HomePage() {
             setZipCode('')
         }
     }
-    
+
     return (
-        <>  
-            {modalContent && <GenericModal content={modalContent}/>}
-            <form className={styles.container}>
-                {errorContent && <div className={ERROR_MSG_MEDIUM}>{`Error - ${errorContent}`}</div>}
-                <div className={LINEFORM}>
-                    <input className={TEXTFIELD} onChange={handleZipCode} type="text" 
-                    placeholder='Enter a valid zip code to get started' />
-                </div>
-            </form>
-            {zipCode && <Pagination api={getLocationsURL(zipCode)} card={ListingCard}/>}
-        </>
+        <Fragment>
+            <Backdrop
+                open={isFetching}
+                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <CircularProgress ref={inProgressRef} />
+            </Backdrop>
+
+            <Container
+                maxWidth='sm'
+                sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: { md: '15%', xs: '50%' }
+                }}>
+                <Box
+                    sx={{
+                        backgroundColor: "common.white",
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: '100%'
+                    }}>
+                    <IconButton>
+                        <SearchIcon />
+                    </IconButton>
+
+                    {/* This TextField is causing "Warning: Extra attributes from the server: data-ddg-inputtype" on DuckDuckGo browser */}
+                    <TextField
+                        disabled={isFetching}
+                        sx={{ backgroundColor: "common.white", color: 'black', width: '100%', marginRight: 2, marginY: 2 }}
+                        error={!!errorContent}
+                        helperText={errorContent}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={handleZipCode}
+                        placeholder="Enter a valid zip code to search for food truck's locations and hours" />
+                </Box>
+            </Container>
+            {zipCode && <Pagination api={getLocationsURL(zipCode)} card={ListingCard} />}
+        </Fragment>
     )
 }

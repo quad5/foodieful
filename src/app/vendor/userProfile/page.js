@@ -1,37 +1,112 @@
-import { auth } from "@/auth";
-import styles from "./userProfile.module.css"
-import Image from "next/image";
-import { EMAIL_CC, NAME_CC } from "@/app/lib/constants";
+'use client'
+
+import { useSession } from 'next-auth/react';
+import {
+    Fragment,
+    useEffect,
+    useRef,
+    useState
+} from "react";
+import {
+    Backdrop,
+    Card,
+    CardContent,
+    CardMedia,
+    CircularProgress,
+    Container,
+    Stack,
+    TextField,
+    Typography,
+} from '@mui/material'
+import {
+    EMAIL_CC,
+    MY_PROFILE_CC,
+    NAME_CC,
+} from "@/app/lib/constants";
 
 
-export default async function Page() {
-    const session = await auth();
-    const image = session.user.image
+export default function UserProfile() {
+    const inProgressRef = useRef(null)
+    const { data: session, status } = useSession();
+    const [isFetching, setIsFetching] = useState(true)
+
+    useEffect(() => {
+        session ? setIsFetching(false) : setIsFetching(true)
+    }, [session])
+
+    useEffect(() => {
+        if (isFetching && inProgressRef.current) {
+            inProgressRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [isFetching])
 
     return (
-        
-        <div className={styles.container}>
-            <div className={styles.leftContainer}>
-                <Image
-                    src={session.user.image}
-                    alt="Picture of user"
-                    width={100}
-                    height={100}
-                />
+        <Fragment>
+            <Backdrop
+                open={isFetching}
+                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <CircularProgress ref={inProgressRef} />
+            </Backdrop>
 
-            </div>
+            <Typography
+                align='center'
+                sx={{
+                    color: 'common.white',
+                    marginY: '5%'
+                }}
+                variant='h3'>
+                {MY_PROFILE_CC}
+            </Typography>
 
-            <div className={styles.rightContainer}>
-                {<div className={styles.nameContainer}>
-                    <div className={styles.label}>{NAME_CC}:</div>
-                    <div>{session.user.name}</div>
-                </div>}
+            <Container
+                maxWidth='sm'
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: { xs: '20%' }
+                }}>
 
-                {<div className={styles.emailContainer}>
-                    <div className={styles.label}>{EMAIL_CC}:</div>
-                    <div>{session.user.email}</div>
-                </div>}
-            </div>
-        </div>
+                <Card sx={{ padding: 2 }}>
+                    <Stack
+                        alignItems="center"
+                        direction={'row'}>
+                        <CardMedia
+                            component="img"
+                            height='100'
+                            image={session?.user.image}
+                            width='100'
+                        />
+
+                        <CardContent sx={{ flex: '1 0 auto' }}>
+                            <Stack
+                                direction={'column'}
+                                spacing={2}>
+                                <TextField
+                                    InputLabelProps={{ shrink: true }}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    label={NAME_CC}
+                                    size='small'
+                                    value={session?.user.name}
+                                    variant='filled' />
+
+                                <TextField
+                                    InputLabelProps={{ shrink: true }}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    label={EMAIL_CC}
+                                    size='small'
+                                    value={session?.user.email}
+                                    variant='filled'
+                                />
+                            </Stack>
+                        </CardContent>
+                    </Stack>
+                </Card>
+            </Container>
+        </Fragment>
     )
 }
+

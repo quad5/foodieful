@@ -1,10 +1,13 @@
-import { VENDOR_SIGN_UP } from "@/app/lib/constants"
-
+import { VENDOR_SIGN_UP_CC } from "@/app/lib/constants"
+import { Button } from "@mui/material"
 
 export default function SignUp() {
     return (
         <form action="/create-vendor">
-            <button type="submit">{VENDOR_SIGN_UP}</button> 
+            <Button
+                type="submit"
+                variant="text">
+                {VENDOR_SIGN_UP_CC}</Button>
         </form>
     )
 }
