@@ -1,6 +1,6 @@
 'use client'
 
-import { useAppSelector, useAppDispatch } from '@/app/redux/hooks'
+
 import { useSession } from 'next-auth/react';
 import {
     Fragment,
@@ -36,7 +36,6 @@ import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import GenericSuccessAlert from '@/components/GenericSuccessAlert';
 import GenericErrorAlert from '@/components/GenericErrorAlert';
-import { updateVendorUser } from '@/app/redux/slices/userSlice'
 import {
     ACTIVE_LISTINGS_CC,
     ADD,
@@ -59,7 +58,6 @@ import {
     TECHNICAL_DIFFICULTIES,
     ZIP_CODE_CC
 } from "@/app/lib/constants"
-
 import {
     DB_ADDRESS_LINE_1,
     DB_CITY,
@@ -70,12 +68,12 @@ import {
 import {
     deleteListingByAddressId,
     getListingsByActive,
+    updateVendorUser
 } from "../lib/apiHelpers";
 import { convertToFullCalendarEvent } from '../lib/fullCalendar/event-utils';
 
 
 export default function Vendor() {
-    const dispatch = useAppDispatch()
     const router = useRouter()
     const { data: session, status } = useSession();
 
@@ -88,6 +86,7 @@ export default function Vendor() {
     const inProgressRef = useRef(null);
     const [activeListings, setActiveListings] = useState([])
     const [activePreviouslyClosed, setActivePreviouslyClosed] = useState([])
+    const [email, setEmail] = useState('')
     const [inActiveListings, setInActiveListings] = useState([])
     const [inActivePreviouslyClosed, setInActivePreviouslyClosed] = useState([])
     const [isFetching, setIsFetching] = useState(true)
@@ -99,68 +98,56 @@ export default function Vendor() {
     const [selectedInActiveIndex, setSelectedInActiveIndex] = useState(-1)
     const [updateListing, setUpdateListing] = useState(false)
 
-    const { email, error, isLoading, loaded, name } = useAppSelector((state) => state.user)
-
-    console.log("__outside, email", email)
-    console.log("__outside, error", error)
-    console.log("__outside, loaded", loaded)
-    console.log("__outside, name", name)
-    console.log("__outside, isLoading", isLoading)
-
 
     useEffect(() => {
         const fetchData = async () => {
+            setEmail(session.user.email)
+            if (email) {
+                // TODO - implement Redux to execute this once after login, and clear it once logout. 
+                // if (!name) {
+                //     const userResponse = await updateVendorUser({ email: email, name: session.user.name })
+                //     if (userResponse.success) {
+                //         setName(session?.user.name)
+                //     }
+                // }
 
-            if (loaded) {
                 const activeListingsResp = await getListingsByActive(email, true)
-                console.log("__activeListingsResp", activeListingsResp)
-                if (activeListingsResp.statusText === "OK") {
-                    setActiveListings(activeListingsResp.data.message)
+                if (activeListingsResp.success) {
+                    setActiveListings(activeListingsResp.message)
                 }
 
-                // const inActiveListingsResp = await getListingsByActive(email, false)
-                // if (inActiveListingsResp.success) {
-                //     setInActiveListings(inActiveListingsResp.message)
-                // }
+                const inActiveListingsResp = await getListingsByActive(email, false)
+                if (inActiveListingsResp.success) {
+                    setInActiveListings(inActiveListingsResp.message)
+                }
                 setUpdateListing(false)
                 setIsFetching(false)
                 router.refresh()
             }
-            else {
-                dispatch(updateVendorUser({ email: session.user.email, name: session.user.name }))
-            }
 
         }
 
-        console.log("__inside, email, loaded", email, loaded)
 
         if (session) {
-            fetchData()
+            fetchData().catch(() => {
+                setIsFetching(false)
+                setOpenErrorAlert(true)
+            })
+        } else {
+            setIsFetching(true)
         }
+    }, [email, router, session, updateListing])
 
-    }, [dispatch, router, session, updateListing, loaded])
 
 
     useEffect(() => {
         if (isFetching && inProgressRef.current) {
             inProgressRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [isFetching])
-
-    useEffect(() => {
-        if (error) {
-            setOpenErrorAlert(true)
-            setIsFetching(false)
-        }
-    }, [error])
-
-    useEffect(() => {
-
         if ((openErrorAlert && alertRef.current) || (openSuccessAlert && alertRef.current)) {
             alertRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-
-    }, [openErrorAlert, openSuccessAlert])
+    }, [isFetching, openErrorAlert, openSuccessAlert])
 
     const handleAlertClose = () => {
         setOpenErrorAlert(false)
@@ -372,11 +359,13 @@ export default function Vendor() {
                 message={SUCCESSFULLY_DELETED_LISTING_CC}
                 ref={alertRef} />}
 
-            <Backdrop
-                open={isFetching}
-                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <CircularProgress ref={inProgressRef} />
-            </Backdrop>
+            <div>
+                <Backdrop
+                    open={isFetching}
+                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                    <CircularProgress ref={inProgressRef} />
+                </Backdrop>
+            </div>
 
             <Typography
                 align='center'

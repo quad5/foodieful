@@ -1,6 +1,5 @@
 "use client"
 
-import { useAppSelector, useAppDispatch } from '@/app/redux/hooks'
 import {
     Fragment,
     useEffect,
@@ -82,7 +81,6 @@ import { convertToFullCalendarEvent } from '@/app/lib/fullCalendar/event-utils';
 
 
 export default function Listings() {
-    const { email, error, isLoading, loaded, name } = useAppSelector((state) => state.user)
     const methods = useForm({
         resolver: yupResolver(listingSchema),
     });
@@ -90,7 +88,7 @@ export default function Listings() {
     const inProgressRef = useRef(null);
     const router = useRouter()
     const searchParams = useSearchParams()
-    // const { data: session, status } = useSession();
+    const { data: session, status } = useSession();
     const [activeListing, setActiveListing] = useState(true);
     const [addressLine1, setAddressLine1] = useState('')
     const [city, setCity] = useState('')
@@ -110,9 +108,7 @@ export default function Listings() {
     useEffect(() => {
         const fetchData = async () => {
             const result = await getListingByAddressId(itemId)
-            console.log("__result, ", result)
             if (result.success) {
-
                 setActiveListing(result.message[DB_ACTIVE])
                 setAddressLine1(result.message[DB_ADDRESS_LINE_1])
                 setCity(result.message[DB_CITY])
@@ -121,19 +117,13 @@ export default function Listings() {
                 setExistingSchedules(result.message.schedule)
             }
         }
-
-        // if (session) {
-        if (itemId > 0) {
-            fetchData().catch((error) => {
-                console.log("__error", error)
+        if (mode === EDIT) {
+            fetchData().catch(() => {
                 setOpenErrorAlert(true)
             })
-
         }
         setIsFetching(false)
-        // }
-        // setIsFetching(false)
-    }, [itemId])
+    }, [mode, itemId])
 
     useEffect(() => {
         if (isFetching && inProgressRef.current) {
@@ -145,9 +135,9 @@ export default function Listings() {
     }, [isFetching, openErrorAlert, openSuccessAlert])
 
     // NOTE - Need to place after all hooks initialization
-    // if (!session) {
-    //     return
-    // }
+    if (!session) {
+        return
+    }
 
     const {
         register,
@@ -205,8 +195,7 @@ export default function Listings() {
                     [PIT_STOP_ADDRESS]: address,
                     [SCHEDULES]: currentEvents,
                     [ACTIVE_LISTING]: activeListing,
-                    // }, session.user.email)
-                }, email)
+                }, session.user.email)
 
             } else {    // edit
                 response = await updateListingByAddressId({
@@ -442,8 +431,7 @@ export default function Listings() {
                                         allDaySlot={false}
                                         dayHeaderFormat={{ weekday: 'short' }}
                                         droppable={false}
-                                        // editable={!disableElement}
-                                        editable={true}
+                                        editable={!disableElement}
                                         eventClick={handleEventClick}
                                         eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                                         headerToolbar={{
@@ -455,9 +443,7 @@ export default function Listings() {
                                         initialEvents={convertToFullCalendarEvent(existingSchedules)}
                                         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                                         select={handleDateSelect}
-                                        // selectable={!disableElement}
-                                        selectable={true}
-
+                                        selectable={!disableElement}
                                         weekends={true} />
                                 </CardContent>
 
@@ -547,15 +533,16 @@ export default function Listings() {
                     message={TECHNICAL_DIFFICULTIES}
                     ref={alertRef} />}
 
-            <Backdrop
-                open={isFetching}
-                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <CircularProgress ref={inProgressRef} />
-            </Backdrop>
+            <div>
+                <Backdrop
+                    open={isFetching}
+                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                    <CircularProgress ref={inProgressRef} />
+                </Backdrop>
+            </div>
 
             {mode === ADD && addMode()}
             {mode === EDIT && editMode()}
-
 
         </Fragment>
     );

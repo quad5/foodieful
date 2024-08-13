@@ -73,6 +73,8 @@ export default function VendorProfile() {
         }
     }, [session])
 
+
+
     useEffect(() => {
         if (isFetching && inProgressRef.current) {
             inProgressRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -82,7 +84,6 @@ export default function VendorProfile() {
         }
     }, [isFetching, openErrorAlert])
 
-
     return (
         <Fragment>
             {openErrorAlert && <GenericErrorAlert
@@ -90,11 +91,13 @@ export default function VendorProfile() {
                 message={TECHNICAL_DIFFICULTIES}
                 ref={alertRef} />}
 
-            <Backdrop
-                open={isFetching}
-                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <CircularProgress ref={inProgressRef} />
-            </Backdrop>
+            <div>
+                <Backdrop
+                    open={isFetching}
+                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                    <CircularProgress ref={inProgressRef} />
+                </Backdrop>
+            </div>
 
             <Typography
                 align='center'
@@ -132,7 +135,7 @@ export default function VendorProfile() {
                                     }}
                                     label={VENDOR_BUSINESS_NAME_CC}
                                     size='small'
-                                    value={vendorProfile?.name || ''}
+                                    value={vendorProfile?.name || ""}
                                     variant='filled' />
 
                                 <TextField
@@ -142,7 +145,7 @@ export default function VendorProfile() {
                                     }}
                                     label={ADDRESS_LINE_1}
                                     size='small'
-                                    value={vendorProfile?.addressLine1}
+                                    value={vendorProfile?.addressLine1 || ""}
                                     variant='filled' />
 
                                 <TextField
@@ -152,7 +155,7 @@ export default function VendorProfile() {
                                     }}
                                     label={ADDRESS_LINE_2}
                                     size='small'
-                                    value={vendorProfile?.addressLine2}
+                                    value={vendorProfile?.addressLine2 || ""}
                                     variant='filled' />
 
                                 <TextField
@@ -162,7 +165,7 @@ export default function VendorProfile() {
                                     }}
                                     label={CITY_CC}
                                     size='small'
-                                    value={vendorProfile?.city}
+                                    value={vendorProfile?.city || ""}
                                     variant='filled' />
 
                                 <TextField
@@ -172,7 +175,7 @@ export default function VendorProfile() {
                                     }}
                                     label={STATE_CC}
                                     size='small'
-                                    value={vendorProfile?.state}
+                                    value={vendorProfile?.state || ""}
                                     variant='filled' />
 
                                 <TextField
@@ -182,7 +185,7 @@ export default function VendorProfile() {
                                     }}
                                     label={ZIP_CODE_CC}
                                     size='small'
-                                    value={vendorProfile?.zipCode}
+                                    value={vendorProfile?.zipCode || ""}
                                     variant='filled' />
                             </Stack>
                         </CardContent>

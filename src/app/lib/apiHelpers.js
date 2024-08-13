@@ -8,7 +8,7 @@ import {
     POST,
     PUT,
 } from "./constants";
-import axios from "axios";
+
 
 const host = process.env.NEXT_PUBLIC_URL;
 
@@ -44,18 +44,15 @@ export async function getListings(email) {
 }
 
 export async function getListingByAddressId(id) {
-    return await genericAPIGET(`${host}/api/listings?${ID}=${id}`)
-    // return await axios.get(`${host}/api/listings?${ID}=${id}`)
-    // const url = `${host}/api/listings?${EMAIL}=${email}&${ID}=${id}`
+    const url = `${host}/api/listings?${ID}=${id}`
 
-    // return await genericAPICall(url, GET)
+    return await genericAPICall(url, GET)
 }
 
-export async function getListingsByActive(email, isActive) {
-    return await axios.get(`${host}/api/listings?${EMAIL}=${email}&${ACTIVE_LISTING}=${isActive}`)
-    // const url = `${host}/api/listings?${EMAIL}=${email}&${ACTIVE_LISTING}=${isActive}`
+export async function getListingsByActive(email, active) {
+    const url = `${host}/api/listings?${EMAIL}=${email}&${ACTIVE_LISTING}=${active}`
 
-    // return await genericAPICall(url, GET)
+    return await genericAPICall(url, GET)
 }
 
 export function getListingsURL(email) {
@@ -81,9 +78,9 @@ export async function updateListingByAddressId(body, id) {
     return await genericAPICall(url, PUT, body)
 }
 
-// export async function updateVendorUser(body) {
-//     return await genericAPICall(host + "/api/vendorUser", PUT, body)
-// }
+export async function updateVendorUser(body) {
+    return await genericAPICall(host + "/api/vendorUser", PUT, body)
+}
 
 export async function getVendorUserByEmail(email) {
     return await genericAPICall(host + `/api/vendorUser?${EMAIL}=${email}`, GET)
@@ -119,31 +116,4 @@ export async function genericAPICall(url, method, body = {}) {
     }
 
     return await response.json()
-}
-
-export async function genericAPICall2(url, method, body = {}) {
-    const host = process.env.NEXT_PUBLIC_URL;
-    let response = {}
-    if (method === GET) {
-        response = await fetch(host + url);
-    } else {
-        response = await fetch(host + url, {
-            method: method,
-            body: JSON.stringify(body),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-    }
-
-    return await response.json()
-}
-
-export async function genericAPIGET(url) {
-    try {
-        const respone = await axios.get(url)
-        console.log("__in genericAPIGET, response", respone)
-    } catch (error) {
-        console.log("in genericAPIGET, error catch", error)
-    }
 }

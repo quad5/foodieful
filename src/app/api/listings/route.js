@@ -54,14 +54,13 @@ export async function GET(request) {
     const isActive = request.nextUrl.searchParams.get(ACTIVE_LISTING)
     const email = request.nextUrl.searchParams.get(EMAIL)
 
-    console.log("__addressId", addressId, typeof (addressId))
     try {
         let result = {}
         if (addressId) {    // get a specified listing based on addressId
             result = await prisma.pitStopAddress.findUnique({
                 where: {
-                    // [DB_ID]: addressId,
-                    [DB_ID]: null,
+                    [DB_ID]: addressId,
+
 
 
 
@@ -69,18 +68,6 @@ export async function GET(request) {
                 include: {
                     schedule: true
                 }
-                // include: {
-                //     vendorProfile: {
-                //         include: {
-                //             vendorUser: {
-                //                 where: {
-                //                     email: email
-                //                 }
-                //             }
-                //         }
-                //     },
-                //     schedule: true
-                // }
             })
         }
         else if (isActive) {
@@ -134,12 +121,12 @@ export async function GET(request) {
                 }
             })
         }
-        console.log("__result", result)
 
         return NextResponse.json({ success: true, message: result }, { status: 200 });
     } catch (error) {
         console.log("__in GET /listings", error)
-        throw error
+        return NextResponse.json({ success: false });
+
     }
 }
 

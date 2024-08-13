@@ -42,11 +42,13 @@ export default function UserProfile() {
 
     return (
         <Fragment>
-            <Backdrop
-                open={isFetching}
-                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <CircularProgress ref={inProgressRef} />
-            </Backdrop>
+            <div>
+                <Backdrop
+                    open={isFetching}
+                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                    <CircularProgress ref={inProgressRef} />
+                </Backdrop>
+            </div>
 
             <Typography
                 align='center'

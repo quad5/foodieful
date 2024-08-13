@@ -1,6 +1,5 @@
 import prisma from "../../lib/prisma";
 import { NextResponse } from "next/server";
-
 import { EMAIL } from "@/app/lib/constants"
 
 
@@ -16,7 +15,7 @@ export async function GET(request) {
 
         return NextResponse.json({ success: true, message: result }, { status: 200 });
     } catch (error) {
-        console.log("/GET vendorUser, result", error)
+        console.log("/GET vendorUser, error", error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 
@@ -25,23 +24,18 @@ export async function GET(request) {
 export async function PUT(request) {
     try {
         const data = await request.json();
-        console.log("__/PUT vendorUser, data", data)
 
-        const updatedUser = await prisma.vendorUser.update({
+        const updateUser = await prisma.vendorUser.update({
             where: {
                 email: data.email,
-                // email: null
             },
             data: {
                 name: data.name,
             },
         })
-        return NextResponse.json({ success: true, message: updatedUser })
-        // return NextResponse.json({ success: true, message: updateUser }, { status: 200 });
+        return NextResponse.json({ success: true, message: updateUser }, { status: 200 });
     } catch (error) {
-        console.log("/PUT vendorUser, result", error)
-        throw error
-        // return NextResponse.json({ message: error })
-        // return NextResponse.json({ success: false, message: error }, { status: 400 });
+        console.log("/PUT vendorUser, error", error)
+        return NextResponse.json({ success: false }, { status: 400 });
     }
 }

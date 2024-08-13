@@ -9,6 +9,7 @@ export function convertToFullCalendarEvent(schedules) {
       end: toISOString(schedule.dayOfWeek[0], schedule.endHours, schedule.endMinutes),
     })
   }
+
   return initialEvents
 }
 

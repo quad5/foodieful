@@ -13,9 +13,8 @@
     "seed": "node  --experimental-default-type=module ./prisma/seed.mjs"
   },
   "dependencies": {
-    "@emotion/cache": "^11.11.0",
-    "@emotion/react": "11.11.4",
-    "@emotion/styled": "^11.11.5",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
     "@fullcalendar/core": "^6.1.13",
     "@fullcalendar/daygrid": "^6.1.13",
     "@fullcalendar/interaction": "^6.1.13",
@@ -26,8 +25,6 @@
     "@mui/material-nextjs": "^5.16.4",
     "@newrelic/pino-enricher": "^1.1.1",
     "@prisma/client": "^5.13.0",
-    "@reduxjs/toolkit": "^2.2.7",
-    "axios": "^1.7.3",
     "material-ui-popup-state": "^5.1.2",
     "newrelic": "12.1.0",
     "next": "latest",
@@ -37,9 +34,6 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.51.5",
-    "react-redux": "^9.1.2",
-    "redux": "5.0.1",
-    "redux-persist": "^6.0.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {

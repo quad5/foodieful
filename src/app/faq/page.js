@@ -71,8 +71,7 @@ export default function Page() {
             <Typography
                 align='center'
                 sx={{ color: 'common.white', marginY: '5%' }}
-                variant='h3'
-            >
+                variant='h3'>
                 {FREQUENTLY_ASKED_QUESTIONS_CC}
             </Typography>
             <Container
@@ -83,14 +82,12 @@ export default function Page() {
                     marginBottom: { xs: '20%' }
                 }}
                 maxWidth='sm'
-                disableGutters
-            >
+                disableGutters>
                 <Card
                     sx={{
                         display: 'flex',
                         mx: 'auto'
-                    }}
-                >
+                    }}>
                     <CardContent>
                         {faq.map((i, index) => (
                             <Stack
@@ -103,19 +100,15 @@ export default function Page() {
                                         backgroundColor: theme.palette.primary[500],
                                         color: 'common.white',
                                     }
-                                }}
-                            >
+                                }}>
                                 <Stack
                                     direction='column'
                                     display='flex'
-                                    flex={1}
-                                >
+                                    flex={1}>
                                     <ListItemButton
-                                        onClick={() => handleClick(index)}
-                                    >
+                                        onClick={() => handleClick(index)}>
                                         <ListItemText
-                                            primary={i[QUESTION_CC]}
-                                        />
+                                            primary={i[QUESTION_CC]} />
                                         <ListItemIcon>
                                             {index === selectedIndex ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
                                         </ListItemIcon>
@@ -123,8 +116,7 @@ export default function Page() {
 
                                     <Collapse
                                         in={index === selectedIndex}
-                                        timeout="auto" unmountOnExit
-                                    >
+                                        timeout="auto" unmountOnExit>
                                         <List
                                             sx={{
                                                 backgroundColor: theme.palette.secondary.main,
@@ -134,8 +126,7 @@ export default function Page() {
                                                     backgroundColor: theme.palette.secondary.main,
                                                     color: 'common.white',
                                                 }
-                                            }}
-                                        >
+                                            }}>
                                             <ListItem>
                                                 <ListItemText>
                                                     {i[ANSWER_CC]}
@@ -147,8 +138,10 @@ export default function Page() {
                                 <Divider
                                     orientation="horizontal"
                                     flexItem
-                                    sx={{ borderBottomWidth: 10 }}
-                                />
+                                    sx={{
+                                        borderBottomWidth: 10,
+                                        borderColor: 'white'
+                                    }} />
                             </Stack>
                         ))}
                     </CardContent>
