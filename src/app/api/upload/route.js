@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { FILE_BRACKET } from '@/app/lib/constants'
 import { createUUIDFilename, getFileExtension } from '@/app/lib/utils'
 import path from 'path'
+import { sendLogToNewRelic } from '@/app/lib/apiHelpers'
 
 export async function POST(request) {
 
@@ -25,6 +26,7 @@ export async function POST(request) {
         }
         return NextResponse.json({ success: true, message: filenames })
     } catch (error) {
+        sendLogToNewRelic(error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 

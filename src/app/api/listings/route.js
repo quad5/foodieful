@@ -1,11 +1,10 @@
 import prisma from "../../lib/prisma";
 import { NextResponse } from "next/server";
+import { sendLogToNewRelic } from "@/app/lib/apiHelpers";
 import {
     ACTIVE_LISTING,
     EMAIL,
     ID,
-    LIMIT,
-    OFFSET,
     PIT_STOP_ADDRESS,
     SCHEDULES,
 } from "@/app/lib/constants"
@@ -18,7 +17,7 @@ import {
     DB_STATE,
     DB_ZIP_CODE,
 } from "@/app/lib/dbFieldConstants";
-import { type } from "os";
+
 
 
 export async function DELETE(request) {
@@ -45,6 +44,7 @@ export async function DELETE(request) {
 
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
+        sendLogToNewRelic(error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 }
@@ -60,10 +60,7 @@ export async function GET(request) {
             result = await prisma.pitStopAddress.findUnique({
                 where: {
                     [DB_ID]: addressId,
-
-
-
-
+                    // [DB_ID]: null
                 },
                 include: {
                     schedule: true
@@ -125,6 +122,7 @@ export async function GET(request) {
         return NextResponse.json({ success: true, message: result }, { status: 200 });
     } catch (error) {
         console.log("__in GET /listings", error)
+        sendLogToNewRelic(error)
         return NextResponse.json({ success: false });
 
     }
@@ -190,6 +188,7 @@ export async function POST(request) {
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
         console.log("__ POST /listings, ", error)
+        sendLogToNewRelic(error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 }
@@ -245,6 +244,7 @@ export async function PUT(request) {
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
         console.log("__ PUT /listings, ", error)
+        sendLogToNewRelic(error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 }

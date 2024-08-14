@@ -1,5 +1,6 @@
 import prisma from "../../lib/prisma";
 import { NextResponse } from "next/server";
+import { sendLogToNewRelic } from "@/app/lib/apiHelpers";
 import {
     CODE,
     TOTAL_COUNT,
@@ -75,6 +76,7 @@ export async function GET(request) {
 
         return NextResponse.json({ success: true, message: result }, { status: 200 });
     } catch (error) {
+        sendLogToNewRelic(error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 }

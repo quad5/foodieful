@@ -2,6 +2,7 @@
 
 import {
     Fragment,
+    Suspense,
     useEffect,
     useRef,
     useState
@@ -520,6 +521,7 @@ export default function Listings() {
     }
 
     return (
+
         <Fragment>
             {openSuccessAlert &&
                 <GenericSuccessAlert
@@ -543,7 +545,8 @@ export default function Listings() {
 
             {mode === ADD && addMode()}
             {mode === EDIT && editMode()}
+        </Fragment >
 
-        </Fragment>
+
     );
 } 

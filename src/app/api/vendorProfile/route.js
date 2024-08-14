@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
-// const nrPino = require('@newrelic/pino-enricher')
-// const pino = require('pino')
-// const logger = pino(nrPino())
+import { sendLogToNewRelic } from "@/app/lib/apiHelpers";
 import {
     ADDRESS_LINE_1,
     ADDRESS_LINE_2,
@@ -39,6 +37,7 @@ export async function GET(request) {
         return NextResponse.json({ success: true, message: result }, { status: 200 });
     } catch (error) {
         console.log("POST /vendorProfile", error)
+        sendLogToNewRelic(error)
         return NextResponse.json({ success: false, message: error.message }, { status: 400 });
     }
 }
@@ -69,6 +68,7 @@ export async function POST(request) {
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
         console.log("POST /vendorProfile", error)
+        sendLogToNewRelic(error)
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }
