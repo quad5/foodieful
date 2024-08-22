@@ -37,29 +37,19 @@ export default function Pagination(props) {
     useEffect(() => {
         const fetchData = async () => {
             const result = await genericAPICall(`${props.api}&${TOTAL_COUNT}=true`, GET)
-            if (result.success) {
-                setTotalCount(result.message);
-            }
+            result.success ? setTotalCount(result.message) : setOpenErrorAlert(true)
         }
 
-        fetchData().catch((e) => {
-            setOpenErrorAlert(true)
-        })
+        fetchData()
     }, [props])
 
     useEffect(() => {
         const fetchData = async () => {
             const result = await genericAPICall(`${props.api}&${LIMIT}=${limit}&${OFFSET}=${offset}`, GET)
-            if (result.success) {
-                setData(result.message);
-            } else {
-                setOpenErrorAlert(true)
-            }
+            result.success ? setData(result.message) : setOpenErrorAlert(true)
         }
 
-        fetchData().catch((e) => {
-            setOpenErrorAlert(true)
-        })
+        fetchData()
     }, [props, offset])
 
     useEffect(() => {
@@ -67,7 +57,6 @@ export default function Pagination(props) {
             alertRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [openErrorAlert])
-
 
     const handlePaginationClick = (e, selectedPageNumber) => {
         setOffset((selectedPageNumber * limit) - limit)

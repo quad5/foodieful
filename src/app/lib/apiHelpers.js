@@ -101,12 +101,9 @@ export async function getUserLocation() {
     return await genericAPICall('https://geolocation-db.com/json/', GET)
 }
 
-export async function sendLogToNewRelic(data) {
+export async function sendLogToNewRelic(logLevel, data) {
     fetch("https://log-api.newrelic.com/log/v1", {
-        body: {
-            "logtype": "ERROR",
-            "message": data
-        },
+        body: JSON.stringify({ level: logLevel, message: `${data}` }),
         headers: {
             'Api-Key': process.env.NEW_RELIC_LICENSE_KEY,
             "Content-Type": "application/json",

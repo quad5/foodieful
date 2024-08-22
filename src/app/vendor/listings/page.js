@@ -2,7 +2,6 @@
 
 import {
     Fragment,
-    Suspense,
     useEffect,
     useRef,
     useState
@@ -61,6 +60,8 @@ import {
     ZIP_CODE_CC,
 } from "@/app/lib/constants";
 
+import { isEmpty } from '@/app/lib/utils';
+
 import {
     DB_ACTIVE,
     DB_ADDRESS_LINE_1,
@@ -82,9 +83,6 @@ import { convertToFullCalendarEvent } from '@/app/lib/fullCalendar/event-utils';
 
 
 export default function Listings() {
-    const methods = useForm({
-        resolver: yupResolver(listingSchema),
-    });
     const alertRef = useRef(null);
     const inProgressRef = useRef(null);
     const router = useRouter()
@@ -107,24 +105,30 @@ export default function Listings() {
     const mode = searchParams.get(MODE)
 
     useEffect(() => {
+
         const fetchData = async () => {
             const result = await getListingByAddressId(itemId)
+
             if (result.success) {
+                setExistingSchedules(result.message.schedule)
                 setActiveListing(result.message[DB_ACTIVE])
                 setAddressLine1(result.message[DB_ADDRESS_LINE_1])
                 setCity(result.message[DB_CITY])
                 setState(result.message[DB_STATE])
                 setZipCode(result.message[DB_ZIP_CODE])
-                setExistingSchedules(result.message.schedule)
-            }
-        }
-        if (mode === EDIT) {
-            fetchData().catch(() => {
+            } else {
                 setOpenErrorAlert(true)
-            })
+            }
+            setIsFetching(false)
         }
-        setIsFetching(false)
-    }, [mode, itemId])
+
+        if (mode === EDIT) {
+            fetchData()
+        } else {
+            setIsFetching(false)
+        }
+
+    }, [itemId, mode])
 
     useEffect(() => {
         if (isFetching && inProgressRef.current) {
@@ -135,17 +139,20 @@ export default function Listings() {
         }
     }, [isFetching, openErrorAlert, openSuccessAlert])
 
-    // NOTE - Need to place after all hooks initialization
-    if (!session) {
-        return
-    }
-
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = methods
+    } = useForm({
+        resolver: yupResolver(listingSchema),
+        mode: 'onChange'
+    });
 
+
+    // NOTE - Need to place after all hooks initialization
+    if (!session) {
+        return
+    }
     const handleActive = () => {
         setActiveListing(!activeListing)
     }
@@ -271,7 +278,6 @@ export default function Listings() {
                                 label={ACTIVE_LISTING_CC} />
                         </Button>
 
-
                         <Card
                             sx={{
                                 mx: 'auto',
@@ -318,6 +324,7 @@ export default function Listings() {
                                                 helperText={errors[ADDRESS_LINE_1]?.message}
                                                 InputLabelProps={{ shrink: true }}
                                                 label={ADDRESS_LINE_1}
+                                                required={true}
                                                 size='small'
                                                 variant='outlined'
                                                 {...register(ADDRESS_LINE_1)} />
@@ -356,7 +363,7 @@ export default function Listings() {
                                                 {...register(ZIP_CODE_CC)} />
 
                                             <Button
-                                                disabled={disableElement}
+                                                disabled={!isEmpty(errors) || zipCodeError || disableElement}
                                                 mx='auto'
                                                 size='small'
                                                 type='submit'
@@ -465,7 +472,8 @@ export default function Listings() {
                                                 label={ADDRESS_LINE_1}
                                                 size='small'
                                                 variant='outlined'
-                                                {...register(ADDRESS_LINE_1)} />
+                                                {...register(ADDRESS_LINE_1)}
+                                            />
 
                                             <TextField
                                                 disabled={disableElement}
@@ -499,10 +507,11 @@ export default function Listings() {
                                                 onKeyUp={handleZipCode}
                                                 size='small'
                                                 variant='outlined'
-                                                {...register(ZIP_CODE_CC)} />
+                                                {...register(ZIP_CODE_CC)}
+                                            />
 
                                             <Button
-                                                disabled={disableElement}
+                                                disabled={!isEmpty(errors) || zipCodeError || disableElement}
                                                 mx='auto'
                                                 size='small'
                                                 type='submit'
@@ -544,7 +553,8 @@ export default function Listings() {
             </div>
 
             {mode === ADD && addMode()}
-            {mode === EDIT && editMode()}
+            {!isFetching && mode === EDIT && editMode()}
+
         </Fragment >
 
 

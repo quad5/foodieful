@@ -1,7 +1,7 @@
 import prisma from "../../lib/prisma";
 import { NextResponse } from "next/server";
 import { sendLogToNewRelic } from "@/app/lib/apiHelpers";
-import { EMAIL } from "@/app/lib/constants"
+import { EMAIL, ERROR } from "@/app/lib/constants"
 
 
 export async function GET(request) {
@@ -16,8 +16,7 @@ export async function GET(request) {
 
         return NextResponse.json({ success: true, message: result }, { status: 200 });
     } catch (error) {
-        console.log("/GET vendorUser, error", error)
-        sendLogToNewRelic(error)
+        sendLogToNewRelic(ERROR, `requestUrl: GET ${request.nextUrl.href} \n` + error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 
@@ -37,8 +36,7 @@ export async function PUT(request) {
         })
         return NextResponse.json({ success: true, message: updateUser }, { status: 200 });
     } catch (error) {
-        console.log("/PUT vendorUser, error", error)
-        sendLogToNewRelic(error)
+        sendLogToNewRelic(ERROR, `requestUrl: ${request.nextUrl.href} \n body: ${data} \n` + error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 }

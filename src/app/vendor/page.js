@@ -68,7 +68,6 @@ import {
 import {
     deleteListingByAddressId,
     getListingsByActive,
-    updateVendorUser
 } from "../lib/apiHelpers";
 import { convertToFullCalendarEvent } from '../lib/fullCalendar/event-utils';
 
@@ -120,6 +119,9 @@ export default function Vendor() {
                 if (inActiveListingsResp.success) {
                     setInActiveListings(inActiveListingsResp.message)
                 }
+                if (!activeListingsResp.success || !inActiveListingsResp.success) {
+                    setOpenErrorAlert(true)
+                }
                 setUpdateListing(false)
                 setIsFetching(false)
                 router.refresh()
@@ -131,7 +133,6 @@ export default function Vendor() {
         if (session) {
             fetchData().catch(() => {
                 setIsFetching(false)
-                setOpenErrorAlert(true)
             })
         } else {
             setIsFetching(true)

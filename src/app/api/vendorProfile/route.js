@@ -6,6 +6,7 @@ import {
     ADDRESS_LINE_2,
     CITY_CC,
     EMAIL_CC,
+    ERROR,
     ID,
     LOGO_FILENAME,
     MENU_FILENAME,
@@ -36,8 +37,7 @@ export async function GET(request) {
         })
         return NextResponse.json({ success: true, message: result }, { status: 200 });
     } catch (error) {
-        console.log("POST /vendorProfile", error)
-        sendLogToNewRelic(error)
+        sendLogToNewRelic(ERROR, `requestUrl: GET ${request.nextUrl.href} \n` + error)
         return NextResponse.json({ success: false, message: error.message }, { status: 400 });
     }
 }
@@ -67,8 +67,7 @@ export async function POST(request) {
 
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
-        console.log("POST /vendorProfile", error)
-        sendLogToNewRelic(error)
+        sendLogToNewRelic(ERROR, `requestUrl: POST ${request.nextUrl.href} \n` + error)
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }

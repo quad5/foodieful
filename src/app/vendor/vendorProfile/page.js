@@ -50,7 +50,6 @@ export default function VendorProfile() {
         const fetchData = async () => {
             const user = await getVendorUserByEmail(session?.user.email)
 
-
             if (user.success) {
                 setVendorUser(user.message)
                 const vendorId = user.message.vendorProfileId
@@ -59,14 +58,17 @@ export default function VendorProfile() {
                 if (profile.success) {
                     setVendorProfile(profile.message)
                     setIsFetching(false)
+                } else {
+                    setOpenErrorAlert(true)
                 }
+            } else {
+                setOpenErrorAlert(true)
             }
         }
 
         if (session) {
             fetchData().catch(() => {
                 setIsFetching(false)
-                setOpenErrorAlert(true)
             })
         } else {
             setIsFetching(true)

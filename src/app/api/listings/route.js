@@ -4,6 +4,7 @@ import { sendLogToNewRelic } from "@/app/lib/apiHelpers";
 import {
     ACTIVE_LISTING,
     EMAIL,
+    ERROR,
     ID,
     PIT_STOP_ADDRESS,
     SCHEDULES,
@@ -44,7 +45,7 @@ export async function DELETE(request) {
 
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
-        sendLogToNewRelic(error)
+        sendLogToNewRelic(ERROR, `requestUrl: DELETE ${request.nextUrl.href} \n` + error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 }
@@ -60,7 +61,6 @@ export async function GET(request) {
             result = await prisma.pitStopAddress.findUnique({
                 where: {
                     [DB_ID]: addressId,
-                    // [DB_ID]: null
                 },
                 include: {
                     schedule: true
@@ -121,10 +121,8 @@ export async function GET(request) {
 
         return NextResponse.json({ success: true, message: result }, { status: 200 });
     } catch (error) {
-        console.log("__in GET /listings", error)
-        sendLogToNewRelic(error)
+        sendLogToNewRelic(ERROR, `requestUrl: GET ${request.nextUrl.href} \n` + error)
         return NextResponse.json({ success: false });
-
     }
 }
 
@@ -187,8 +185,7 @@ export async function POST(request) {
 
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
-        console.log("__ POST /listings, ", error)
-        sendLogToNewRelic(error)
+        sendLogToNewRelic(ERROR, `requestUrl: POST ${request.nextUrl.href} \n body: ${data} \n` + error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 }
@@ -243,8 +240,7 @@ export async function PUT(request) {
         })
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
-        console.log("__ PUT /listings, ", error)
-        sendLogToNewRelic(error)
+        sendLogToNewRelic(ERROR, `requestUrl: PUT ${request.nextUrl.href} \n body: ${data} \n` + error)
         return NextResponse.json({ success: false }, { status: 400 });
     }
 }

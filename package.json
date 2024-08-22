@@ -7,6 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "prod_w_seed": "npx prisma migrate deploy && npx prisma db seed && node server.js",
     "prod": "npx prisma migrate deploy && node server.js"
   },
   "prisma": {
@@ -23,13 +24,11 @@
     "@hookform/resolvers": "^3.4.2",
     "@mui/icons-material": "^5.16.4",
     "@mui/material-nextjs": "^5.16.4",
-    "@prisma/client": "^5.13.0",
-    "material-ui-popup-state": "^5.1.2",
+    "@prisma/client": "^5.18.0",
     "next": "latest",
     "next-auth": "beta",
     "pg": "^8.11.5",
-    "pino": "^9.3.2",
-    "prisma": "^5.13.0",
+    "prisma": "^5.18.0",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.51.5",

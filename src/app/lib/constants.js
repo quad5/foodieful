@@ -18,6 +18,7 @@ export const EDIT = 'edit';
 export const EDIT_LISTING_CC = 'Edit Listing';
 export const EMAIL = 'email';
 export const EMAIL_CC = 'Email';
+export const ERROR = 'ERROR';
 export const EXPAND_ALL_CC = 'Expand All';
 export const FAQS = 'FAQs';
 export const FILE_BRACKET = 'file[]';
