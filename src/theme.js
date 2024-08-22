@@ -18,7 +18,9 @@ const theme = createTheme({
     },
 
 
-    primary: deepOrange,
+    primary: {
+      main: deepOrange[500],
+    },
     secondary: {
       main: teal[500],
       secondary: teal[200],
