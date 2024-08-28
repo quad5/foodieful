@@ -1,10 +1,13 @@
 
-import prisma from "../src/app/lib/prisma.js";
+// import prisma from "../src/app/lib/prisma.js";
 // import profile from "../src/data/vendorsProfile.json" assert { type: 'json' }
 // import user from "../src/data/vendorsUser.json" assert { type: 'json' }
+
+import { PrismaClient } from "@prisma/client"
 import fs from "fs"
 import readline from "readline"
 
+const prisma = new PrismaClient();
 
 function seedVendorsProfile() {
     Promise.all(profile.map(d => prisma.vendorProfile.create({ data: d })))
@@ -19,15 +22,17 @@ function seedVendorsUser() {
 }
 
 function loadZipCodeData() {
-    const stream = fs.createReadStream("./src/data/zip_code_database_updated.csv");
+    const stream = fs.createReadStream("./prisma/zip_code_database_updated.csv");
     const reader = readline.createInterface({ input: stream });
 
-    reader.on("line", row => {
+
+    reader.on("line", async row => {
+
         const removedQuotes = row.replace(/\"/g, "")
         const splitted = removedQuotes.split(",");
 
         if (splitted[6] === 'US') {
-            prisma.zipCode.create({
+            await prisma.zipCode.create({
                 data: {
                     zipCode: splitted[0],
                     decommissioned: splitted[1] === 0,
@@ -38,10 +43,15 @@ function loadZipCodeData() {
                     latitude: splitted[7],
                     longitude: splitted[8]
                 }
-            }).catch(e => console.error('[SEED] Failed to create zip code', e))
+            })
         }
-    });
+    })
 }
+
+
+
+
+
 
 
 //seedVendorsProfile();
