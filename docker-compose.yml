@@ -4,6 +4,8 @@ services:
     container_name: nextjs
     ports:
       - "3000:3000"
+    volumes:
+     - nextjs:/var/lib/nextjs/data
     restart: always
     depends_on:
       db_postgres:
@@ -46,3 +48,4 @@ services:
 
 volumes:
   db_postgres:
+  nextjs:
