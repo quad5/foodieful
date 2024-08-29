@@ -111,12 +111,19 @@ export default function HomePage() {
                     {/* This TextField is causing "Warning: Extra attributes from the server: data-ddg-inputtype" on DuckDuckGo browser */}
                     <TextField
                         disabled={isFetching}
-                        sx={{ backgroundColor: "common.white", color: 'black', width: '100%', marginRight: 2, marginY: 2 }}
                         error={!!errorContent}
                         helperText={errorContent}
                         InputLabelProps={{ shrink: true }}
+                        label="Enter a zip code to search for food truck's locations and hours"
                         onChange={handleZipCode}
-                        placeholder="Enter a valid zip code to search for food truck's locations and hours" />
+                        sx={{
+                            backgroundColor: "common.white",
+                            color: 'black',
+                            width: '100%',
+                            marginRight: 2,
+                            marginY: 2,
+                        }}
+                    />
                 </Box>
             </Container>
             {zipCode && <Pagination api={getLocationsURL(zipCode)} card={ListingCard} />}

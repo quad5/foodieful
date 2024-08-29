@@ -285,8 +285,8 @@ export default function Listings() {
                             }}>
                             <Stack
                                 display='flex'
-                                direction={{ xs: 'column', sm: 'column', md: 'row' }} >
-                                <CardContent sx={{ width: { xs: '100%', sm: '100%', md: '65%' } }}>
+                                direction={{ xs: 'column', md: 'row' }} >
+                                <CardContent sx={{ width: { xs: '100%', md: '65%' } }}>
 
                                     <Divider>{OPERATING_HOURS_CC}</Divider>
                                     <FullCalendar
@@ -309,7 +309,7 @@ export default function Listings() {
                                         weekends={true} />
                                 </CardContent>
 
-                                <CardContent sx={{ width: { xs: '100%', sm: '100%', md: '35%' } }}>
+                                <CardContent sx={{ width: { xs: '100%', md: '35%' } }}>
                                     <form onSubmit={handleSubmit(onSubmit)}>
                                         <Stack
                                             direction={'column'}
@@ -431,9 +431,9 @@ export default function Listings() {
 
                             <Stack
                                 display='flex'
-                                direction={{ xs: 'column', sm: 'column', md: 'row' }} >
+                                direction={{ xs: 'column', md: 'row' }} >
 
-                                <CardContent sx={{ width: { xs: '100%', sm: '100%', md: '65%' } }}>
+                                <CardContent sx={{ width: { xs: '100%', md: '65%' } }}>
                                     <Divider>{OPERATING_HOURS_CC}</Divider>
                                     <FullCalendar
                                         allDaySlot={false}
@@ -455,7 +455,7 @@ export default function Listings() {
                                         weekends={true} />
                                 </CardContent>
 
-                                <CardContent sx={{ width: { xs: '100%', sm: '100%', md: '35%' } }} >
+                                <CardContent sx={{ width: { xs: '100%', md: '35%' } }} >
                                     <form onSubmit={handleSubmit(onSubmit)}>
                                         <Stack
                                             direction={'column'}

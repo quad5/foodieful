@@ -6,11 +6,8 @@ import {
     Collapse,
     Container,
     Divider,
-    List,
-    ListItem,
     ListItemButton,
     ListItemIcon,
-    ListItemText,
     Stack,
     Typography
 } from '@mui/material';
@@ -47,6 +44,10 @@ export default function Page() {
         {
             [QUESTION_CC]: "Can food truck vendors list multiple pit stop location’s addresses?",
             [ANSWER_CC]: "Yes! In addition, the site allows vendors to activate and deactivate listings."
+        },
+        {
+            [QUESTION_CC]: "How do I select the time on the calendar?",
+            [ANSWER_CC]: "You place the mouse onto the start hour and the day of the week you want, then press and hold the mouse to the end hour."
         },
         {
             [QUESTION_CC]: "Can food truck vendors list multiple pit stop location’s operating hours?",
@@ -94,12 +95,8 @@ export default function Page() {
                                 key={index}
                                 spacing={3}
                                 sx={{
-                                    backgroundColor: theme.palette.primary[500],
+                                    backgroundColor: theme.palette.primary.main,
                                     color: 'common.white',
-                                    ":hover": {
-                                        backgroundColor: theme.palette.primary[500],
-                                        color: 'common.white',
-                                    }
                                 }}>
                                 <Stack
                                     direction='column'
@@ -107,9 +104,14 @@ export default function Page() {
                                     flex={1}>
                                     <ListItemButton
                                         onClick={() => handleClick(index)}>
-                                        <ListItemText
-                                            primary={i[QUESTION_CC]} />
-                                        <ListItemIcon>
+                                        <Typography
+                                            align='left'
+                                            sx={{ color: 'common.black', marginTop: 4 }}
+                                            variant='h5'>
+                                            {i[QUESTION_CC]}
+                                        </Typography>
+                                        <ListItemIcon
+                                            sx={{ marginLeft: 'auto' }}>
                                             {index === selectedIndex ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
                                         </ListItemIcon>
                                     </ListItemButton>
@@ -117,29 +119,23 @@ export default function Page() {
                                     <Collapse
                                         in={index === selectedIndex}
                                         timeout="auto" unmountOnExit>
-                                        <List
+                                        <Typography
                                             sx={{
                                                 backgroundColor: theme.palette.secondary.main,
-                                                color: 'common.white',
-                                                ml: 2,
-                                                ":hover": {
-                                                    backgroundColor: theme.palette.secondary.main,
-                                                    color: 'common.white',
-                                                }
-                                            }}>
-                                            <ListItem>
-                                                <ListItemText>
-                                                    {i[ANSWER_CC]}
-                                                </ListItemText>
-                                            </ListItem>
-                                        </List>
+                                                color: 'common.black',
+                                                paddingY: 3,
+                                                paddingLeft: 5
+                                            }}
+                                            variant='h5'>
+                                            {i[ANSWER_CC]}
+                                        </Typography>
                                     </Collapse>
                                 </Stack>
                                 <Divider
                                     orientation="horizontal"
                                     flexItem
                                     sx={{
-                                        borderBottomWidth: 10,
+                                        borderBottomWidth: index < faq.length - 1 ? 10 : 0,
                                         borderColor: 'white'
                                     }} />
                             </Stack>
