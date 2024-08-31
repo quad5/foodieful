@@ -15,7 +15,7 @@ export default function Terms() {
 
             <Box marginX={2}>
                 <Typography variant='body' color='white' >
-                    This website ("Site") is owned and operated by Foodieful ("we", "us" or "Company"). By accessing and using this Site and its related software, networks, and processes, including the purchase of any products or services through this Site, you are agreeing to these Terms of Service ("Terms"). If you do not agree to these Terms, do not use this Site.
+                    This website ({`"`}Site{`"`}) is owned and operated by Foodieful ({`"`}we{`"`}, {`"`}us{`"`} or {`"`}Company{`"`}). By accessing and using this Site and its related software, networks, and processes, including the purchase of any products or services through this Site, you are agreeing to these Terms of Service ({`"`}Terms{`"`}). If you do not agree to these Terms, do not use this Site.
                 </Typography>
             </Box>
 
@@ -76,7 +76,7 @@ export default function Terms() {
 
             <Box marginX={2}>
                 <Typography variant='body' color='white'>
-                    The site, including, without limitation, all content, functions, and materials is provided "as is," without warranty of any kind, either express or implied.
+                    The site, including, without limitation, all content, functions, and materials is provided {`"`}as is,{`"`} without warranty of any kind, either express or implied.
                 </Typography>
             </Box>
 
@@ -96,7 +96,7 @@ export default function Terms() {
 
             <Box marginX={2}>
                 <Typography variant='body' color='white'>
-                    You will indemnify and hold us, and our subsidiaries, affiliates, officers, agents, and employees, harmless from any claim or demand, including reasonable attorneys' fees, made by any third party due to or arising out of your use of the Site, the violation of these Terms by you, or the infringement by you, or any other user of the Site using your account, of any intellectual property or other right of any person or entity.
+                    You will indemnify and hold us, and our subsidiaries, affiliates, officers, agents, and employees, harmless from any claim or demand, including reasonable attorneys{`'`} fees, made by any third party due to or arising out of your use of the Site, the violation of these Terms by you, or the infringement by you, or any other user of the Site using your account, of any intellectual property or other right of any person or entity.
                 </Typography>
             </Box>
 
@@ -141,7 +141,7 @@ export default function Terms() {
                                         A statement that you have a good faith belief that use of the copyrighted material in the manner complained of is not authorized by the copyright owner, its agent, or the law.
                                     </ListItem>
                                     <ListItem style={{ display: 'list-item' }}>
-                                        A statement, made under penalty of perjury, that the information in your notice is accurate, and that you are the copyright owner or are authorized to act on the copyright owner's behalf.
+                                        A statement, made under penalty of perjury, that the information in your notice is accurate, and that you are the copyright owner or are authorized to act on the copyright owner{`'`}s behalf.
                                     </ListItem>
                                     <ListItem style={{ display: 'list-item' }}>
                                         An electronic or physical signature of the copyright owner or a person authorized to act on their behalf.
@@ -172,7 +172,7 @@ export default function Terms() {
                                         A statement under penalty of perjury that the subscriber has a good faith belief that the material was removed or disabled as a result of mistake or misidentification of the material to be removed or disabled.
                                     </ListItem>
                                     <ListItem style={{ display: 'list-item' }}>
-                                        The subscriber's name, address, and telephone number, and a statement that the subscriber consents to the jurisdiction of the Federal District Court for the judicial district in which the address is located.
+                                        The subscriber{`'`}s name, address, and telephone number, and a statement that the subscriber consents to the jurisdiction of the Federal District Court for the judicial district in which the address is located.
                                     </ListItem>
                                     <ListItem style={{ display: 'list-item' }}>
                                         A physical or electronic signature of the subscriber.

@@ -9,7 +9,7 @@ export default function Privacy() {
             </Typography>
 
             <Typography variant='body' color='white' >
-                This Privacy Policy describes how Foodieful ("we", "us", "our") collects, uses, shares, and safeguards your information.
+                This Privacy Policy describes how Foodieful ({`"we"`}, {`"us"`}, {`"our"`}) collects, uses, shares, and safeguards your information.
             </Typography>
 
 
@@ -19,7 +19,7 @@ export default function Privacy() {
 
             <Box marginX={2}>
                 <Typography variant='body' color='white'>
-                    This Privacy Policy applies to our website, applications, products, and services that link to this policy or otherwise refer you to this policy (collectively, our "Services").
+                    This Privacy Policy applies to our website, applications, products, and services that link to this policy or otherwise refer you to this policy (collectively, our {`"Services"`}).
 
                     We used Privacy Policy Ace to generate this Privacy Policy.
                 </Typography>
@@ -140,7 +140,7 @@ export default function Privacy() {
 
                     <List sx={{ listStyleType: 'disc', pl: 4 }}>
                         <ListItem style={{ display: 'list-item' }}>
-                            Our ad provider may use cookies to serve ads based on that user's interests.
+                            Our ad provider may use cookies to serve ads based on that user{`'`}s interests.
                         </ListItem>
                         <ListItem style={{ display: 'list-item' }}>
                             It may be possible to opt out of personalized advertising for our provider.
@@ -151,10 +151,10 @@ export default function Privacy() {
 
                     <List sx={{ listStyleType: 'disc', pl: 4 }}>
                         <ListItem style={{ display: 'list-item' }}>
-                            Third party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites.
+                            Third party vendors, including Google, use cookies to serve ads based on a user{`'`}s prior visits to this website or other websites.
                         </ListItem>
                         <ListItem style={{ display: 'list-item' }}>
-                            Google's use of advertising cookies enables it and its partners to serve ads based on your visit to our sites and/or other sites on the Internet.
+                            Google{`'`}s use of advertising cookies enables it and its partners to serve ads based on your visit to our sites and/or other sites on the Internet.
                         </ListItem>
                         <ListItem style={{ display: 'list-item' }}>
                             You may opt out of personalized advertising by visiting www.aboutads.info.
@@ -194,7 +194,7 @@ export default function Privacy() {
             </Box>
 
             <Typography variant='h5' color='white' marginY={2}>
-                Children's Privacy
+                Children{`'`}s Privacy
             </Typography>
 
             <Box marginX={2}>
