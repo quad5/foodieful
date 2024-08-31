@@ -90,12 +90,13 @@ export default function HomePage() {
             </div>
 
             <Container
+
                 maxWidth='sm'
                 sx={{
                     alignItems: 'center',
                     display: 'flex',
                     justifyContent: 'center',
-                    marginTop: { md: '15%', xs: '50%' }
+                    marginTop: { sm: '15%', xs: '50%' }
                 }}>
                 <Box
                     sx={{

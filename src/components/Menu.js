@@ -2,7 +2,6 @@
 
 import {
     Fragment,
-    useState
 } from 'react';
 import {
     signOut,
@@ -11,6 +10,7 @@ import {
 import { useRouter } from 'next/navigation'
 import {
     AppBar,
+    Box,
     Card,
     CardActionArea,
     CardMedia,
@@ -22,13 +22,13 @@ import DropDownMenu from "@/components/DropDownMenu"
 import SignIn from "./SignIn";
 import { signInHelperFn } from '@/app/lib/accessHelpers'
 import {
-    FAQS,
+    COMPANY_CC,
     SIGN_OUT_CC,
     VENDOR_MENU_CC,
     VENDOR_SIGN_IN_CC,
     VENDOR_SIGN_UP_CC
 } from "@/app/lib/constants";
-import { vendorMenu } from "@/app/lib/menus";
+import { companyMenu, vendorMenu } from "@/app/lib/menus";
 
 
 export default function Menu() {
@@ -39,11 +39,14 @@ export default function Menu() {
     return (
         <Fragment>
             <AppBar position="static">
-                <Container maxWidth="xl">
-                    <Toolbar disableGutters>
+                <Container maxWidth="xl" sx={{ paddingX: 0 }}>
+                    <Toolbar sx={{
+                        marginY: { xs: 2, sm: 0 }, paddingX: 0
+                    }}>
                         <Card
                             square={true}
-                            sx={{ mr: { xs: 3 } }}>
+                            sx={{ marginLeft: { xs: 0, sm: 1 } }}>
+
                             <CardActionArea onClick={() => router.push("/")}>
                                 <CardMedia
                                     component="img"
@@ -74,17 +77,18 @@ export default function Menu() {
                         </Drawer> */}
 
 
-                        {/* <Stack direction={'row'} spacing={2} marginLeft={'auto'} sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}> */}
                         <Stack
                             direction={'row'}
                             marginLeft={'auto'}
-                            spacing={2}>
+                            marginRight={{ xs: 'auto', md: 0 }}
+                            paddingX={0.5}
+                            spacing={{ xs: 0.5, sm: 2 }}>
 
                             <DropDownMenu
                                 fn={() => { router.push('/faq') }}
-                                menu={[]}
-                                menuName={FAQS}
-                                singleLevel={true} />
+                                menu={companyMenu()}
+                                menuName={COMPANY_CC}
+                                singleLevel={false} />
 
                             {session && <DropDownMenu
                                 menu={vendorMenu()}

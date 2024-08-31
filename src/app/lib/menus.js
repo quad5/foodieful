@@ -5,18 +5,22 @@ import {
 } from "./constants"
 
 
-// export function companyMenu() {
-//     return [
-//         {
-//             title: 'Home Page',
-//             link: '/'
-//         },
-//         {
-//             title: 'FAQs',
-//             link: '/faq'
-//         }
-//     ]
-// }
+export function companyMenu() {
+    return [
+        {
+            title: 'FAQs',
+            link: '/faq'
+        },
+        {
+            title: 'Privacy',
+            link: '/privacy'
+        },
+        {
+            title: 'Terms of Service',
+            link: '/terms'
+        },
+    ]
+}
 
 export function vendorMenu() {
     return [

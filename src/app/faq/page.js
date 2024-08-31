@@ -83,7 +83,7 @@ export default function Page() {
                     marginBottom: { xs: '20%' }
                 }}
                 maxWidth='sm'
-                disableGutters>
+            >
                 <Card
                     sx={{
                         display: 'flex',

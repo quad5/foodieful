@@ -2,6 +2,7 @@
 import { Suspense } from 'react';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
+import { Container } from '@mui/material'
 import Menu from "@/components/Menu";
 import Script from 'next/script'
 import { SessionProvider } from 'next-auth/react';
@@ -27,7 +28,9 @@ export default async function RootLayout({ children }) {
               <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Menu />
-                {children}
+                <Container disableGutters>
+                  {children}
+                </Container>
               </ThemeProvider>
             </AppRouterCacheProvider>
           </Suspense>
