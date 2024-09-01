@@ -12,6 +12,7 @@ import {
 import { usePathname, useRouter } from 'next/navigation'
 import {
     AppBar,
+    Box,
     Card,
     CardActionArea,
     CardMedia,
@@ -54,6 +55,7 @@ export default function Menu() {
     const menus = () => {
         return (
             <>
+
                 <DropDownMenu
                     fn={() => { router.push('/faq') }}
                     menu={companyMenu()}
@@ -104,9 +106,12 @@ export default function Menu() {
                             component="img"
                             image="/logo.png"
                             sx={{
-                                height: 70,
-                                width: 70,
-                            }} />
+                                height: 100,
+                                width: 100,
+
+
+                            }}
+                        />
                     </CardActionArea>
                 </Card>
 
@@ -131,6 +136,7 @@ export default function Menu() {
 
                     {<ClickAwayListener onClickAway={handleClickAway}>
                         <Stack
+
                             marginY={2}
                             direction={'row'}
                             marginLeft={'auto'}
@@ -144,6 +150,7 @@ export default function Menu() {
                 </Drawer>
 
                 <Stack
+
                     marginY={2}
                     direction={'row'}
                     display={{ xs: 'none', sm: 'flex' }}

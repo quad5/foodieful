@@ -39,11 +39,17 @@ export default function DropDownMenu(props) {
       selected={!!pathname && o.link === pathname}
       sx={{
         '&.Mui-selected': {
-          backgroundColor: theme.palette.primary.main,
-          "&:hover": { backgroundColor: "red" }
+          alignContent: 'center',
+          backgroundColor: 'white',
+          display: "list-item",
+          listStylePosition: 'inside',
+          listStyleType: "disc",
+          ":hover": {
+            backgroundColor: theme.palette.primary.main,
+          }
         },
         ":hover": {
-          backgroundColor: theme.palette.secondary.main,
+          backgroundColor: theme.palette.primary.main,
         }
       }}>
       {o.title}
@@ -55,13 +61,15 @@ export default function DropDownMenu(props) {
       <Button
         endIcon={!props.singleLevel && <ExpandMore />}
         onClick={props.singleLevel ? props.fn : handleClick}
+        size='large'  // Need this and width to make other buttons same size 
         sx={{
           backgroundColor: 'common.black',
           color: 'white',
           ":hover": {
             backgroundColor: "white",
             color: 'black'
-          }
+          },
+          width: 120
         }}
         type="submit"
         variant='contained'>
@@ -69,6 +77,7 @@ export default function DropDownMenu(props) {
       </Button>
 
       {!props.singleLevel && <Menu
+
         anchorEl={anchorEl}
         onClose={handleClose}
         open={Boolean(anchorEl)}>
