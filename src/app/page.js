@@ -108,7 +108,7 @@ export default function HomePage() {
                         paddingX: 1
                     }}>
 
-                    <Typography variant='h5' sx={{ marginTop: 1, marginX: 1 }}>
+                    <Typography variant='body' sx={{ marginTop: 1, marginX: 1 }}>
                         Enter a valid zip code to search for food truck{`'`}s locations and hours
                     </Typography>
 

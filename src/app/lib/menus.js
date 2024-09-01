@@ -5,7 +5,7 @@ import {
 } from "./constants"
 
 
-export function companyMenu() {
+export function aboutUsMenu() {
     return [
         {
             title: 'FAQs',

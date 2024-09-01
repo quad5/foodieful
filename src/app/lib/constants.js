@@ -1,4 +1,4 @@
-
+export const ABOUT_US_CC = 'About Us';
 export const ACTIVE_LISTING = 'activeListing';
 export const ACTIVE_LISTING_CC = 'Active Listing';
 export const ACTIVE_LISTINGS_CC = 'Active Listings';

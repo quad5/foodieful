@@ -69,7 +69,7 @@ export default function DropDownMenu(props) {
             backgroundColor: "white",
             color: 'black'
           },
-          width: 120
+          width: 120,
         }}
         type="submit"
         variant='contained'>

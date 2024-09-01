@@ -26,13 +26,14 @@ import DropDownMenu from "@/components/DropDownMenu"
 import SignIn from "./SignIn";
 import { signInHelperFn } from '@/app/lib/accessHelpers'
 import {
+    ABOUT_US_CC,
     COMPANY_CC,
     SIGN_OUT_CC,
     VENDOR_MENU_CC,
     VENDOR_SIGN_IN_CC,
     VENDOR_SIGN_UP_CC
 } from "@/app/lib/constants";
-import { companyMenu, vendorMenu } from "@/app/lib/menus";
+import { aboutUsMenu, vendorMenu } from "@/app/lib/menus";
 import theme from '@/theme';
 
 
@@ -55,11 +56,10 @@ export default function Menu() {
     const menus = () => {
         return (
             <>
-
                 <DropDownMenu
                     fn={() => { router.push('/faq') }}
-                    menu={companyMenu()}
-                    menuName={COMPANY_CC}
+                    menu={aboutUsMenu()}
+                    menuName={ABOUT_US_CC}
                     singleLevel={false} />
 
                 {
@@ -96,7 +96,7 @@ export default function Menu() {
 
     return (
         <Fragment>
-            <AppBar position="static" sx={{ flexDirection: 'row' }}>
+            <AppBar position="static" sx={{ flexDirection: 'row', height: 100 }}>
                 <Card
                     square={true}
                     sx={{ marginLeft: 4 }}>
@@ -108,8 +108,6 @@ export default function Menu() {
                             sx={{
                                 height: 100,
                                 width: 100,
-
-
                             }}
                         />
                     </CardActionArea>
@@ -122,7 +120,7 @@ export default function Menu() {
                         marginRight: 'auto',
                         paddingLeft: 2
                     }}>
-                    <MenuIcon />
+                    <MenuIcon fontSize='large' />
                 </IconButton>
 
                 <Drawer
@@ -150,7 +148,6 @@ export default function Menu() {
                 </Drawer>
 
                 <Stack
-
                     marginY={2}
                     direction={'row'}
                     display={{ xs: 'none', sm: 'flex' }}
@@ -158,7 +155,6 @@ export default function Menu() {
                     marginRight={{ xs: 'auto', md: 0 }}
                     paddingX={4}
                     spacing={2}>
-
                     {menus()}
                 </Stack>
             </AppBar>
