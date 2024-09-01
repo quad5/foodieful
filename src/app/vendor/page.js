@@ -275,7 +275,6 @@ export default function Vendor() {
                                     }}
                                     initialView='timeGridWeek'
                                     initialEvents={convertToFullCalendarEvent(item.schedule)}
-                                    longPressDelay={1}
                                     plugins={[dayGridPlugin, timeGridPlugin]}
                                     selectable={false}
                                     weekends={true}

@@ -296,6 +296,7 @@ export default function Listings() {
                                         editable={!disableElement}
                                         eventClick={handleEventClick}
                                         eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+                                        eventStartEditable={false}
                                         headerToolbar={{
                                             left: '',
                                             center: '',
@@ -303,10 +304,10 @@ export default function Listings() {
                                         }}
                                         initialView='timeGridWeek'
                                         initialEvents={[]}
-                                        longPressDelay={1}
                                         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                                         select={handleDateSelect}
                                         selectable={!disableElement}
+                                        selectLongPressDelay={1}
                                         weekends={true} />
                                 </CardContent>
 
@@ -443,6 +444,7 @@ export default function Listings() {
                                         editable={!disableElement}
                                         eventClick={handleEventClick}
                                         eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+                                        eventStartEditable={false}
                                         headerToolbar={{
                                             left: '',
                                             center: '',
@@ -450,10 +452,10 @@ export default function Listings() {
                                         }}
                                         initialView='timeGridWeek'
                                         initialEvents={convertToFullCalendarEvent(existingSchedules)}
-                                        longPressDelay={1}
                                         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                                         select={handleDateSelect}
                                         selectable={!disableElement}
+                                        selectLongPressDelay={1}
                                         weekends={true} />
                                 </CardContent>
 
