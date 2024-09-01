@@ -13,6 +13,7 @@ import {
   MenuItem
 } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import theme from '@/theme';
 
 
 
@@ -37,7 +38,11 @@ export default function DropDownMenu(props) {
       onClick={() => handleClose(o.link)}
       selected={!!pathname && o.link === pathname}
       sx={{
-        '&.Mui-selected': { textDecoration: 'underline' }
+        '&.Mui-selected': { backgroundColor: theme.palette.primary.main },
+        ":hover": {
+          backgroundColor: theme.palette.secondary.main,
+          color: 'black'
+        },
       }}>
       {o.title}
     </MenuItem>

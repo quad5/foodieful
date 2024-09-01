@@ -303,6 +303,7 @@ export default function Listings() {
                                         }}
                                         initialView='timeGridWeek'
                                         initialEvents={[]}
+                                        longPressDelay={1}
                                         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                                         select={handleDateSelect}
                                         selectable={!disableElement}
@@ -449,6 +450,7 @@ export default function Listings() {
                                         }}
                                         initialView='timeGridWeek'
                                         initialEvents={convertToFullCalendarEvent(existingSchedules)}
+                                        longPressDelay={1}
                                         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                                         select={handleDateSelect}
                                         selectable={!disableElement}

@@ -108,92 +108,94 @@ export default function VendorProfile() {
                 {VENDOR_PROFILE_CC}
             </Typography>
 
-            <Container
-                maxWidth='sm'
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginBottom: { xs: '20%' }
-                }}>
-                <Card>
-                    <Stack
-                        alignItems="center"
-                        direction={'row'}>
-                        <CardMedia
-                            component="img"
-                            height='100'
-                            image="/orange-4547207_1920.png"    // temporary image
-                            width='100' />
+            {/* <Container */}
+            {/* // maxWidth='sm'
+                // sx={{
+                //     display: 'flex',
+                //     justifyContent: 'center',
+                //     marginBottom: { xs: '20%' }
+                // }} */}
 
-                        <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Stack
-                                direction={'column'}
-                                spacing={2}>
+            {/* // > */}
+            <Card>
+                <Stack
+                    alignItems="center"
+                    direction={'row'}>
+                    <CardMedia
+                        component="img"
+                        height='100'
+                        image="/orange-4547207_1920.png"    // temporary image
+                        width='100' />
 
-                                <TextField
-                                    InputLabelProps={{ shrink: true }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    label={VENDOR_BUSINESS_NAME_CC}
-                                    size='small'
-                                    value={vendorProfile?.name || ""}
-                                    variant='filled' />
+                    <CardContent sx={{ flex: '1 0 auto' }}>
+                        <Stack
+                            direction={'column'}
+                            spacing={2}>
 
-                                <TextField
-                                    InputLabelProps={{ shrink: true }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    label={ADDRESS_LINE_1}
-                                    size='small'
-                                    value={vendorProfile?.addressLine1 || ""}
-                                    variant='filled' />
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                label={VENDOR_BUSINESS_NAME_CC}
+                                size='small'
+                                value={vendorProfile?.name || ""}
+                                variant='filled' />
 
-                                <TextField
-                                    InputLabelProps={{ shrink: true }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    label={ADDRESS_LINE_2}
-                                    size='small'
-                                    value={vendorProfile?.addressLine2 || ""}
-                                    variant='filled' />
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                label={ADDRESS_LINE_1}
+                                size='small'
+                                value={vendorProfile?.addressLine1 || ""}
+                                variant='filled' />
 
-                                <TextField
-                                    InputLabelProps={{ shrink: true }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    label={CITY_CC}
-                                    size='small'
-                                    value={vendorProfile?.city || ""}
-                                    variant='filled' />
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                label={ADDRESS_LINE_2}
+                                size='small'
+                                value={vendorProfile?.addressLine2 || ""}
+                                variant='filled' />
 
-                                <TextField
-                                    InputLabelProps={{ shrink: true }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    label={STATE_CC}
-                                    size='small'
-                                    value={vendorProfile?.state || ""}
-                                    variant='filled' />
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                label={CITY_CC}
+                                size='small'
+                                value={vendorProfile?.city || ""}
+                                variant='filled' />
 
-                                <TextField
-                                    InputLabelProps={{ shrink: true }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    label={ZIP_CODE_CC}
-                                    size='small'
-                                    value={vendorProfile?.zipCode || ""}
-                                    variant='filled' />
-                            </Stack>
-                        </CardContent>
-                    </Stack>
-                </Card>
-            </Container>
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                label={STATE_CC}
+                                size='small'
+                                value={vendorProfile?.state || ""}
+                                variant='filled' />
+
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                label={ZIP_CODE_CC}
+                                size='small'
+                                value={vendorProfile?.zipCode || ""}
+                                variant='filled' />
+                        </Stack>
+                    </CardContent>
+                </Stack>
+            </Card>
+            {/* </Container> */}
         </Fragment>
     )
 }

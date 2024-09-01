@@ -21,6 +21,18 @@ export default function sitemap() {
             priority: 0.9,
         },
         {
+            url: 'https://www.foodieful.net/privacy',
+            lastModified: new Date(),
+            changeFrequency: 'yearly',
+            priority: 0.5,
+        },
+        {
+            url: 'https://www.foodieful.net/terms',
+            lastModified: new Date(),
+            changeFrequency: 'yearly',
+            priority: 0.5,
+        },
+        {
             url: 'https://www.foodieful.net/vendor',
             lastModified: new Date(),
             changeFrequency: 'yearly',

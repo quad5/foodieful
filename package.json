@@ -22,6 +22,7 @@
     "@fullcalendar/react": "^6.1.13",
     "@fullcalendar/timegrid": "^6.1.13",
     "@hookform/resolvers": "^3.4.2",
+    "@mui/base": "5.0.0-beta.40",
     "@mui/icons-material": "^5.16.4",
     "@mui/material-nextjs": "^5.16.4",
     "@prisma/client": "^5.18.0",
