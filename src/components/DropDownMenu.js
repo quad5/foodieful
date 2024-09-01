@@ -38,11 +38,13 @@ export default function DropDownMenu(props) {
       onClick={() => handleClose(o.link)}
       selected={!!pathname && o.link === pathname}
       sx={{
-        '&.Mui-selected': { backgroundColor: theme.palette.primary.main },
+        '&.Mui-selected': {
+          backgroundColor: theme.palette.primary.main,
+          "&:hover": { backgroundColor: "red" }
+        },
         ":hover": {
           backgroundColor: theme.palette.secondary.main,
-          color: 'black'
-        },
+        }
       }}>
       {o.title}
     </MenuItem>
