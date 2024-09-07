@@ -13,6 +13,7 @@ import {
     DB_LOGO_FILENAME,
     DB_MENU_FILENAME,
     DB_NAME,
+    DB_PHONE_NUMBER,
     DB_ZIP_CODE
 } from "@/app/lib/dbFieldConstants";
 
@@ -66,6 +67,7 @@ export async function GET(request) {
                                 [DB_LOGO_FILENAME]: true,
                                 [DB_MENU_FILENAME]: true,
                                 [DB_NAME]: true,
+                                [DB_PHONE_NUMBER]: true,
                             },
                         }
                     }

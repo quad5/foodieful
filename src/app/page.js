@@ -10,8 +10,6 @@ import {
     Backdrop,
     Box,
     CircularProgress,
-    Container,
-    FormHelperText,
     IconButton,
     Stack,
     TextField,
@@ -92,55 +90,50 @@ export default function HomePage() {
                 </Backdrop>
             </div>
 
-            <Container
+            <Stack
+                direction={'column'}
                 sx={{
-                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    borderRadius: 1,
                     display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: { sm: '15%', xs: '50%' },
-                    maxWidth: 'sm'
+                    marginTop: { sm: '15%', xs: '40%' },
+                    mx: 'auto',
+                    paddingX: 1,
+                    width: { xs: '100%', sm: '60%' }
                 }}>
-                <Stack
+
+                <Typography variant='body' sx={{ marginTop: 1, marginX: 1 }}>
+                    Enter a valid zip code to search for food truck{`'`}s locations and hours
+                </Typography>
+
+                <Box
                     sx={{
-                        backgroundColor: 'white',
-                        borderRadius: 1,
-                        flexDirection: 'column',
-                        paddingX: 1
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: '100%'
                     }}>
+                    <IconButton>
+                        <SearchIcon />
+                    </IconButton>
 
-                    <Typography variant='body' sx={{ marginTop: 1, marginX: 1 }}>
-                        Enter a valid zip code to search for food truck{`'`}s locations and hours
-                    </Typography>
-
-                    <Box
+                    {/* This TextField is causing "Warning: Extra attributes from the server: data-ddg-inputtype" on DuckDuckGo browser */}
+                    <TextField
+                        disabled={isFetching}
+                        error={!!errorContent}
+                        helperText={errorContent}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={handleZipCode}
                         sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            width: '100%'
-                        }}>
-                        <IconButton>
-                            <SearchIcon />
-                        </IconButton>
-
-                        {/* This TextField is causing "Warning: Extra attributes from the server: data-ddg-inputtype" on DuckDuckGo browser */}
-                        <TextField
-                            disabled={isFetching}
-                            error={!!errorContent}
-                            helperText={errorContent}
-                            InputLabelProps={{ shrink: true }}
-                            onChange={handleZipCode}
-                            sx={{
-                                backgroundColor: "common.white",
-                                color: 'black',
-                                width: '100%',
-                                marginRight: 2,
-                                marginY: 2,
-                                marginLeft: 1
-                            }}
-                        />
-                    </Box>
-                </Stack>
-            </Container>
+                            backgroundColor: "white",
+                            color: 'black',
+                            width: '100%',
+                            marginRight: 2,
+                            marginY: 2,
+                            marginLeft: 1
+                        }}
+                    />
+                </Box>
+            </Stack>
             {zipCode && <Pagination api={getLocationsURL(zipCode)} card={ListingCard} />}
         </Fragment>
     )

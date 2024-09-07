@@ -14,3 +14,7 @@ export function getFileExtension(filename) {
 export const createUUIDFilename = (filename) => {
     return `${generateRandomUUID()}.${getFileExtension(filename)}`
 }
+
+export const hyphenatedPhoneNumber = (phoneNumber) => {
+    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`
+}

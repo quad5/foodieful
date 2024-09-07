@@ -14,6 +14,7 @@ import {
     DB_ACTIVE,
     DB_ADDRESS_LINE_1,
     DB_CITY,
+    DB_EMAIL,
     DB_ID,
     DB_STATE,
     DB_ZIP_CODE,
@@ -28,14 +29,14 @@ export async function DELETE(request) {
     try {
         await prisma.pitStopAddress.delete({
             where: {
-                id: parseInt(addressId, 10)
+                [DB_ID]: parseInt(addressId, 10)
             },
             include: {
                 vendorProfile: {
                     include: {
                         vendorUser: {
                             where: {
-                                email: email
+                                [DB_EMAIL]: email
                             }
                         },
                     }
@@ -84,11 +85,7 @@ export async function GET(request) {
                         [DB_ACTIVE]: {
                             equals: String(isActive).toLowerCase() === "true"
                         }
-
-
                     }
-
-
                 },
                 orderBy: {
                     createdAt: 'desc'
@@ -127,6 +124,7 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+
     const data = await request.json();
     const email = request.nextUrl.searchParams.get(EMAIL)
     let addAddressResult = {}

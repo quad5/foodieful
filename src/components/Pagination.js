@@ -72,7 +72,7 @@ export default function Pagination(props) {
                 align="center"
                 mt={4}
                 variant="h5"
-                sx={{ color: "common.white" }}>
+                sx={{ color: "white" }}>
                 {NO_LISTING_FOUND_CC}
             </Typography>}
 

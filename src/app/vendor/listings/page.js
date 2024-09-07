@@ -19,7 +19,6 @@ import {
     Card,
     CardContent,
     CircularProgress,
-    Container,
     Divider,
     FormControlLabel,
     Stack,
@@ -40,14 +39,15 @@ import { generateRandomUUID } from '@/app/lib/utils';
 import {
     ACTIVE_LISTING,
     ACTIVE_LISTING_CC,
-    ADD,
     ADDRESS_LINE_1,
     ADD_LISTING_CC,
     CITY_CC,
+    CREATE,
     EDIT,
     EDIT_LISTING_CC,
     ID,
     MODE,
+    NO_ACTION_TAKEN_CC,
     OPERATING_HOURS_CC,
     PIT_STOP_ADDRESS,
     PIT_STOP_ADDRESS_CC,
@@ -90,13 +90,16 @@ export default function Listings() {
     const { data: session, status } = useSession();
     const [activeListing, setActiveListing] = useState(true);
     const [addressLine1, setAddressLine1] = useState('')
+    const [alertMessage, setAlertMessage] = useState('')
     const [city, setCity] = useState('')
     const [currentEvents, setCurrentEvents] = useState([])
     const [disableElement, setDisableElement] = useState(false)
     const [existingSchedules, setExistingSchedules] = useState([])
+    const [formHasChanged, setFormHasChanged] = useState(false)
     const [isFetching, setIsFetching] = useState(true)
     const [openErrorAlert, setOpenErrorAlert] = useState(false)
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false)
+    const [processingZipcode, setProcessingZipcode] = useState(false)
     const [state, setState] = useState('')
     const [zipCode, setZipCode] = useState('')
     const [zipCodeError, setZipCodeError] = useState('')
@@ -162,11 +165,21 @@ export default function Listings() {
         setDisableElement(true)
     }
 
+    const handleFormOnChange = () => {
+        if (!formHasChanged) {
+            setFormHasChanged(true)
+        }
+        setOpenErrorAlert(false)
+        setOpenSuccessAlert(false)
+    }
+
     const handleZipCode = async (e) => {
         setZipCode(e.target.value)
 
         if (e.target.value.length === 5) {
+            setProcessingZipcode(true)
             const result = await getZipCodeDetails(e.target.value)
+            setProcessingZipcode(false)
 
             if (result.success) {
                 setCity(result.message.city)
@@ -187,38 +200,44 @@ export default function Listings() {
         data[CITY_CC] = city
         data[STATE_CC] = state
 
-        if (!zipCodeError) {
-            let response = {}
+        if (formHasChanged) {
+            if (!zipCodeError) {
+                let response = {}
 
-            // create address object
-            const address = {
-                [DB_ADDRESS_LINE_1]: data[ADDRESS_LINE_1],
-                [DB_CITY]: city,
-                [DB_STATE]: state,
-                [DB_ZIP_CODE]: data[ZIP_CODE_CC]
+                // create address object
+                const address = {
+                    [DB_ADDRESS_LINE_1]: data[ADDRESS_LINE_1],
+                    [DB_CITY]: city,
+                    [DB_STATE]: state,
+                    [DB_ZIP_CODE]: data[ZIP_CODE_CC]
+                }
+
+                if (mode === CREATE) {
+                    response = await createListing({
+                        [PIT_STOP_ADDRESS]: address,
+                        [SCHEDULES]: currentEvents,
+                        [ACTIVE_LISTING]: activeListing,
+                    }, session.user.email)
+
+                } else {    // edit
+                    response = await updateListingByAddressId({
+                        [PIT_STOP_ADDRESS]: address,
+                        [SCHEDULES]: currentEvents,
+                        [ACTIVE_LISTING]: activeListing,
+                    }, itemId)
+                }
+
+                if (response.success) {
+                    mode === CREATE ? setAlertMessage(SUCCESSFULLY_CREATED_LISTING_CC) : setAlertMessage(SUCCESSFULLY_UPDATED_LISTING_CC)
+                    setDisableElement(true)
+                    setOpenSuccessAlert(true)
+                } else {
+                    setOpenErrorAlert(true)
+                }
             }
-
-            if (mode === ADD) {
-                response = await createListing({
-                    [PIT_STOP_ADDRESS]: address,
-                    [SCHEDULES]: currentEvents,
-                    [ACTIVE_LISTING]: activeListing,
-                }, session.user.email)
-
-            } else {    // edit
-                response = await updateListingByAddressId({
-                    [PIT_STOP_ADDRESS]: address,
-                    [SCHEDULES]: currentEvents,
-                    [ACTIVE_LISTING]: activeListing,
-                }, itemId)
-            }
-
-            if (response.success) {
-                setOpenSuccessAlert(true)
-                setDisableElement(true)
-            } else {
-                setOpenErrorAlert(true)
-            }
+        } else {
+            setAlertMessage(NO_ACTION_TAKEN_CC)
+            setOpenSuccessAlert(true)
         }
     }
 
@@ -245,23 +264,31 @@ export default function Listings() {
         setCurrentEvents(events)
     }
 
-    function addMode() {
+    function createMode() {
         return (
             <Fragment>
-                <Typography
-                    align='center'
-                    sx={{ color: 'common.white', marginY: '5%' }}
-                    variant='h3'>
-                    {ADD_LISTING_CC}
-                </Typography>
+                {!isFetching && <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}>
+                    <Typography
+                        align='center'
+                        sx={{ color: 'white', marginBottom: 4 }}
+                        variant='h3'>
+                        {ADD_LISTING_CC}
+                    </Typography>
 
-                <Container
-                    maxWidth='md'
-                    sx={{ display: 'flex', justifyContent: 'center', maxHeight: 'xs' }}>
                     <Box
-                        display='flex'
-                        flexDirection='column'
-                        width='100%' >
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            maxHeight: 'xs',
+                            maxWidth: 'md',
+                            mx: 'auto',
+                            width: '100%'
+                        }}>
+
                         <Button
                             size='small'
                             sx={{
@@ -272,7 +299,7 @@ export default function Listings() {
                             variant='contained'>
                             <FormControlLabel
                                 checked={activeListing}
-                                control={<Switch onChange={handleActive} color='common.white' />}
+                                control={<Switch onChange={handleActive} color='white' />}
                                 disabled={disableElement}
                                 disableTypography
                                 label={ACTIVE_LISTING_CC} />
@@ -283,6 +310,7 @@ export default function Listings() {
                                 mx: 'auto',
                                 width: '100%'
                             }}>
+
                             <Stack
                                 display='flex'
                                 direction={{ xs: 'column', md: 'row' }} >
@@ -322,7 +350,7 @@ export default function Listings() {
 
                                             <TextField
                                                 disabled={disableElement}
-                                                error={!!errors[ADDRESS_LINE_1]}
+                                                error={errors[ADDRESS_LINE_1]}
                                                 helperText={errors[ADDRESS_LINE_1]?.message}
                                                 InputLabelProps={{ shrink: true }}
                                                 label={ADDRESS_LINE_1}
@@ -355,7 +383,7 @@ export default function Listings() {
 
                                             <TextField
                                                 disabled={disableElement}
-                                                error={!!errors[ZIP_CODE_CC] || zipCodeError}
+                                                error={errors[ZIP_CODE_CC] || zipCodeError}
                                                 helperText={errors[ZIP_CODE_CC]?.message || zipCodeError}
                                                 InputLabelProps={{ shrink: true }}
                                                 label={ZIP_CODE_CC}
@@ -363,6 +391,8 @@ export default function Listings() {
                                                 size='small'
                                                 variant='outlined'
                                                 {...register(ZIP_CODE_CC)} />
+
+                                            {processingZipcode && <CircularProgress />}
 
                                             <Button
                                                 disabled={!isEmpty(errors) || zipCodeError || disableElement}
@@ -378,8 +408,7 @@ export default function Listings() {
                             </Stack>
                         </Card>
                     </Box>
-                </Container>
-
+                </Box>}
             </Fragment>
         )
     }
@@ -387,27 +416,30 @@ export default function Listings() {
     function editMode() {
         return (
             <Fragment>
-                <Typography
-                    align='center'
-                    sx={{
-                        color: 'common.white',
-                        marginY: '5%'
-                    }}
-                    variant='h3'>
-                    {EDIT_LISTING_CC}
-                </Typography>
-
-                <Container
-                    maxWidth='md'
+                {!isFetching && <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'center',
-                        maxHeight: 'xs'
+                        flexDirection: 'column',
                     }}>
+                    <Typography
+                        align='center'
+                        sx={{
+                            color: 'white',
+                            marginBottom: 4
+                        }}
+                        variant='h3'>
+                        {EDIT_LISTING_CC}
+                    </Typography>
+
                     <Box
-                        display='flex'
-                        flexDirection='column'
-                        width='100%'>
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            maxHeight: 'xs',
+                            maxWidth: 'md',
+                            mx: 'auto',
+                            width: '100%',
+                        }}>
 
                         <Button
                             size='small'
@@ -419,7 +451,7 @@ export default function Listings() {
                             variant='contained'>
                             <FormControlLabel
                                 checked={activeListing}
-                                control={<Switch onChange={handleActive} color='common.white' />}
+                                control={<Switch onChange={handleActive} color='white' />}
                                 disabled={disableElement}
                                 disableTypography
                                 label={ACTIVE_LISTING_CC} />
@@ -460,7 +492,9 @@ export default function Listings() {
                                 </CardContent>
 
                                 <CardContent sx={{ width: { xs: '100%', md: '35%' } }} >
-                                    <form onSubmit={handleSubmit(onSubmit)}>
+                                    <form
+                                        onChange={handleFormOnChange}
+                                        onSubmit={handleSubmit(onSubmit)}>
                                         <Stack
                                             direction={'column'}
                                             mx='auto'
@@ -470,7 +504,7 @@ export default function Listings() {
                                             <TextField
                                                 defaultValue={addressLine1}
                                                 disabled={disableElement}
-                                                error={!!errors[ADDRESS_LINE_1]}
+                                                error={errors[ADDRESS_LINE_1]}
                                                 helperText={errors[ADDRESS_LINE_1]?.message}
                                                 InputLabelProps={{ shrink: true }}
                                                 label={ADDRESS_LINE_1}
@@ -504,16 +538,16 @@ export default function Listings() {
                                             <TextField
                                                 defaultValue={zipCode}
                                                 disabled={disableElement}
-                                                error={!!errors[ZIP_CODE_CC] || zipCodeError}
+                                                error={errors[ZIP_CODE_CC] || zipCodeError}
                                                 helperText={errors[ZIP_CODE_CC]?.message || zipCodeError}
                                                 InputLabelProps={{ shrink: true }}
                                                 label={ZIP_CODE_CC}
                                                 onKeyUp={handleZipCode}
                                                 size='small'
                                                 variant='outlined'
-                                                {...register(ZIP_CODE_CC)}
-                                            />
+                                                {...register(ZIP_CODE_CC)} />
 
+                                            {processingZipcode && <CircularProgress />}
                                             <Button
                                                 disabled={!isEmpty(errors) || zipCodeError || disableElement}
                                                 mx='auto'
@@ -528,7 +562,7 @@ export default function Listings() {
                             </Stack>
                         </Card>
                     </Box>
-                </Container>
+                </Box>}
             </Fragment>
         )
     }
@@ -539,7 +573,7 @@ export default function Listings() {
             {openSuccessAlert &&
                 <GenericSuccessAlert
                     closeFn={handleAlertClose}
-                    message={mode === ADD ? SUCCESSFULLY_CREATED_LISTING_CC : SUCCESSFULLY_UPDATED_LISTING_CC}
+                    message={alertMessage}
                     ref={alertRef} />}
 
             {openErrorAlert &&
@@ -556,11 +590,9 @@ export default function Listings() {
                 </Backdrop>
             </div>
 
-            {mode === ADD && addMode()}
+            {mode === CREATE && createMode()}
             {!isFetching && mode === EDIT && editMode()}
 
         </Fragment >
-
-
     );
 } 

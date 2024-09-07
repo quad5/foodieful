@@ -7,13 +7,11 @@ import {
     useRef,
     useState
 } from "react";
+import Image from 'next/image'
 import {
     Backdrop,
-    Card,
-    CardContent,
-    CardMedia,
     CircularProgress,
-    Container,
+    ImageListItem,
     Stack,
     TextField,
     Typography,
@@ -40,6 +38,7 @@ export default function UserProfile() {
         }
     }, [isFetching])
 
+
     return (
         <Fragment>
             <div>
@@ -50,64 +49,56 @@ export default function UserProfile() {
                 </Backdrop>
             </div>
 
-            <Typography
+            {!isFetching && <Typography
                 align='center'
                 sx={{
-                    color: 'common.white',
-                    marginY: '5%'
+                    color: 'white',
+                    marginBottom: 4,
                 }}
                 variant='h3'>
                 {MY_PROFILE_CC}
-            </Typography>
+            </Typography>}
 
-            <Container
-                maxWidth='sm'
+            {!isFetching && <Stack
+                direction={'column'}
+                padding={2}
+                spacing={2}
                 sx={{
+                    backgroundColor: 'white',
                     display: 'flex',
-                    justifyContent: 'center',
-                    marginBottom: { xs: '20%' }
+                    mx: 'auto',
+                    width: { xs: '100%', sm: '60%', md: '40%' }
                 }}>
 
-                <Card sx={{ padding: 2 }}>
-                    <Stack
-                        alignItems="center"
-                        direction={'row'}>
-                        <CardMedia
-                            component="img"
-                            height='100'
-                            image={session?.user.image}
-                            width='100'
-                        />
+                <ImageListItem sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Image
+                        alt="user-image"
+                        height={200}
+                        loading="lazy"
+                        src={session?.user.image}
+                        width={200} />
+                </ImageListItem>
 
-                        <CardContent sx={{ flex: '1 0 auto' }}>
-                            <Stack
-                                direction={'column'}
-                                spacing={2}>
-                                <TextField
-                                    InputLabelProps={{ shrink: true }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    label={NAME_CC}
-                                    size='small'
-                                    value={session?.user.name}
-                                    variant='filled' />
+                <TextField
+                    InputLabelProps={{ shrink: true }}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    label={NAME_CC}
+                    size='small'
+                    value={session?.user.name}
+                    variant='filled' />
 
-                                <TextField
-                                    InputLabelProps={{ shrink: true }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    label={EMAIL_CC}
-                                    size='small'
-                                    value={session?.user.email}
-                                    variant='filled'
-                                />
-                            </Stack>
-                        </CardContent>
-                    </Stack>
-                </Card>
-            </Container>
+                <TextField
+                    InputLabelProps={{ shrink: true }}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    label={EMAIL_CC}
+                    size='small'
+                    value={session?.user.email}
+                    variant='filled' />
+            </Stack>}
         </Fragment>
     )
 }

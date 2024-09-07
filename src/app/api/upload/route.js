@@ -8,13 +8,13 @@ import { sendLogToNewRelic } from '@/app/lib/apiHelpers'
 export async function POST(request) {
 
     try {
-        const filenames = []
+        const filenames = {}
         const data = await request.formData()
 
         for (const file of data.getAll(FILE_BRACKET)) {
             const fileExt = getFileExtension(file.name)
             const filename = createUUIDFilename(file.name)
-            filenames.push(filename)
+            filenames[fileExt] = filename
             const dirRelativeToPublicFolder = fileExt
 
             const dir = path.resolve('./public', dirRelativeToPublicFolder);

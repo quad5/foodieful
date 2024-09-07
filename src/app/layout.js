@@ -10,7 +10,7 @@ import theme from '../theme';
 import CssBaseline from '@mui/material/CssBaseline';
 
 export const metadata = {
-  title: 'Foodieful.net',
+  title: 'Foodieful.net - Food truck finder',
   description: 'New food truck finder in town! Food truck vendors can list their locations and operating hours. Customers can search food truck locations by zip code.',
 }
 
@@ -28,7 +28,9 @@ export default async function RootLayout({ children }) {
               <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Menu />
-                <Container disableGutters>
+                <Container disableGutters
+                  sx={{ marginBottom: { xs: '20%', sm: '10%' }, marginTop: 4 }}
+                >
                   {children}
                 </Container>
               </ThemeProvider>

@@ -1,33 +1,36 @@
-"use client"
+'use client'
 
 import {
-    Card,
-    CardContent,
-    Collapse,
-    Container,
-    Divider,
-    ListItemButton,
-    ListItemIcon,
-    Stack,
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
     Typography
 } from '@mui/material';
-import { Fragment, useState } from 'react';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     ANSWER_CC,
     FREQUENTLY_ASKED_QUESTIONS_CC,
     QUESTION_CC,
 } from '@/app/lib/constants'
 import theme from '@/theme';
+import { Fragment } from 'react';
 
-export default function Page() {
-    const [selectedIndex, setSelectedIndex] = useState(-1)
+export default function FAQ() {
 
     const faq = [
         {
             [QUESTION_CC]: "What is the purpose of this website?",
             [ANSWER_CC]: "It is for food truck vendors to list their pit stop locations’ address and operating hours, and customers to search said listings by zip code.",
+        },
+        {
+            [QUESTION_CC]: "Which country is this made for?",
+            [ANSWER_CC]: "Currently this website is available only in the United States."
+        },
+        {
+            [QUESTION_CC]: "Why am I seeing no listing in my area?",
+            [ANSWER_CC]: "Please understand that this is a new website. We are building out our database by reaching out to food truck vendors to sign up and list on our website."
         },
         {
             [QUESTION_CC]: "How can food truck vendors get started listing their pit stop addresses?",
@@ -50,99 +53,49 @@ export default function Page() {
             [ANSWER_CC]: "You place the mouse onto the start hour and the day of the week you want, then press and hold the mouse to the end hour."
         },
         {
-            [QUESTION_CC]: "Can food truck vendors list multiple pit stop location’s operating hours?",
-            [ANSWER_CC]: "Yes!"
+            [QUESTION_CC]: "Where can I create an SVG file for my food truck's logo?",
+            [ANSWER_CC]: "We recommend checking out canva.com because they have a lot of free features, free designs, and simple to use."
         },
         {
-            [QUESTION_CC]: "How can I contact Foodieful.net for support / more information / feature request?",
+            [QUESTION_CC]: "How can I contact Foodieful.net for support / more information / features request?",
             [ANSWER_CC]: "You can leave your email and a brief description in the chat widget in the right hand corner."
         },
     ]
 
-    const handleClick = (index) => {
-        if (index !== selectedIndex) {
-            setSelectedIndex(index)
-        } else {
-            setSelectedIndex(-1)
-        }
-    }
-
     return (
         <Fragment>
-            <Typography
-                align='center'
-                sx={{ color: 'common.white', marginY: '5%' }}
-                variant='h3'>
-                {FREQUENTLY_ASKED_QUESTIONS_CC}
-            </Typography>
-            <Container
-                sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginBottom: { xs: '20%' }
-                }}
-                maxWidth='sm'
-            >
-                <Card
-                    sx={{
-                        display: 'flex',
-                        mx: 'auto'
-                    }}>
-                    <CardContent>
-                        {faq.map((i, index) => (
-                            <Stack
-                                key={index}
-                                spacing={3}
-                                sx={{
-                                    backgroundColor: theme.palette.primary.main,
-                                    color: 'common.white',
-                                }}>
-                                <Stack
-                                    direction='column'
-                                    display='flex'
-                                    flex={1}>
-                                    <ListItemButton
-                                        onClick={() => handleClick(index)}>
-                                        <Typography
-                                            align='left'
-                                            sx={{ color: 'common.black', marginTop: 4 }}
-                                            variant='h5'>
-                                            {i[QUESTION_CC]}
-                                        </Typography>
-                                        <ListItemIcon
-                                            sx={{ marginLeft: 'auto' }}>
-                                            {index === selectedIndex ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-                                        </ListItemIcon>
-                                    </ListItemButton>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginX: 'auto',
+                maxWidth: 'sm',
+                paddingX: { xs: 2, md: 0 }
+            }}>
+                <Typography
+                    align='center'
+                    sx={{ color: 'white', marginY: '5%' }}
+                    variant='h3'>
+                    {FREQUENTLY_ASKED_QUESTIONS_CC}
+                </Typography>
 
-                                    <Collapse
-                                        in={index === selectedIndex}
-                                        timeout="auto" unmountOnExit>
-                                        <Typography
-                                            sx={{
-                                                backgroundColor: theme.palette.secondary.main,
-                                                color: 'common.black',
-                                                paddingY: 3,
-                                                paddingLeft: 5
-                                            }}
-                                            variant='h5'>
-                                            {i[ANSWER_CC]}
-                                        </Typography>
-                                    </Collapse>
-                                </Stack>
-                                <Divider
-                                    orientation="horizontal"
-                                    flexItem
-                                    sx={{
-                                        borderBottomWidth: index < faq.length - 1 ? 10 : 0,
-                                        borderColor: 'white'
-                                    }} />
-                            </Stack>
-                        ))}
-                    </CardContent>
-                </Card>
-            </Container>
+                {faq.map((i, index) => (
+                    <Accordion key={index}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            sx={{ backgroundColor: index % 2 === 0 ? theme.palette.primary.main : 'white' }}
+                        >
+                            {i[QUESTION_CC]}
+                        </AccordionSummary>
+                        <AccordionDetails
+                            sx={{
+                                backgroundColor: theme.palette.secondary.main,
+                            }}
+                        >
+                            {i[ANSWER_CC]}
+                        </AccordionDetails>
+                    </Accordion>
+                ))}
+            </Box>
         </Fragment>
     )
 }

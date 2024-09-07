@@ -1,11 +1,13 @@
 import {
+    MODE,
     MY_PROFILE_CC,
     MANAGE_MY_LISTINGS_CC,
     VENDOR_PROFILE_CC,
+    VIEW
 } from "./constants"
 
 
-export function aboutUsMenu() {
+export function aboutMenu() {
     return [
         {
             title: 'FAQs',
@@ -30,7 +32,7 @@ export function vendorMenu() {
         },
         {
             title: VENDOR_PROFILE_CC,
-            link: '/vendor/vendorProfile'
+            link: `/vendor/vendorProfile?${MODE}=${VIEW}`
         },
         {
             title: MY_PROFILE_CC,

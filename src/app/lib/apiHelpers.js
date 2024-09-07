@@ -16,8 +16,16 @@ export async function createVendor(body) {
     return await genericAPICall(host + "/api/vendorProfile", POST, body)
 }
 
+export async function deleteVendorProfile(id) {
+    return await genericAPICall(host + `/api/vendorProfile?${ID}=${id}`, DELETE)
+}
+
 export async function getVendorProfileById(id) {
     return await genericAPICall(host + `/api/vendorProfile?${ID}=${id}`, GET)
+}
+
+export async function updateVendorProfile(body) {
+    return await genericAPICall(host + "/api/vendorProfile", PUT, body)
 }
 
 export async function getZipCodeDetails(zipCode) {

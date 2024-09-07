@@ -19,7 +19,7 @@ model VendorUser {
   name            String
   active          Boolean       @default(true)
   vendorProfileId Int
-  vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id])
+  vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id], onDelete: Cascade)
   createdAt       DateTime      @default(now()) @db.Timestamptz(3)
   updatedAt       DateTime      @updatedAt
 }
@@ -30,6 +30,7 @@ model VendorProfile {
   active         Boolean          @default(true)
   logoFilename   String?
   menuFilename   String?
+  phoneNumber    String?
   addressLine1   String
   addressLine2   String?
   city           String

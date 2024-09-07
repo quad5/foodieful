@@ -14,12 +14,12 @@ import {
 } from 'next/navigation'
 import {
     Backdrop,
+    Box,
     Button,
     Card,
     CardContent,
     CircularProgress,
     Collapse,
-    Container,
     Divider,
     FormControlLabel,
     List,
@@ -38,7 +38,7 @@ import GenericSuccessAlert from '@/components/GenericSuccessAlert';
 import GenericErrorAlert from '@/components/GenericErrorAlert';
 import {
     ACTIVE_LISTINGS_CC,
-    ADD,
+    CREATE,
     ADDRESS_LINE_1,
     CITY_CC,
     CREATE_NEW_LISTING,
@@ -126,20 +126,14 @@ export default function Vendor() {
                 setIsFetching(false)
                 router.refresh()
             }
-
         }
 
-
         if (session) {
-            fetchData().catch(() => {
-                setIsFetching(false)
-            })
+            fetchData()
         } else {
             setIsFetching(true)
         }
     }, [email, router, session, updateListing])
-
-
 
     useEffect(() => {
         if (isFetching && inProgressRef.current) {
@@ -368,23 +362,24 @@ export default function Vendor() {
                 </Backdrop>
             </div>
 
-            <Typography
-                align='center'
-                sx={{
-                    color: 'common.white',
-                    marginY: '5%'
-                }}
-                variant='h3'>
-                {MANAGE_MY_LISTINGS_CC}
-            </Typography>
-
-            <Container
+            {!isFetching && <Box
                 maxWidth='md'
                 sx={{
                     display: 'flex',
-                    marginBottom: '20%',
+                    flexDirection: 'column',
                     mx: 'auto',
-                }} >
+                    paddingX: { xs: 2, md: 0 }
+                }}>
+                <Typography
+                    align='center'
+                    sx={{
+                        color: 'white',
+                        marginBottom: 4
+                    }}
+                    variant='h3'>
+                    {MANAGE_MY_LISTINGS_CC}
+                </Typography>
+
                 <List sx={{ mx: 'auto', width: '100%' }}>
                     <Stack
                         direction={'row'}
@@ -394,7 +389,7 @@ export default function Vendor() {
                         <Button
                             disabled={isFetching}
                             variant='contained'
-                            href={`/vendor/listings?${MODE}=${ADD}`}
+                            href={`/vendor/listings?${MODE}=${CREATE}`}
                             sx={{ width: 'fit-content' }}>
                             {CREATE_NEW_LISTING}
                         </Button>
@@ -405,7 +400,7 @@ export default function Vendor() {
                             variant='contained'>
                             <FormControlLabel
                                 control={<Switch
-                                    color='common.white'
+                                    color='white'
                                     onChange={handleExpandAllClick} />}
                                 disableTypography
                                 label={EXPAND_ALL_CC} />
@@ -415,7 +410,7 @@ export default function Vendor() {
                     {!isFetching && activeListings.length == 0 && inActiveListings.length == 0 && <Typography
                         align='center'
                         sx={{
-                            color: 'common.white',
+                            color: 'white',
                             marginTop: '5%'
                         }}
                         variant='h5'>
@@ -423,7 +418,7 @@ export default function Vendor() {
                     </Typography>}
                     {activeListings.length > 0 && <Typography
                         align='center'
-                        sx={{ color: 'common.white', marginTop: '5%' }}
+                        sx={{ color: 'white', marginTop: '5%' }}
                         variant='h5'>
                         {ACTIVE_LISTINGS_CC}
                     </Typography>}
@@ -434,7 +429,7 @@ export default function Vendor() {
 
                     {inActiveListings.length > 0 && <Typography
                         align='center'
-                        sx={{ color: 'common.white', marginTop: '5%' }}
+                        sx={{ color: 'white', marginTop: '5%' }}
                         variant='h5'>
                         {INACTIVE_LISTINGS_CC}
                     </Typography>}
@@ -443,7 +438,7 @@ export default function Vendor() {
                         <UI item={item} isActive={false} key={item[DB_ID]} />
                     ))}
                 </List>
-            </Container>
+            </Box>}
         </Fragment>
     )
 }
