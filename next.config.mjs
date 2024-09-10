@@ -4,7 +4,7 @@ const cspHeader = `
     default-src 'self'  https://api.hubspot.com
     https://forms.hscollectedforms.net
     https://app.hubspot.com;
-    
+
     script-src 'self' 'unsafe-eval' 'unsafe-inline'
     https://js.hs-scripts.com
     https://js.usemessages.com
@@ -16,7 +16,7 @@ const cspHeader = `
 
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data:  https://forms.hsforms.com;
-    font-src 'self';
+    font-src 'self' data:;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
