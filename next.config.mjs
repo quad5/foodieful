@@ -15,7 +15,7 @@ const cspHeader = `
     https://udbaa.com;
 
     style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data:  https://forms.hsforms.com;
+    img-src * ;
     font-src 'self' data:;
     object-src 'none';
     base-uri 'self';
