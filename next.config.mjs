@@ -16,6 +16,7 @@ const cspHeader = `
 
     style-src 'self' 'unsafe-inline';
     img-src * ;
+    plugin-types application/pdf;
     font-src 'self' data:;
     object-src 'none';
     base-uri 'self';
