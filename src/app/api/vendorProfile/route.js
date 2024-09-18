@@ -5,6 +5,7 @@ import {
     ADDRESS_LINE_1,
     ADDRESS_LINE_2,
     CITY_CC,
+    EMAIL,
     EMAIL_CC,
     ERROR,
     ID,
@@ -20,6 +21,7 @@ import {
     DB_ADDRESS_LINE_1,
     DB_ADDRESS_LINE_2,
     DB_CITY,
+    DB_EMAIL,
     DB_ID,
     DB_LOGO_FILENAME,
     DB_MENU_FILENAME,
@@ -46,14 +48,26 @@ export async function DELETE(request) {
 }
 
 export async function GET(request) {
+    const email = request.nextUrl.searchParams.get(EMAIL)
     const id = parseInt(request.nextUrl.searchParams.get(ID), 10)
+    let result = {}
 
     try {
-        const result = await prisma.vendorProfile.findFirstOrThrow({
-            where: {
-                id: id,
-            },
-        })
+        if (id) {
+            result = await prisma.vendorProfile.findFirstOrThrow({
+                where: {
+                    [DB_ID]: id,
+                },
+            })
+        }
+
+        if (email) {
+            result = await prisma.vendorProfile.findFirstOrThrow({
+                where: {
+                    [DB_EMAIL]: email,
+                },
+            })
+        }
         return NextResponse.json({ success: true, message: result }, { status: 200 });
     } catch (error) {
         sendLogToNewRelic(ERROR, `requestUrl: GET ${request.nextUrl.href} \n` + error)
@@ -76,12 +90,6 @@ export async function POST(request) {
                 [DB_PHONE_NUMBER]: data[PHONE_NUMBER_CC],
                 [DB_STATE]: data[STATE_CC],
                 [DB_ZIP_CODE]: data[ZIP_CODE_CC],
-                vendorUser: {
-                    create: {
-                        email: data[EMAIL_CC],
-                        name: '',
-                    }
-                }
             },
         });
 

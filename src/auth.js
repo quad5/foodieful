@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import Auth0 from "next-auth/providers/auth0"
-import { getVendorUserByEmail } from "@/app/lib/apiHelpers"
+import { getVendorProfileByEmail } from "@/app/lib/apiHelpers"
 import { sendLogToNewRelic } from "@/app/lib/apiHelpers"
 import { ERROR } from "./app/lib/constants"
 
@@ -18,7 +18,7 @@ const authOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      const response = await getVendorUserByEmail(user?.email)
+      const response = await getVendorProfileByEmail(user?.email)
 
       if (!response.success) {
         sendLogToNewRelic(ERROR, `In signIn callback, unrecognized email address '${user?.email}'.`)

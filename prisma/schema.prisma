@@ -13,20 +13,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model VendorUser {
-  id              Int           @id @default(autoincrement())
-  email           String        @unique
-  name            String
-  active          Boolean       @default(true)
-  vendorProfileId Int
-  vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id], onDelete: Cascade)
-  createdAt       DateTime      @default(now()) @db.Timestamptz(3)
-  updatedAt       DateTime      @updatedAt
-}
+// model VendorUser {
+//   id              Int           @id @default(autoincrement())
+//   email           String        @unique
+//   name            String
+//   active          Boolean       @default(true)
+//   vendorProfileId Int
+//   vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id], onDelete: Cascade)
+//   createdAt       DateTime      @default(now()) @db.Timestamptz(3)
+//   updatedAt       DateTime      @updatedAt
+// }
 
 model VendorProfile {
   id             Int              @id @default(autoincrement())
   name           String
+  email          String           @unique
   active         Boolean          @default(true)
   logoFilename   String?
   menuFilename   String?
@@ -36,7 +37,7 @@ model VendorProfile {
   city           String
   state          String
   zipCode        String
-  vendorUser     VendorUser[]
+  // vendorUser     VendorUser[]
   pitStopAddress PitStopAddress[]
   createdAt      DateTime         @default(now()) @db.Timestamptz(3)
   updatedAt      DateTime         @updatedAt

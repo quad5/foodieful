@@ -15,12 +15,6 @@ function seedVendorsProfile() {
         .catch(e => console.error('[SEED] Failed to create vendor profiles', e))
 }
 
-function seedVendorsUser() {
-    Promise.all(user.map(d => prisma.vendorUser.create({ data: d })))
-        .then(() => console.info('[SEED] Succussfully create vendor user'))
-        .catch(e => console.error('[SEED] Failed to create vendor user', e))
-}
-
 function loadZipCodeData() {
     const stream = fs.createReadStream("./prisma/zip_code_database_updated.csv");
     const reader = readline.createInterface({ input: stream });
@@ -55,6 +49,5 @@ function loadZipCodeData() {
 
 
 //seedVendorsProfile();
-//seedVendorsUser();
 
 loadZipCodeData()

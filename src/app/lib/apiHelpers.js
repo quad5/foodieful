@@ -20,6 +20,10 @@ export async function deleteVendorProfile(id) {
     return await genericAPICall(host + `/api/vendorProfile?${ID}=${id}`, DELETE)
 }
 
+export async function getVendorProfileByEmail(email) {
+    return await genericAPICall(host + `/api/vendorProfile?${EMAIL}=${email}`, GET)
+}
+
 export async function getVendorProfileById(id) {
     return await genericAPICall(host + `/api/vendorProfile?${ID}=${id}`, GET)
 }
@@ -78,20 +82,10 @@ export function getLocationsURL(zipCode) {
     return `${host}/api/locations?${CODE}=${zipCode}`
 }
 
-
-
 export async function updateListingByAddressId(body, id) {
     const url = `${host}/api/listings?${ID}=${id}`
 
     return await genericAPICall(url, PUT, body)
-}
-
-export async function updateVendorUser(body) {
-    return await genericAPICall(host + "/api/vendorUser", PUT, body)
-}
-
-export async function getVendorUserByEmail(email) {
-    return await genericAPICall(host + `/api/vendorUser?${EMAIL}=${email}`, GET)
 }
 
 export async function upload(body) {

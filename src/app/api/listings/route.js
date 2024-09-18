@@ -33,13 +33,13 @@ export async function DELETE(request) {
             },
             include: {
                 vendorProfile: {
-                    include: {
-                        vendorUser: {
-                            where: {
-                                [DB_EMAIL]: email
-                            }
-                        },
-                    }
+                    // include: {
+                    //     vendorUser: {
+                    //         where: {
+                    //             [DB_EMAIL]: email
+                    //         }
+                    //     },
+                    // }
                 },
             }
         })
@@ -72,13 +72,13 @@ export async function GET(request) {
             result = await prisma.pitStopAddress.findMany({
                 where: {
                     vendorProfile: {
-                        vendorUser: {
-                            every: {
-                                email: {
-                                    equals: email
-                                }
+                        // vendorUser: {
+                        every: {
+                            email: {
+                                equals: email
                             }
                         }
+                        // }
                     },
 
                     AND: {
@@ -98,13 +98,13 @@ export async function GET(request) {
             result = await prisma.pitStopAddress.findMany({
                 where: {
                     vendorProfile: {
-                        vendorUser: {
-                            every: {
-                                email: {
-                                    equals: email
-                                }
+                        // vendorUser: {
+                        every: {
+                            email: {
+                                equals: email
                             }
                         }
+                        // }
                     }
                 },
                 orderBy: {
@@ -131,24 +131,20 @@ export async function POST(request) {
 
     try {
         await prisma.$transaction(async (tx) => {
-            addAddressResult = await tx.vendorUser.update({
+            addAddressResult = await tx.vendorProfile.update({
                 where: {
                     email: email
                 },
                 data: {
-                    vendorProfile: {
-                        update: {
-                            pitStopAddress: {
-                                create: {
-                                    [DB_ACTIVE]: data[ACTIVE_LISTING],
-                                    [DB_ADDRESS_LINE_1]: data[PIT_STOP_ADDRESS][DB_ADDRESS_LINE_1],
-                                    [DB_CITY]: data[PIT_STOP_ADDRESS][DB_CITY],
-                                    [DB_STATE]: data[PIT_STOP_ADDRESS][DB_STATE],
-                                    [DB_ZIP_CODE]: data[PIT_STOP_ADDRESS][DB_ZIP_CODE],
-                                },
-                            },
+                    pitStopAddress: {
+                        create: {
+                            [DB_ACTIVE]: data[ACTIVE_LISTING],
+                            [DB_ADDRESS_LINE_1]: data[PIT_STOP_ADDRESS][DB_ADDRESS_LINE_1],
+                            [DB_CITY]: data[PIT_STOP_ADDRESS][DB_CITY],
+                            [DB_STATE]: data[PIT_STOP_ADDRESS][DB_STATE],
+                            [DB_ZIP_CODE]: data[PIT_STOP_ADDRESS][DB_ZIP_CODE],
                         },
-                    }
+                    },
                 },
                 include: {
                     vendorProfile: {

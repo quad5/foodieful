@@ -94,8 +94,7 @@ import { tempSchema, vendorSchema } from '@/app/lib/validation-schema'
 import {
     createVendor,
     deleteVendorProfile,
-    getVendorProfileById,
-    getVendorUserByEmail,
+    getVendorProfileByEmail,
     getZipCodeDetails,
     updateVendorProfile,
     upload
@@ -128,30 +127,19 @@ export default function VendorProfile() {
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false)
     const [processingZipcode, setProcessingZipcode] = useState(false)
     const [state, setState] = useState('')
-    const [vendorId, setVendorId] = useState(0)
     const [vendorProfile, setVendorProfile] = useState();
-    const [vendorUser, setVendorUser] = useState();
+
     const [zipCode, setZipCode] = useState('')
     const [zipCodeError, setZipCodeError] = useState('')
 
     useEffect(() => {
         const fetchData = async () => {
-            const user = await getVendorUserByEmail(session?.user.email)
+            const profile = await getVendorProfileByEmail(session?.user.email)
 
-            if (user.success) {
-                setVendorUser(user.message)
-                const id = user.message.vendorProfileId
-                setVendorId(id)
-                const profile = await getVendorProfileById(id)
-
-                if (profile.success) {
-                    setCity(profile.message[DB_CITY])
-                    setState(profile.message[DB_STATE])
-                    setVendorProfile(profile.message)
-
-                } else {
-                    setOpenErrorAlert(true)
-                }
+            if (profile.success) {
+                setCity(profile.message[DB_CITY])
+                setState(profile.message[DB_STATE])
+                setVendorProfile(profile.message)
             } else {
                 setOpenErrorAlert(true)
             }
@@ -293,7 +281,7 @@ export default function VendorProfile() {
             data[CITY_CC] = city
             data[STATE_CC] = state
             if (mode === EDIT) {
-                data[VENDOR_ID] = vendorId
+                data[VENDOR_ID] = vendorProfile[DB_ID]
                 response = await updateVendorProfile(data)
             } else {
                 response = await createVendor(data)
@@ -398,7 +386,7 @@ export default function VendorProfile() {
                             {...register(NAME_CC)} />
 
                         <TextField
-                            defaultValue={vendorUser[DB_EMAIL]}
+                            defaultValue={vendorProfile[DB_EMAIL]}
                             disabled={true}
                             InputLabelProps={{ shrink: true }}
                             label={VENDOR_EMAIL_CC}

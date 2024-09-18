@@ -158,7 +158,7 @@ export const vendorSchema = object().shape({
             name: 'menuUpload',
             skipAbsent: false,
             test(value, ctx) {
-                if (value && value[0] && value[0].size >= 200000) {
+                if (value && value[0] && value[0].size >= 2000000) {
                     return ctx.createError({
                         message: "The file is too large. Limit 2MB"
                     })
