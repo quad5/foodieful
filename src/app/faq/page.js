@@ -42,7 +42,7 @@ export default function FAQ() {
         },
         {
             [QUESTION_CC]: "What information does Foodieful.net get from Google/Yahoo and store in our database?",
-            [ANSWER_CC]: "Your public profile information such as name and image/picture."
+            [ANSWER_CC]: "We get your public profile information such as name and image, BUT we do NOT store those in our database."
         },
         {
             [QUESTION_CC]: "Can food truck vendors list multiple pit stop location’s addresses?",

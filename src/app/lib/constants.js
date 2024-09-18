@@ -39,7 +39,6 @@ export const MENU_FILE = 'menu';
 export const MENU_FILENAME = 'menuFilename'
 export const MODE = 'mode';
 export const MANAGE_MY_LISTINGS_CC = 'Manage My Listings';
-export const MY_PROFILE_CC = 'My Profile';
 export const NAME_CC = 'Name';
 export const NO_ACTION_TAKEN_CC = 'No action taken since nothing has changed.'
 export const NO_LISTING_CREATED_CC = 'No Listing Created Yet.';

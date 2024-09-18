@@ -1,6 +1,5 @@
 import {
     MODE,
-    MY_PROFILE_CC,
     MANAGE_MY_LISTINGS_CC,
     VENDOR_PROFILE_CC,
     VIEW
