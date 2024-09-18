@@ -34,10 +34,6 @@ export function vendorMenu() {
             title: VENDOR_PROFILE_CC,
             link: `/vendor/vendorProfile?${MODE}=${VIEW}`
         },
-        {
-            title: MY_PROFILE_CC,
-            link: '/vendor/userProfile'
-        }
     ]
 }
 

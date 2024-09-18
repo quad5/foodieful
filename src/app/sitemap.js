@@ -50,11 +50,5 @@ export default function sitemap() {
             changeFrequency: 'yearly',
             priority: 0.4,
         },
-        {
-            url: 'https://www.foodieful.net/userProfile',
-            lastModified: new Date(),
-            changeFrequency: 'yearly',
-            priority: 0.4,
-        },
     ]
 }

@@ -261,6 +261,7 @@ export default function Listings() {
     }
 
     function handleEvents(events) {
+        setFormHasChanged(true)
         setCurrentEvents(events)
     }
 
@@ -340,7 +341,9 @@ export default function Listings() {
                                 </CardContent>
 
                                 <CardContent sx={{ width: { xs: '100%', md: '35%' } }}>
-                                    <form onSubmit={handleSubmit(onSubmit)}>
+                                    <form
+                                        onChange={handleFormOnChange}
+                                        onSubmit={handleSubmit(onSubmit)}>
                                         <Stack
                                             direction={'column'}
                                             spacing={2}

@@ -84,6 +84,7 @@ export async function POST(request) {
                 [DB_ADDRESS_LINE_1]: data[ADDRESS_LINE_1],
                 [DB_ADDRESS_LINE_2]: data[ADDRESS_LINE_2],
                 [DB_CITY]: data[CITY_CC],
+                [DB_EMAIL]: data[EMAIL_CC],
                 [DB_LOGO_FILENAME]: data[LOGO_FILENAME],
                 [DB_MENU_FILENAME]: data[MENU_FILENAME],
                 [DB_NAME]: data[NAME_CC],

@@ -14,7 +14,6 @@ import {
     DB_ACTIVE,
     DB_ADDRESS_LINE_1,
     DB_CITY,
-    DB_EMAIL,
     DB_ID,
     DB_STATE,
     DB_ZIP_CODE,
@@ -33,13 +32,6 @@ export async function DELETE(request) {
             },
             include: {
                 vendorProfile: {
-                    // include: {
-                    //     vendorUser: {
-                    //         where: {
-                    //             [DB_EMAIL]: email
-                    //         }
-                    //     },
-                    // }
                 },
             }
         })
@@ -72,13 +64,9 @@ export async function GET(request) {
             result = await prisma.pitStopAddress.findMany({
                 where: {
                     vendorProfile: {
-                        // vendorUser: {
-                        every: {
-                            email: {
-                                equals: email
-                            }
+                        email: {
+                            equals: email
                         }
-                        // }
                     },
 
                     AND: {
@@ -98,13 +86,9 @@ export async function GET(request) {
             result = await prisma.pitStopAddress.findMany({
                 where: {
                     vendorProfile: {
-                        // vendorUser: {
-                        every: {
-                            email: {
-                                equals: email
-                            }
+                        email: {
+                            equals: email
                         }
-                        // }
                     }
                 },
                 orderBy: {
@@ -124,7 +108,6 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-
     const data = await request.json();
     const email = request.nextUrl.searchParams.get(EMAIL)
     let addAddressResult = {}
@@ -147,16 +130,12 @@ export async function POST(request) {
                     },
                 },
                 include: {
-                    vendorProfile: {
-                        include: {
-                            pitStopAddress: {
-                                orderBy: {
-                                    createdAt: 'desc',
-                                },
-                                take: 1,
-                            },
+                    pitStopAddress: {
+                        orderBy: {
+                            createdAt: 'desc',
                         },
-                    }
+                        take: 1,
+                    },
                 }
             })
 
@@ -165,7 +144,7 @@ export async function POST(request) {
 
                 await tx.pitStopAddress.update({
                     where: {
-                        id: addAddressResult.vendorProfile.pitStopAddress[0].id
+                        id: addAddressResult.pitStopAddress[0].id
                     },
                     data: {
                         schedule: {

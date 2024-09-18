@@ -131,6 +131,7 @@ export default function CreateVendor() {
 
     async function onSubmit(data, e) {
         e.preventDefault()
+        setOpenErrorAlert(false)
         setDisableElement(true)
         setIsSaving(true)
 
