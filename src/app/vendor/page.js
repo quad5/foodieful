@@ -320,7 +320,7 @@ export default function Vendor() {
 
                                     <Stack direction='row' spacing={2} justifyContent={'center'} display={'flex'} sx={{ textAlign: 'center' }}>
                                         <Button
-                                            href={`/vendor/listings?${MODE}=${EDIT}&${ID}=${item[DB_ID]}`}
+                                            href={`/vendor/manage?${MODE}=${EDIT}&${ID}=${item[DB_ID]}`}
                                             size='small'
                                             variant='contained'>
                                             {EDIT_LISTING_CC}
@@ -389,7 +389,7 @@ export default function Vendor() {
                         <Button
                             disabled={isFetching}
                             variant='contained'
-                            href={`/vendor/listings?${MODE}=${CREATE}`}
+                            href={`/vendor/manage?${MODE}=${CREATE}`}
                             sx={{ width: 'fit-content' }}>
                             {CREATE_NEW_LISTING}
                         </Button>

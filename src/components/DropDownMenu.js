@@ -34,7 +34,6 @@ export default function DropDownMenu(props) {
       href={o.link}
       onClick={() => handleClose(o.link)}
       sx={{
-        backgroundColor: pathname && o.link === pathname ? theme.palette.primary.main : 'none',
         display: 'flex',
         flexDirection: 'column',
         color: 'black',

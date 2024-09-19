@@ -19,6 +19,7 @@ import {
     IconButton,
     Stack,
 } from '@mui/material'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import DropDownMenu from "@/components/DropDownMenu"
@@ -26,12 +27,14 @@ import SignIn from "./SignIn";
 import { signInHelperFn } from '@/app/lib/accessHelpers'
 import {
     ABOUT_CC,
+    MANAGE_MY_LISTINGS_CC,
+    MODE,
     SIGN_OUT_CC,
-    VENDOR_MENU_CC,
     VENDOR_SIGN_IN_CC,
-    VENDOR_SIGN_UP_CC
+    VENDOR_SIGN_UP_CC,
+    VIEW
 } from "@/app/lib/constants";
-import { aboutMenu, vendorMenu } from "@/app/lib/menus";
+import { aboutMenu } from "@/app/lib/menus";
 import theme from '@/theme';
 
 
@@ -63,9 +66,11 @@ export default function Menu() {
 
                 {
                     session && <DropDownMenu
-                        menu={vendorMenu()}
-                        menuName={VENDOR_MENU_CC}
-                        singleLevel={false} />
+                        fn={() => { router.push('/vendor') }}
+                        menu={[]}
+                        menuName={MANAGE_MY_LISTINGS_CC}
+                        singleLevel={true}
+                    />
                 }
 
                 {
@@ -139,23 +144,32 @@ export default function Menu() {
                             marginLeft={'auto'}
                             marginRight={{ xs: 'auto', md: 0 }}
                             marginY={'auto'}
-                            paddingX={4}
-                            spacing={2}>
+                            paddingX={1}
+                            spacing={1}>
                             {menus()}
                         </Stack>
                     </ClickAwayListener>}
                 </Drawer>
 
-                <Stack
+                {status !== 'loading' && <Stack
                     direction={'row'}
                     display={{ xs: 'none', sm: 'flex' }}
                     marginLeft={'auto'}
                     marginRight={{ xs: 'auto', md: 0 }}
                     marginY={'auto'}
-                    paddingX={4}
-                    spacing={2}>
+                    paddingX={2}
+                    spacing={1}>
                     {menus()}
-                </Stack>
+                    {session && <IconButton onClick={() => router.push(`/vendor/vendorProfile?${MODE}=${VIEW}`)}>
+                        <AccountCircleIcon fontSize='large' />
+                    </IconButton>}
+                </Stack>}
+
+                {session && <IconButton href={`/vendor/vendorProfile?${MODE}=${VIEW}`} sx={{ display: { xs: 'flex', sm: 'none' }, mr: 1 }}>
+                    <AccountCircleIcon fontSize='large' />
+                </IconButton>}
+
+
             </AppBar>
         </Fragment>
     )

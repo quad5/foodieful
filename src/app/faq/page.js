@@ -58,7 +58,7 @@ export default function FAQ() {
         },
         {
             [QUESTION_CC]: "How can I contact Foodieful.net for support / more information / features request?",
-            [ANSWER_CC]: "You can leave your email and a brief description in the chat widget in the right hand corner."
+            [ANSWER_CC]: "You can leave your email and a brief description in the chat widget in the bottom right corner. Or send an email to 'support@foodieful.net'."
         },
     ]
 
