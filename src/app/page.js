@@ -134,6 +134,7 @@ export default function HomePage() {
                     />
                 </Box>
             </Stack>
+
             {zipCode && <Pagination api={getLocationsURL(zipCode)} card={ListingCard} />}
         </Fragment>
     )

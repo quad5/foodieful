@@ -4,6 +4,7 @@ import { Alert } from '@mui/material'
 function GenericSuccessAlert(props, ref) {
     return (
         <Alert
+            className='success-alert'
             onClose={props.closeFn}
             ref={ref}
             severity="success"

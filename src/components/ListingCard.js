@@ -21,7 +21,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import PlaceIcon from '@mui/icons-material/Place';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
-import { getFileExtension, hyphenatedPhoneNumber } from "@/app/lib/utils";
+import { getFileExtension, hyphenatePhoneNumber } from "@/app/lib/utils";
 import {
     FOOD_MENU_CC,
     OPERATING_HOURS_CC,
@@ -55,6 +55,7 @@ export default function ListingCard(props) {
     return (
         <Fragment>
             <Card
+                className="listing-card-wrapper"
                 sx={{
                     flexGrow: 1,
                     maxHeight: '100%',
@@ -67,6 +68,7 @@ export default function ListingCard(props) {
                             spacing={2}>
 
                             {getFileExtension(data[DB_VENDOR_PROFILE][DB_LOGO_FILENAME]) ? <CardMedia
+                                alt="vendor-logo"
                                 component="img"
                                 image={`/${getFileExtension(data[DB_VENDOR_PROFILE][DB_LOGO_FILENAME])}/${data[DB_VENDOR_PROFILE][DB_LOGO_FILENAME]}`}
                                 sx={{
@@ -75,6 +77,7 @@ export default function ListingCard(props) {
                                     width: 50
                                 }} /> :
                                 <Icon
+                                    className="listing-card-no-logo"
                                     sx={{
                                         height: 50,
                                         width: 50
@@ -82,10 +85,11 @@ export default function ListingCard(props) {
                                     <ImageNotSupportedIcon fontSize='large' />
                                 </Icon>}
 
-                            <Typography variant='body1'>
+                            <Typography
+                                className="listing-card-vendor-name"
+                                variant='h6'>
                                 {data[DB_VENDOR_PROFILE][DB_NAME]}
                             </Typography>
-
                         </Stack>
 
                         <Collapse
@@ -94,26 +98,38 @@ export default function ListingCard(props) {
                             unmountOnExit>
 
                             <Stack spacing={2}>
-                                <Divider sx={{ fontSize: 'medium' }}>{PHONE_NUMBER_CC}</Divider>
+                                <Divider
+                                    className="listing-card-phone-number-divider"
+                                    sx={{ fontSize: 'medium' }}>{PHONE_NUMBER_CC}</Divider>
                                 <ListItem>
                                     <ListItemIcon>
                                         <PhoneIcon fontSize='large' />
                                     </ListItemIcon>
-                                    <ListItemText primary={hyphenatedPhoneNumber(data[DB_VENDOR_PROFILE][DB_PHONE_NUMBER])} />
+                                    <ListItemText
+                                        className="listing-card-phone-number"
+                                        primary={hyphenatePhoneNumber(data[DB_VENDOR_PROFILE][DB_PHONE_NUMBER])} />
                                 </ListItem>
 
-                                <Divider sx={{ fontSize: 'medium' }}>{PIT_STOP_ADDRESS_CC}</Divider>
+                                <Divider
+                                    className="listing-card-address-divider"
+                                    sx={{ fontSize: 'medium' }}>{PIT_STOP_ADDRESS_CC}</Divider>
                                 <ListItem>
                                     <ListItemIcon>
                                         <PlaceIcon fontSize='large' />
                                     </ListItemIcon>
                                     <Box direction={'row'}>
-                                        <ListItemText primary={data[DB_ADDRESS_LINE_1]} />
-                                        <ListItemText primary={`${data[DB_CITY]}, ${data[DB_STATE]} ${data[DB_ZIP_CODE]}`} />
+                                        <ListItemText
+                                            className='listing-card-address1'
+                                            primary={data[DB_ADDRESS_LINE_1]} />
+                                        <ListItemText
+                                            className="listing-card-city-state-zipcode"
+                                            primary={`${data[DB_CITY]}, ${data[DB_STATE]} ${data[DB_ZIP_CODE]}`} />
                                     </Box>
                                 </ListItem>
 
-                                <Divider sx={{ fontSize: 'medium' }}>{OPERATING_HOURS_CC}</Divider>
+                                <Divider
+                                    className="listing-card-operating-hours-divider"
+                                    sx={{ fontSize: 'medium' }}>{OPERATING_HOURS_CC}</Divider>
                                 <ListItem>
                                     <ListItemIcon>
                                         <ScheduleIcon fontSize='large' />
@@ -129,6 +145,7 @@ export default function ListingCard(props) {
                     </CardContent>
                 </CardActionArea>
                 <Button
+                    className="listing-card-menu"
                     disabled={!data[DB_VENDOR_PROFILE][DB_MENU_FILENAME]}
                     fullWidth
                     href={data[DB_VENDOR_PROFILE][DB_MENU_FILENAME] && `/${getFileExtension(data[DB_VENDOR_PROFILE][DB_MENU_FILENAME])}/${data[DB_VENDOR_PROFILE][DB_MENU_FILENAME]}`}

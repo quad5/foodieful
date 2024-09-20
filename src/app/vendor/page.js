@@ -78,7 +78,6 @@ export default function Vendor() {
 
     if (status !== 'loading' && !session) {
         redirect("/")
-        // router.replace("/")
     }
 
     const alertRef = useRef(null);
@@ -102,13 +101,6 @@ export default function Vendor() {
         const fetchData = async () => {
             setEmail(session.user.email)
             if (email) {
-                // TODO - implement Redux to execute this once after login, and clear it once logout. 
-                // if (!name) {
-                //     const userResponse = await updateVendorUser({ email: email, name: session.user.name })
-                //     if (userResponse.success) {
-                //         setName(session?.user.name)
-                //     }
-                // }
 
                 const activeListingsResp = await getListingsByActive(email, true)
                 if (activeListingsResp.success) {
@@ -228,9 +220,11 @@ export default function Vendor() {
     function UI({ item, isActive }) {
         return (
             <Stack
+                className='vendor-wrapper'
                 direction={'column'}
                 justifyContent='center'>
                 <ListItemButton
+                    className='vendor-listing'
                     onClick={() => handleItemExpansionClick(item[DB_ID], isActive)}
                     sx={{
                         bgcolor: 'secondary.secondary',
@@ -241,7 +235,9 @@ export default function Vendor() {
                             backgroundColor: "secondary.main"
                         }
                     }}>
-                    <ListItemText disableTypography >
+                    <ListItemText
+                        className='vendor-listing-text'
+                        disableTypography >
                         {`${item[DB_ADDRESS_LINE_1]} ${item[DB_CITY]}, ${item[DB_STATE]}, ${item[DB_ZIP_CODE]}`}
                     </ListItemText>
                 </ListItemButton>
@@ -250,13 +246,17 @@ export default function Vendor() {
                     (openInActive && !inActivePreviouslyClosed.includes(item[DB_ID]) || item[DB_ID] == selectedInActiveIndex)}
                     timeout="auto" unmountOnExit>
 
-                    <Card sx={{ mb: 4 }}>
+                    <Card
+                        className='vendor-listing-card'
+                        sx={{ mb: 4 }}>
                         <Stack
                             direction={{ xs: 'column', sm: 'column', md: 'row' }}
                             display='flex'>
                             <CardContent
+                                className='vendor-operating-hours-wrapper'
                                 sx={{ width: { xs: '100%', sm: '100%', md: '65%' } }} >
-                                <Divider>{OPERATING_HOURS_CC}</Divider>
+                                <Divider className='vendor-hours-divider'>{OPERATING_HOURS_CC}</Divider>
+                                {/* unable to declare class name in FullCalendar component */}
                                 <FullCalendar
                                     allDaySlot={false}
                                     dayHeaderFormat={{ weekday: 'short' }}
@@ -275,10 +275,13 @@ export default function Vendor() {
                                 />
                             </CardContent>
 
-                            <CardContent sx={{ width: { xs: '100%', sm: '100%', md: '35%' } }} >
+                            <CardContent
+                                className='vendor-address-wrapper'
+                                sx={{ width: { xs: '100%', sm: '100%', md: '35%' } }} >
                                 <Stack direction={'column'} spacing={2}>
-                                    <Divider>{PIT_STOP_ADDRESS_CC}</Divider>
+                                    <Divider className='vendor-address-divier'>{PIT_STOP_ADDRESS_CC}</Divider>
                                     <TextField
+                                        className='vendor-address1'
                                         InputLabelProps={{ shrink: true }}
                                         InputProps={{
                                             readOnly: true,
@@ -289,6 +292,7 @@ export default function Vendor() {
                                         variant='filled' />
 
                                     <TextField
+                                        className='vendor-city'
                                         InputLabelProps={{ shrink: true }}
                                         InputProps={{
                                             readOnly: true,
@@ -299,6 +303,7 @@ export default function Vendor() {
                                         variant='filled' />
 
                                     <TextField
+                                        className='vendor-state'
                                         InputLabelProps={{ shrink: true }}
                                         InputProps={{
                                             readOnly: true,
@@ -309,6 +314,7 @@ export default function Vendor() {
                                         variant='filled' />
 
                                     <TextField
+                                        className='vendor-zipcode'
                                         InputLabelProps={{ shrink: true }}
                                         InputProps={{
                                             readOnly: true,
@@ -320,6 +326,7 @@ export default function Vendor() {
 
                                     <Stack direction='row' spacing={2} justifyContent={'center'} display={'flex'} sx={{ textAlign: 'center' }}>
                                         <Button
+                                            className='vendor-edit-listing'
                                             href={`/vendor/manage?${MODE}=${EDIT}&${ID}=${item[DB_ID]}`}
                                             size='small'
                                             variant='contained'>
@@ -327,6 +334,7 @@ export default function Vendor() {
                                         </Button>
 
                                         <Button
+                                            className='vendor-delete-listing'
                                             onClick={() => handleDelete(item.id)}
                                             size='small'
                                             variant='contained'>
@@ -356,9 +364,10 @@ export default function Vendor() {
 
             <div>
                 <Backdrop
+                    className='vendor-progress-wrapper'
                     open={isFetching}
                     sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                    <CircularProgress ref={inProgressRef} />
+                    <CircularProgress className='vendor-progress' ref={inProgressRef} />
                 </Backdrop>
             </div>
 
@@ -372,6 +381,7 @@ export default function Vendor() {
                 }}>
                 <Typography
                     align='center'
+                    className='vendor-header'
                     sx={{
                         color: 'white',
                         marginBottom: 4
@@ -387,6 +397,7 @@ export default function Vendor() {
                         spacing={2}
                         sx={{ mb: 2 }}>
                         <Button
+                            className='vendor-create'
                             disabled={isFetching}
                             variant='contained'
                             href={`/vendor/manage?${MODE}=${CREATE}`}
@@ -394,6 +405,7 @@ export default function Vendor() {
                             {CREATE_NEW_LISTING}
                         </Button>
                         <Button
+                            className='vendor-expand-collapse-all'
                             disabled={isFetching}
                             size='small'
                             sx={{ width: 'fit-content' }}
@@ -409,6 +421,7 @@ export default function Vendor() {
 
                     {!isFetching && activeListings.length == 0 && inActiveListings.length == 0 && <Typography
                         align='center'
+                        className='vendor-no-listing'
                         sx={{
                             color: 'white',
                             marginTop: '5%'
@@ -418,6 +431,7 @@ export default function Vendor() {
                     </Typography>}
                     {activeListings.length > 0 && <Typography
                         align='center'
+                        className='vendor-active-listings'
                         sx={{ color: 'white', marginTop: '5%' }}
                         variant='h5'>
                         {ACTIVE_LISTINGS_CC}
@@ -429,6 +443,7 @@ export default function Vendor() {
 
                     {inActiveListings.length > 0 && <Typography
                         align='center'
+                        className='vendor-inactive-listings'
                         sx={{ color: 'white', marginTop: '5%' }}
                         variant='h5'>
                         {INACTIVE_LISTINGS_CC}

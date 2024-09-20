@@ -15,7 +15,7 @@ const cspHeader = `
     https://udbaa.com;
 
     style-src 'self' 'unsafe-inline';
-    img-src * ;
+    img-src * 'self' blob: data:;
     plugin-types application/pdf;
     font-src 'self' data:;
     object-src 'none';

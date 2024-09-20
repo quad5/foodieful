@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation'
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+    Backdrop,
     Button,
     CircularProgress,
     Divider,
@@ -165,13 +166,16 @@ export default function CreateVendor() {
 
     return (
         <Fragment>
-            {isSaving &&
-                <Stack
-                    alignItems='center'>
+            <div>
+                <Backdrop
+                    className='create-vendor-progress-wrapper'
+                    open={isSaving}
+                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                     <CircularProgress
-                        ref={inProgressRef}
-                    />
-                </Stack>}
+                        className='create-vendor-progress'
+                        ref={inProgressRef} />
+                </Backdrop>
+            </div>
 
             {openSuccessAlert && <GenericSuccessAlert
                 closeFn={() => router.push("/")}
@@ -185,12 +189,14 @@ export default function CreateVendor() {
 
             <Typography
                 align='center'
+                className='create-vendor-header'
                 sx={{ color: 'white', marginBottom: 4 }}
                 variant='h3'>
                 {VENDOR_SIGN_UP_CC}
             </Typography>
 
             <Stack
+                className='create-vendor-wrapper'
                 direction={'column'}
                 sx={{
                     backgroundColor: 'white',
@@ -204,11 +210,13 @@ export default function CreateVendor() {
                     onChange={handleAlertClose}
                     onSubmit={handleSubmit(onSubmit)}>
                     <Stack
+                        className='create-vendor-form'
                         direction={'column'}
                         spacing={2}
                         marginY={4}>
 
                         <TextField
+                            className='create-vendor-name'
                             disabled={disableElement}
                             error={errors[NAME_CC]}
                             helperText={errors[NAME_CC]?.message}
@@ -219,6 +227,7 @@ export default function CreateVendor() {
                             {...register(NAME_CC)} />
 
                         <TextField
+                            className='create-vendor-email'
                             disabled={disableElement}
                             error={errors[EMAIL_CC]}
                             helperText={errors[EMAIL_CC]?.message}
@@ -229,6 +238,7 @@ export default function CreateVendor() {
                             {...register(EMAIL_CC)} />
 
                         <TextField
+                            className='create-vendor-phone-number'
                             disabled={disableElement}
                             error={errors[PHONE_NUMBER_CC]}
                             helperText={errors[PHONE_NUMBER_CC]?.message}
@@ -239,6 +249,7 @@ export default function CreateVendor() {
                             {...register(PHONE_NUMBER_CC)} />
 
                         <Button
+                            className='create-vendor-upload-logo'
                             component="label"
                             disabled={disableElement}
                             onChange={(e) => setLogoFile(e.target.files?.[0])}
@@ -253,15 +264,18 @@ export default function CreateVendor() {
                         </Button>
 
                         {errors[LOGO_FILE] && <FormHelperText
+                            className='create-vendor-logo-error'
                             error={errors[LOGO_FILE]}>{errors[LOGO_FILE]?.message}
                         </FormHelperText>}
 
                         {logoFile && <FormHelperText
+                            className='create-vendor-selected-logo'
                             sx={{ overflowWrap: 'break-word' }}>
                             {`Selected logo file ${logoFile.name}`}
                         </FormHelperText>}
 
                         <Button
+                            className='create-vendor-upload-menu'
                             component="label"
                             disabled={disableElement}
                             onChange={(e) => setMenuFile(e.target.files?.[0])}
@@ -276,16 +290,19 @@ export default function CreateVendor() {
                         </Button>
 
                         {errors[MENU_FILE] && <FormHelperText
+                            className='create-vendor-menu-error'
                             error={errors[MENU_FILE]}>{errors[MENU_FILE]?.message}
                         </FormHelperText>}
 
                         {menuFile && <FormHelperText
+                            className='create-vendor-selected-menu'
                             sx={{ overflowWrap: 'break-word' }}>{`Selected menu file ${menuFile.name}`}
                         </FormHelperText>}
 
-                        <Divider>{MAILING_ADDRESS}</Divider>
+                        <Divider className='create-vendor-divider-address'>{MAILING_ADDRESS}</Divider>
 
                         <TextField
+                            className='create-vendor-address1'
                             error={errors[ADDRESS_LINE_1]}
                             disabled={disableElement}
                             helperText={errors[ADDRESS_LINE_1]?.message}
@@ -296,6 +313,7 @@ export default function CreateVendor() {
                             {...register(ADDRESS_LINE_1)} />
 
                         <TextField
+                            className='create-vendor-address2'
                             disabled={disableElement}
                             error={errors[ADDRESS_LINE_2]}
                             InputLabelProps={{ shrink: true }}
@@ -305,6 +323,7 @@ export default function CreateVendor() {
                             {...register(ADDRESS_LINE_2)} />
 
                         <TextField
+                            className='create-vendor-city'
                             disabled={disableElement}
                             InputLabelProps={{ shrink: true }}
                             InputProps={{
@@ -317,6 +336,7 @@ export default function CreateVendor() {
                             {...register(CITY_CC)} />
 
                         <TextField
+                            className='create-vendor-state'
                             disabled={disableElement}
                             InputLabelProps={{ shrink: true }}
                             InputProps={{
@@ -329,6 +349,7 @@ export default function CreateVendor() {
                             {...register(STATE_CC)} />
 
                         <TextField
+                            className='create-vendor-zipcode'
                             disabled={disableElement}
                             error={errors[ZIP_CODE_CC] || zipCodeError}
                             helperText={errors[ZIP_CODE_CC]?.message || zipCodeError}
@@ -339,9 +360,10 @@ export default function CreateVendor() {
                             variant='outlined'
                             {...register(ZIP_CODE_CC)} />
 
-                        {processingZipcode && <CircularProgress />}
+                        {processingZipcode && <CircularProgress className='create-vendor-zipcode-circular-progress' />}
 
                         <Button
+                            className='create-vendor-sign-up'
                             disabled={disableElement}
                             mx='auto'
                             size='small'

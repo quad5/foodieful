@@ -70,11 +70,13 @@ export default function Pagination(props) {
                 ref={alertRef} />}
             {totalCount == 0 && <Typography
                 align="center"
+                className="pagination-no-listing"
                 mt={4}
                 variant="h5"
                 sx={{ color: "white" }}>
                 {NO_LISTING_FOUND_CC}
             </Typography>}
+
 
             <Box
                 display="flex"
@@ -93,7 +95,6 @@ export default function Pagination(props) {
                 spacing={2}
                 sx={{
                     justifyContent: 'center',
-                    px: 4
                 }}>
 
                 {data.length > 0 && data.map((i, index) => (
@@ -101,7 +102,7 @@ export default function Pagination(props) {
                         key={index}
                         item
                         xs={'auto'}
-                        style={{ width: 410 }}>
+                        sx={{ width: { xs: '100%', sm: 410 } }}>
                         <Component data={i} />
                     </Grid>
                 ))}

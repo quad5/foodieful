@@ -64,33 +64,40 @@ export default function FAQ() {
 
     return (
         <Fragment>
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                marginX: 'auto',
-                maxWidth: 'sm',
-                paddingX: { xs: 2, md: 0 }
-            }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginX: 'auto',
+                    maxWidth: 'sm',
+                    paddingX: { xs: 2, md: 0 }
+                }}>
                 <Typography
                     align='center'
+                    className='faq-header'
                     sx={{ color: 'white', marginY: '5%' }}
                     variant='h3'>
                     {FREQUENTLY_ASKED_QUESTIONS_CC}
                 </Typography>
 
                 {faq.map((i, index) => (
-                    <Accordion key={index}>
+                    <Accordion
+                        className='faq-wrapper'
+                        key={index}>
                         <AccordionSummary
+                            className={`faq-question-${index}`}
                             expandIcon={<ExpandMoreIcon />}
-                            sx={{ backgroundColor: index % 2 === 0 ? theme.palette.primary.main : 'white' }}
-                        >
+                            sx={{ backgroundColor: index % 2 === 0 ? theme.palette.primary.main : 'white' }}>
+
                             {i[QUESTION_CC]}
                         </AccordionSummary>
+
                         <AccordionDetails
+                            className={`faq-answer-${index}`}
                             sx={{
                                 backgroundColor: theme.palette.secondary.main,
-                            }}
-                        >
+                            }}>
+
                             {i[ANSWER_CC]}
                         </AccordionDetails>
                     </Accordion>

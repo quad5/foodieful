@@ -107,6 +107,8 @@ export default function Menu() {
 
                     <CardActionArea onClick={() => router.push("/")}>
                         <CardMedia
+                            className='menu-foodieful-logo'
+                            alt='foodieful-logo'
                             component="img"
                             image="/logo.png"
                             sx={{
@@ -118,6 +120,7 @@ export default function Menu() {
                 </Card>
 
                 <IconButton
+                    className='menu-icon'
                     onClick={() => setOpen(true)}
                     sx={{
                         display: { xs: 'flex', sm: 'none' },
@@ -129,6 +132,7 @@ export default function Menu() {
 
                 <Drawer
                     anchor='top'
+                    className='menu-drawer'
                     open={open}
                     PaperProps={{
                         sx: {
@@ -139,6 +143,7 @@ export default function Menu() {
 
                     {<ClickAwayListener onClickAway={handleClickAway}>
                         <Stack
+                            className='menu-menus'
                             direction={'row'}
                             display={{ xs: 'flex', sm: 'none' }}
                             marginLeft={'auto'}
@@ -152,24 +157,27 @@ export default function Menu() {
                 </Drawer>
 
                 {status !== 'loading' && <Stack
+                    className='menu-menus'
                     direction={'row'}
                     display={{ xs: 'none', sm: 'flex' }}
                     marginLeft={'auto'}
                     marginRight={{ xs: 'auto', md: 0 }}
                     marginY={'auto'}
-                    paddingX={2}
+                    paddingX={{ xs: 1, md: 4 }}
                     spacing={1}>
                     {menus()}
-                    {session && <IconButton onClick={() => router.push(`/vendor/vendorProfile?${MODE}=${VIEW}`)}>
+                    {session && <IconButton
+                        className='menu-account-icon'
+                        onClick={() => router.push(`/vendor/profile?${MODE}=${VIEW}`)}>
                         <AccountCircleIcon fontSize='large' />
                     </IconButton>}
                 </Stack>}
 
-                {session && <IconButton href={`/vendor/vendorProfile?${MODE}=${VIEW}`} sx={{ display: { xs: 'flex', sm: 'none' }, mr: 1 }}>
+                {session && <IconButton
+                    className='menu-account-icon'
+                    href={`/vendor/profile?${MODE}=${VIEW}`} sx={{ display: { xs: 'flex', sm: 'none' }, mr: 1 }}>
                     <AccountCircleIcon fontSize='large' />
                 </IconButton>}
-
-
             </AppBar>
         </Fragment>
     )

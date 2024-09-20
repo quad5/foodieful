@@ -17,6 +17,7 @@ import Image from 'next/image'
 import Prompt from '@/components/Prompt';
 import {
     Backdrop,
+    Box,
     Button,
     CircularProgress,
     Collapse,
@@ -309,9 +310,12 @@ export default function VendorProfile() {
         <Fragment>
             <div>
                 <Backdrop
+                    className='profile-progress-wrapper'
                     open={isFetching || isSaving}
                     sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                    <CircularProgress ref={inProgressRef} />
+                    <CircularProgress
+                        className='profile-progress'
+                        ref={inProgressRef} />
                 </Backdrop>
             </div>
 
@@ -326,6 +330,7 @@ export default function VendorProfile() {
                 ref={alertRef} />}
 
             {openDeleteConfirmation && <Prompt
+                className='profile-deletion-confirmation'
                 content={"All of your listings, user profile, and vendor profile information will be permanently deleted!. You will not be able to recover it."}
                 handleClose={handleClosePrompt}
                 handleOK={handleOK}
@@ -334,12 +339,14 @@ export default function VendorProfile() {
 
             {!isFetching && <Typography
                 align='center'
+                className='profile-header'
                 sx={{ color: 'white', marginBottom: 4 }}
                 variant='h3'>
                 {mode === VIEW ? VENDOR_PROFILE_CC : EDIT_VENDOR_PROFILE_CC}
             </Typography>}
 
             {!isFetching && <Stack
+                className='profile-wrapper'
                 direction={'column'}
                 sx={{
                     backgroundColor: 'white',
@@ -353,19 +360,21 @@ export default function VendorProfile() {
                     onChange={handleFormOnChange}
                     onSubmit={handleSubmit(onSubmit)}>
                     <Stack
+                        className='profile-form'
                         direction={'column'}
                         marginY={4}
                         spacing={2}>
 
                         {mode === VIEW && <Button
+                            className='profile-edit-button'
                             disabled={isSaving}
-                            href={`/vendor/vendorProfile?${MODE}=${EDIT}`}
+                            href={`/vendor/profile?${MODE}=${EDIT}`}
                             size='small'
                             variant="contained">
                             {EDIT_VENDOR_PROFILE_CC}
                         </Button>}
 
-                        {mode === VIEW && vendorProfile[DB_LOGO_FILENAME] && <ImageListItem>
+                        {mode === VIEW && vendorProfile[DB_LOGO_FILENAME] && <ImageListItem className='profile-saved-logo'>
                             <Image
                                 alt="saved-logo"
                                 height={400}
@@ -375,6 +384,7 @@ export default function VendorProfile() {
                         </ImageListItem>}
 
                         <TextField
+                            className='profile-name'
                             defaultValue={vendorProfile[DB_NAME]}
                             disabled={isSaving || !enableForEditting || openSuccessAlert}
                             error={errors[NAME_CC]}
@@ -386,6 +396,7 @@ export default function VendorProfile() {
                             {...register(NAME_CC)} />
 
                         <TextField
+                            className='profile-email'
                             defaultValue={vendorProfile[DB_EMAIL]}
                             disabled={true}
                             InputLabelProps={{ shrink: true }}
@@ -394,6 +405,7 @@ export default function VendorProfile() {
                             variant={'filled'} />
 
                         <TextField
+                            className='profile-phone-number'
                             defaultValue={vendorProfile[DB_PHONE_NUMBER]}
                             disabled={isSaving || !enableForEditting || openSuccessAlert}
                             error={errors[PHONE_NUMBER_CC]}
@@ -404,9 +416,10 @@ export default function VendorProfile() {
                             variant={mode === EDIT ? 'outlined' : 'filled'}
                             {...register(PHONE_NUMBER_CC)} />
 
-                        {mode === EDIT && <Divider sx={{ paddingY: 1 }}>{LOGO_CC}</Divider>}
+                        {mode === EDIT && <Divider className='profile-logo-divider' sx={{ paddingY: 1 }}>{LOGO_CC}</Divider>}
 
                         {mode === EDIT && <Button
+                            className='profile-upload-logo'
                             component="label"
                             disabled={isSaving || openSuccessAlert}
                             onChange={(e) => setLogoFile(e.target.files?.[0])}
@@ -421,66 +434,77 @@ export default function VendorProfile() {
                         </Button>}
 
                         {errors[LOGO_FILE] && <FormHelperText
+                            className='profile-logo-error'
                             error={errors[LOGO_FILE]}>{errors[LOGO_FILE]?.message}
                         </FormHelperText>}
 
-                        {!errors[LOGO_FILE] && logoFile && <Collapse
-                            in={logoFile}
-                            sx={{ border: 'solid' }}
-                            timeout="auto"
-                            unmountOnExit>
+                        {!errors[LOGO_FILE] && logoFile && <Box
+                            className='profile-preview-logo-wrapper'
+                            sx={{ border: 'solid' }}>
 
-                            <IconButton sx={{ display: 'flex', ml: 'auto' }}
-                                onClick={handleCancelLogoUpload}>
+                            <IconButton
+                                className='profile-preview-delete-logo-icon'
+                                onClick={handleCancelLogoUpload}
+                                sx={{ display: 'flex', ml: 'auto' }}>
                                 <DeleteIcon fontSize='large' />
                             </IconButton>
 
-                            <ImageListItem>
+                            <ImageListItem
+                                className='profile-preview-logo-image-wrapper'>
                                 <Image
                                     alt="preview-logo"
+                                    className='profile-preview-image'
                                     height={400}
                                     loading="lazy"
                                     src={URL.createObjectURL(logoFile)}
                                     width={400} />
 
                                 <Typography
+                                    className='profile-selected-logo-filename'
                                     sx={{ textAlign: 'center' }}>
                                     {`Preview of selected file: ${logoFile?.name}`}
                                 </Typography>
                             </ImageListItem>
-                        </Collapse>}
+                        </Box>}
 
                         {mode === EDIT &&
                             (!openSuccessAlert && vendorProfile[DB_LOGO_FILENAME] || (openSuccessAlert && !logoFilename)) &&
                             <ImageListItem
+                                className='profile-saved-logo-wrapper'
                                 sx={{ border: 'solid' }}>
                                 <Image
                                     alt="saved-logo"
+                                    className='profile-saved-logo-image'
                                     height={400}
                                     loading="lazy"
                                     src={`/svg/${vendorProfile[DB_LOGO_FILENAME]}`}
                                     width={400} />
                                 <ImageListItemBar
+                                    className='profiled-saved-logo-text'
                                     position="below"
                                     sx={{ textAlign: 'center' }}
                                     title={SAVED_LOGO_CC} />
                             </ImageListItem>}
 
                         {mode == EDIT && openSuccessAlert && logoFilename && <ImageListItem
+                            className='profile-updated-logo-wrapper'
                             sx={{ border: 'solid' }}>
                             <Image
                                 alt="updated-logo"
+                                className='profile-updated-logo-image'
                                 height={400}
                                 loading="lazy"
                                 src={`/svg/${logoFilename}`}
                                 width={400} />
                             <ImageListItemBar
+                                className='profile-updated-logo-text'
                                 position="below"
                                 sx={{ textAlign: 'center' }}
                                 title={UPDATED_LOGO_CC} />
                         </ImageListItem>}
 
                         {mode === EDIT && !vendorProfile[DB_LOGO_FILENAME] && <IconButton
+                            className='profile-no-image'
                             disabled
                             sx={{
                                 mx: 'auto'
@@ -488,9 +512,12 @@ export default function VendorProfile() {
                             <ImageNotSupportedIcon fontSize='large' />
                         </IconButton>}
 
-                        {mode === EDIT && <Divider sx={{ paddingY: 1 }}>{FOOD_MENU_CC}</Divider>}
+                        {mode === EDIT && <Divider
+                            className='profile-menu-divider'
+                            sx={{ paddingY: 1 }}>{FOOD_MENU_CC}</Divider>}
 
                         {mode === EDIT && <Button
+                            className='profile-upload-menu'
                             component="label"
                             disabled={isSaving || openSuccessAlert}
                             onChange={(e) => setMenuFile(e.target.files?.[0])}
@@ -505,21 +532,23 @@ export default function VendorProfile() {
                         </Button>}
 
                         {errors[MENU_FILE] && <FormHelperText
+                            className='profile-menu-error'
                             error={errors[MENU_FILE]}>{errors[MENU_FILE]?.message}
                         </FormHelperText>}
 
-                        {!errors[MENU_FILE] && menuFile && <Collapse
-                            in={menuFile}
-                            sx={{ border: 'solid' }}
-                            timeout="auto"
-                            unmountOnExit>
+                        {!errors[MENU_FILE] && menuFile && <Box
+                            className='profile-preview-menu-wrapper'
+                            sx={{ border: 'solid' }}>
 
-                            <IconButton sx={{ display: 'flex', ml: 'auto' }}
-                                onClick={handleCancelMenuUpload}>
+                            <IconButton
+                                className='profile-preview-delete-menu-icon'
+                                onClick={handleCancelMenuUpload}
+                                sx={{ display: 'flex', ml: 'auto' }}>
                                 <DeleteIcon fontSize='large' />
                             </IconButton>
 
                             <Button
+                                className='profile-preview-menu'
                                 disabled={isSaving}
                                 fullWidth
                                 href={URL.createObjectURL(menuFile)}
@@ -530,9 +559,10 @@ export default function VendorProfile() {
                                 {`Preview selected file ${menuFile?.name}`}
 
                             </Button>
-                        </Collapse>}
+                        </Box>}
 
                         {!openSuccessAlert && vendorProfile[DB_MENU_FILENAME] && <Button
+                            className='profile-menu'
                             disabled={isSaving}
                             fullWidth
                             href={`/pdf/${vendorProfile[DB_MENU_FILENAME]}`}
@@ -543,6 +573,7 @@ export default function VendorProfile() {
                         </Button>}
 
                         {openSuccessAlert && menuFilename && <Button
+                            className='profile-updated-menu'
                             fullWidth
                             href={`/pdf/${menuFilename}`}
                             size='small'
@@ -552,6 +583,7 @@ export default function VendorProfile() {
                         </Button>}
 
                         {mode === EDIT && !vendorProfile[DB_MENU_FILENAME] && <IconButton
+                            className='profile-no-menu'
                             disabled
                             sx={{
                                 mx: 'auto'
@@ -559,9 +591,10 @@ export default function VendorProfile() {
                             <FolderOffIcon fontSize='large' />
                         </IconButton>}
 
-                        <Divider sx={{ paddingY: 1 }}>{MAILING_ADDRESS}</Divider>
+                        <Divider className='profile-address-divider' sx={{ paddingY: 1 }}>{MAILING_ADDRESS}</Divider>
 
                         <TextField
+                            className='profile-address1'
                             error={errors[ADDRESS_LINE_1]}
                             disabled={isSaving || !enableForEditting || openSuccessAlert}
                             helperText={errors[ADDRESS_LINE_1]?.message}
@@ -573,6 +606,7 @@ export default function VendorProfile() {
                             {...register(ADDRESS_LINE_1)} />
 
                         <TextField
+                            className='profile-address2'
                             disabled={isSaving || !enableForEditting || openSuccessAlert}
                             error={errors[ADDRESS_LINE_2]}
                             InputLabelProps={{ shrink: true }}
@@ -583,6 +617,7 @@ export default function VendorProfile() {
                             {...register(ADDRESS_LINE_2)} />
 
                         <TextField
+                            className='profile-city'
                             disabled={!enableForEditting || openSuccessAlert}
                             InputLabelProps={{ shrink: true }}
                             InputProps={{
@@ -595,6 +630,7 @@ export default function VendorProfile() {
                             {...register(CITY_CC)} />
 
                         <TextField
+                            className='profile-state'
                             disabled={!enableForEditting || openSuccessAlert}
                             InputLabelProps={{ shrink: true }}
                             InputProps={{
@@ -607,6 +643,7 @@ export default function VendorProfile() {
                             {...register(STATE_CC)} />
 
                         <TextField
+                            className='profile-zipcode'
                             disabled={isSaving || !enableForEditting || openSuccessAlert}
                             error={errors[ZIP_CODE_CC] || zipCodeError}
                             helperText={errors[ZIP_CODE_CC]?.message || zipCodeError}
@@ -618,9 +655,10 @@ export default function VendorProfile() {
                             variant={mode === EDIT ? 'outlined' : 'filled'}
                             {...register(ZIP_CODE_CC)} />
 
-                        {processingZipcode && <CircularProgress />}
+                        {processingZipcode && <CircularProgress className='profile-zipcode-progress' />}
 
                         {mode === EDIT && <Button
+                            className='profile-save'
                             disabled={isSaving || openSuccessAlert}
                             mx='auto'
                             size='small'
@@ -631,6 +669,7 @@ export default function VendorProfile() {
                     </Stack>
                 </form>
                 <Button
+                    className='profile-delete'
                     fullWidth
                     onClick={handleDelete}
                     size='large'

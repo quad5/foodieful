@@ -14,6 +14,7 @@ import {
 
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import theme from '@/theme';
+import { hyphenateText } from '@/app/lib/utils'
 
 
 export default function DropDownMenu(props) {
@@ -30,6 +31,7 @@ export default function DropDownMenu(props) {
   const list = props.menu.map(o => {
     // return <MenuItem
     return <Button
+      className={hyphenateText(o.title).toLowerCase()}
       key={o.title}
       href={o.link}
       onClick={() => handleClose(o.link)}
@@ -71,6 +73,7 @@ export default function DropDownMenu(props) {
   return (
     <Fragment>
       <Button
+        className={`drop-down-menu-${hyphenateText(props.menuName).toLowerCase()}`}
         endIcon={!props.singleLevel && <ExpandMore />}
         onClick={props.singleLevel ? props.fn : handleClick}
         size='large'  // Need this to be large and width to make other buttons same size 

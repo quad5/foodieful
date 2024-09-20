@@ -24,22 +24,26 @@ export default function Prompt(props) {
                         backgroundColor: theme.palette.primary.main,
                     }
                 }}>
-                <DialogTitle>
+                <DialogTitle
+                    className='prompt-title'>
                     {props.title}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText
+                        className='prompt-content'
                         sx={{ color: 'black' }}>
                         {props.content}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button
+                        className='prompt-okay'
                         onClick={props.handleOK}
                         sx={{ backgroundColor: 'black', color: 'white' }}>
                         {OKAY_CC}
                     </Button>
                     <Button
+                        className='prompt-cancel'
                         onClick={props.handleClose}
                         sx={{ backgroundColor: 'black', color: 'white' }}>
                         {CANCEL_CC}

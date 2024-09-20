@@ -41,6 +41,7 @@ export default async function RootLayout({ children }) {
                 <CssBaseline />
                 <Menu />
                 <Container disableGutters
+                  maxWidth='xl'
                   sx={{ marginBottom: { xs: '20%', sm: '10%' }, marginTop: 4 }}
                 >
                   {children}

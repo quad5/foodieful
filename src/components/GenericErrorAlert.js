@@ -4,6 +4,7 @@ import { Alert } from '@mui/material'
 function GenericErrorAlert(props, ref) {
     return (
         <Alert
+            className='error-alert'
             onClose={props.closeFn}
             ref={ref}
             severity="error"

@@ -45,7 +45,7 @@ export default function sitemap() {
             priority: 0.7,
         },
         {
-            url: 'https://www.foodieful.net/vendorProfile',
+            url: 'https://www.foodieful.net/vendor/profile',
             lastModified: new Date(),
             changeFrequency: 'yearly',
             priority: 0.4,
