@@ -103,6 +103,7 @@ import {
 import GenericErrorAlert from '@/components/GenericErrorAlert'
 import GenericSuccessAlert from '@/components/GenericSuccessAlert';
 import { signOutHelperFn } from '@/app/lib/accessHelpers'
+import { isEmpty } from '@/app/lib/utils';
 
 
 export default function VendorProfile() {
@@ -255,7 +256,6 @@ export default function VendorProfile() {
     }
 
     async function onSubmit(data, e) {
-        setZipCodeError('');
         e.preventDefault()
 
         if (formHasChanged) {
@@ -289,16 +289,14 @@ export default function VendorProfile() {
             }
 
             setIsSaving(false)
-            if (!zipCodeError) {
-                if (response.success) {
-                    setAlertMessage(SUCCESSFULLY_UPDATED_PROFILE_CC)
-                    setLogoFile(null)
-                    setMenuFile(null)
-                    setOpenSuccessAlert(true)
-                } else {
-                    setIsSaving(false)
-                    setOpenErrorAlert(true)
-                }
+            if (response.success) {
+                setAlertMessage(SUCCESSFULLY_UPDATED_PROFILE_CC)
+                setLogoFile(null)
+                setMenuFile(null)
+                setOpenSuccessAlert(true)
+            } else {
+                setIsSaving(false)
+                setOpenErrorAlert(true)
             }
         } else {
             setAlertMessage(NO_ACTION_TAKEN_CC)
@@ -659,7 +657,7 @@ export default function VendorProfile() {
 
                         {mode === EDIT && <Button
                             className='profile-save'
-                            disabled={isSaving || openSuccessAlert}
+                            disabled={isSaving || openSuccessAlert || !isEmpty(errors) || zipCodeError}
                             mx='auto'
                             size='small'
                             type='submit'

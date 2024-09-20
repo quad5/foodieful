@@ -34,10 +34,12 @@ import {
     MENU_FILE,
     MENU_FILENAME,
     NAME_CC,
+    PDF,
     PHONE_NUMBER_CC,
     POST,
     SIGN_UP_CC,
     STATE_CC,
+    SVG,
     TECHNICAL_DIFFICULTIES,
     UPLOAD_LOGO_CC,
     UPLOAD_FOOD_MENU_CC,
@@ -48,7 +50,7 @@ import {
 } from "@/app/lib/constants";
 import { vendorSchema } from '@/app/lib/validation-schema'
 import { createVendor, getZipCodeDetails, upload } from '@/app/lib/apiHelpers';
-
+import { isEmpty } from '../lib/utils';
 
 
 export default function CreateVendor() {
@@ -86,8 +88,6 @@ export default function CreateVendor() {
             alertRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [isSaving, openErrorAlert, openSuccessAlert])
-
-
 
     const handleAlertClose = () => {
         setOpenErrorAlert(false)
@@ -134,32 +134,37 @@ export default function CreateVendor() {
         e.preventDefault()
         setOpenErrorAlert(false)
         setDisableElement(true)
-        setIsSaving(true)
 
-        const uploadResp = await uploadFile()
-        if (uploadResp.success) {
-            data[CITY_CC] = city
-            data[LOGO_FILENAME] = uploadResp.message[0]
-            data[MENU_FILENAME] = uploadResp.message[1]
-            data[STATE_CC] = state
+        if (logoFile || menuFile) {
+            setIsSaving(true)
 
-            setZipCodeError('');
-            const response = await createVendor(data)
-            setIsSaving(false)
-            if (!zipCodeError) {
-                if (response.success) {
-                    setAlertMessage('Vendor profile successfully created. Please sign in using provided email.')
-                    setLogoFile(null)
-                    setMenuFile(null)
-                    setOpenSuccessAlert(true)
-                } else {
-                    setDisableElement(false)
-                    setOpenErrorAlert(true)
+            const uploadResp = await uploadFile()
+            if (uploadResp.success) {
+                if (uploadResp.message.hasOwnProperty(SVG)) {
+                    data[LOGO_FILENAME] = uploadResp.message[SVG]
                 }
+
+                if (uploadResp.message.hasOwnProperty(PDF)) {
+                    data[MENU_FILENAME] = uploadResp.message[PDF]
+                }
+            } else {
+                setIsSaving(false)
+                setOpenErrorAlert(true)
             }
+        }
+
+        setIsSaving(false)
+        data[CITY_CC] = city
+        data[STATE_CC] = state
+
+        const response = await createVendor(data)
+        if (response.success) {
+            setAlertMessage('Vendor profile successfully created. Please sign in using provided email.')
+            setLogoFile(null)
+            setMenuFile(null)
+            setOpenSuccessAlert(true)
         } else {
             setDisableElement(false)
-            setIsSaving(false)
             setOpenErrorAlert(true)
         }
     }
@@ -364,7 +369,7 @@ export default function CreateVendor() {
 
                         <Button
                             className='create-vendor-sign-up'
-                            disabled={disableElement}
+                            disabled={disableElement || !isEmpty(errors) || zipCodeError}
                             mx='auto'
                             size='small'
                             type='submit'

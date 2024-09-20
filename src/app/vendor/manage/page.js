@@ -196,44 +196,41 @@ export default function Listings() {
     }
 
     async function onSubmit(data) {
-        setZipCodeError('');
         data[CITY_CC] = city
         data[STATE_CC] = state
 
         if (formHasChanged) {
-            if (!zipCodeError) {
-                let response = {}
+            let response = {}
 
-                // create address object
-                const address = {
-                    [DB_ADDRESS_LINE_1]: data[ADDRESS_LINE_1],
-                    [DB_CITY]: city,
-                    [DB_STATE]: state,
-                    [DB_ZIP_CODE]: data[ZIP_CODE_CC]
-                }
+            // create address object
+            const address = {
+                [DB_ADDRESS_LINE_1]: data[ADDRESS_LINE_1],
+                [DB_CITY]: city,
+                [DB_STATE]: state,
+                [DB_ZIP_CODE]: data[ZIP_CODE_CC]
+            }
 
-                if (mode === CREATE) {
-                    response = await createListing({
-                        [PIT_STOP_ADDRESS]: address,
-                        [SCHEDULES]: currentEvents,
-                        [ACTIVE_LISTING]: activeListing,
-                    }, session.user.email)
+            if (mode === CREATE) {
+                response = await createListing({
+                    [PIT_STOP_ADDRESS]: address,
+                    [SCHEDULES]: currentEvents,
+                    [ACTIVE_LISTING]: activeListing,
+                }, session.user.email)
 
-                } else {    // edit
-                    response = await updateListingByAddressId({
-                        [PIT_STOP_ADDRESS]: address,
-                        [SCHEDULES]: currentEvents,
-                        [ACTIVE_LISTING]: activeListing,
-                    }, itemId)
-                }
+            } else {    // edit
+                response = await updateListingByAddressId({
+                    [PIT_STOP_ADDRESS]: address,
+                    [SCHEDULES]: currentEvents,
+                    [ACTIVE_LISTING]: activeListing,
+                }, itemId)
+            }
 
-                if (response.success) {
-                    mode === CREATE ? setAlertMessage(SUCCESSFULLY_CREATED_LISTING_CC) : setAlertMessage(SUCCESSFULLY_UPDATED_LISTING_CC)
-                    setDisableElement(true)
-                    setOpenSuccessAlert(true)
-                } else {
-                    setOpenErrorAlert(true)
-                }
+            if (response.success) {
+                mode === CREATE ? setAlertMessage(SUCCESSFULLY_CREATED_LISTING_CC) : setAlertMessage(SUCCESSFULLY_UPDATED_LISTING_CC)
+                setDisableElement(true)
+                setOpenSuccessAlert(true)
+            } else {
+                setOpenErrorAlert(true)
             }
         } else {
             setAlertMessage(NO_ACTION_TAKEN_CC)
