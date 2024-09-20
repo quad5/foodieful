@@ -50,6 +50,7 @@ USER nextjs
 #ENV PORT=300
 #ENV HOSTNAME="localhost"
 #ENV HOSTNAME="0.0.0.0"
+#CMD ["npm", "run", "prod_new"]
 #CMD ["npm", "run", "prod_w_seed"]
-CMD ["npm", "run", "prod"]
+CMD ["npm", "run",  "prod"]
 

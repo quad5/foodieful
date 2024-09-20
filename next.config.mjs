@@ -15,7 +15,7 @@ const cspHeader = `
     https://udbaa.com;
 
     style-src 'self' 'unsafe-inline';
-    img-src * 'self' blob: data:;
+    img-src * 'self' blob: data: filesystem: https://*.foodieful.net;
     plugin-types application/pdf;
     font-src 'self' data:;
     object-src 'none';

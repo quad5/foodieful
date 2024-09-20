@@ -7,7 +7,9 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "baseline": "mkdir -p prisma/migrations/0_init && npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql && npx prisma migrate resolve --applied 0_init",
     "prod_w_seed": "npx prisma migrate deploy && npx prisma db seed && node server.js",
+    "prod_new": "npx prisma db push --skip-generate && npx prisma db seed && node server.js",
     "prod": "npx prisma migrate deploy && node server.js"
   },
   "prisma": {
