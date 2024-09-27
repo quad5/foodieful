@@ -76,15 +76,6 @@ export default function ListingCard(props) {
                             spacing={2}>
 
                             {data[DB_VENDOR_PROFILE][DB_LOGO_FILE_ID] ?
-                                // <CardMedia
-                                //     alt="vendor-logo"
-                                //     component="img"
-                                //     image={constructImageFileUrl(data[DB_VENDOR_PROFILE][DB_LOGO_FILE_ID], 100)}
-                                //     sx={{
-                                //         height: 50,
-                                //         objectFit: 'contain',
-                                //         width: 50
-                                //     }} /> 
                                 <Image
                                     alt="vendor-logo"
                                     height={50}
@@ -92,8 +83,7 @@ export default function ListingCard(props) {
                                     quality={100}
                                     src={constructImageFileUrl(data[DB_VENDOR_PROFILE][DB_LOGO_FILE_ID], 100)}
                                     width={50}
-                                />
-                                :
+                                /> :
                                 <Icon
                                     className="listing-card-no-logo"
                                     sx={{
