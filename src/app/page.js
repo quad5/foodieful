@@ -23,6 +23,8 @@ import {
     getZipCodeDetails,
 } from "@/app/lib/apiHelpers"
 import {
+    DEVELOPMENT,
+    PRODUCTION,
     ZIP_CODE_CC
 } from '@/app/lib/constants';
 import { zipCodeSchema } from '@/app/lib/validation-schema'
@@ -31,7 +33,11 @@ import Pagination from '@/components/Pagination';
 import ListingCard from '@/components/ListingCard';
 
 import { Button } from '@mui/base';
-import { listFiles, uploadToGoogleDrive, deleteFile } from './lib/google';
+import {
+    createFoler,
+    deleteFile,
+    listFiles
+} from '@/app/lib/google';
 
 
 export default function HomePage() {
@@ -56,6 +62,19 @@ export default function HomePage() {
             inProgressRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [isFetching])
+
+    {/* TODO - remove once a management page has been created. */ }
+    const handleDrive = () => {
+        //createFoler(PRODUCTION)
+
+        // [].forEach(async (id) => {
+        //         console.log("__deleting value", id)
+        //         await new Promise(resolve => setTimeout(resolve, 3000));
+        //         deleteFile(id)
+        //     })
+
+        //listFiles()
+    }
 
     const handleZipCode = async (e) => {
 
@@ -89,6 +108,10 @@ export default function HomePage() {
 
     return (
         <Fragment>
+            {/* TODO - remove once a management page has been created. */}
+            {/* <Button onClick={handleDrive}>
+                Click to list files
+            </Button> */}
             <div>
                 <Backdrop
                     open={isFetching}

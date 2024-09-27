@@ -19,12 +19,10 @@ import { useForm } from 'react-hook-form';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import {
-    DeleteIcon,
-    FolderOffIcon,
-    ImageNotSupportedIcon,
-    UploadFileIcon
-} from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FolderOffIcon from '@mui/icons-material/FolderOff';
+import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 import {
     Backdrop,
@@ -99,7 +97,10 @@ import {
     DB_STATE,
     DB_ZIP_CODE
 } from '@/app/lib/dbFieldConstants';
-import { uploadToGoogleDrive } from '@/app/lib/google';
+import {
+    deleteFile,
+    uploadToGoogleDrive
+} from '@/app/lib/google';
 import {
     constructFileUrl,
     constructImageFileUrl,
@@ -256,8 +257,9 @@ export default function VendorProfile() {
                 const formData = new FormData()
                 formData.append(FILE, logoFile)
                 const fileMetadata = {
-                    name: `${generateRandomUUID()}.svg`,
                     mimeType: "image/svg+xml",
+                    name: `${generateRandomUUID()}.svg`,
+                    parents: [process.env.NEXT_PUBLIC_FOLDER_ID]
                 };
 
                 await uploadToGoogleDrive(formData, fileMetadata)
@@ -271,6 +273,16 @@ export default function VendorProfile() {
                         setOpenErrorAlert(true)
                         setOpenSuccessAlert(false)
                     })
+                if (!openErrorAlert) {
+                    if (vendorProfile[DB_LOGO_FILE_ID]) {
+                        await deleteFile(vendorProfile[DB_LOGO_FILE_ID])
+                            .catch((error) => {
+                                sendLogToNewRelic(ERROR, `On delete log file, ${error}`)
+                                setIsSaving(false)
+                                // no need to prompt error because it doesn't affect foodieful application
+                            })
+                    }
+                }
             }
 
             if (menuFile && !openErrorAlert) {
@@ -278,8 +290,9 @@ export default function VendorProfile() {
                 const formData = new FormData()
                 formData.append(FILE, menuFile)
                 const fileMetadata = {
-                    name: `${generateRandomUUID()}.pdf`,
                     mimeType: "application/pdf",
+                    name: `${generateRandomUUID()}.pdf`,
+                    parents: [process.env.NEXT_PUBLIC_FOLDER_ID]
                 };
                 await uploadToGoogleDrive(formData, fileMetadata)
                     .then(docId => {
@@ -291,6 +304,17 @@ export default function VendorProfile() {
                         setOpenErrorAlert(true)
                         setOpenSuccessAlert(false)
                     })
+
+                if (!openErrorAlert) {
+                    if (vendorProfile[DB_MENU_FILE_ID]) {
+                        await deleteFile(vendorProfile[DB_MENU_FILE_ID])
+                            .catch((error) => {
+                                sendLogToNewRelic(ERROR, `On delete menu file, ${error}`)
+                                setIsSaving(false)
+                                // no need to prompt error because it doesn't affect foodieful application
+                            })
+                    }
+                }
             }
 
             if (!openErrorAlert) {

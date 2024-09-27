@@ -158,6 +158,7 @@ export default function CreateVendor() {
             const formData = new FormData()
             formData.append(FILE, logoFile)
             const fileMetadata = {
+                parents: [process.env.DRIVE_FOLDER_ID],
                 name: `${generateRandomUUID()}.svg`,
                 mimeType: "image/svg+xml",
             };
@@ -180,6 +181,7 @@ export default function CreateVendor() {
             const formData = new FormData()
             formData.append(FILE, menuFile)
             const fileMetadata = {
+                parents: [process.env.DRIVE_FOLDER_ID],
                 name: `${generateRandomUUID()}.pdf`,
                 mimeType: "application/pdf",
             };

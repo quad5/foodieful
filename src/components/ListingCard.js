@@ -2,12 +2,10 @@
 
 import { Fragment, useState } from "react";
 
-import {
-    ImageNotSupportedIcon,
-    PhoneIcon,
-    PlaceIcon,
-    ScheduleIcon
-} from '@mui/icons-material';
+import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
+import PhoneIcon from '@mui/icons-material/Phone';
+import PlaceIcon from '@mui/icons-material/Place';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 
 import {
     Box,

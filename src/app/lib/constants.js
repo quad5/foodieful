@@ -17,6 +17,7 @@ export const CREATE_NEW_LISTING = 'Create New Listing';
 export const DELETE = 'DELETE';
 export const DELETE_LISTING_CC = 'Delete Listing';
 export const DELETE_PROFILE_CC = 'Delete Profile';
+export const DEVELOPMENT = 'development';
 export const EDIT = 'edit';
 export const EDIT_LISTING_CC = 'Edit Listing';
 export const EDIT_VENDOR_PROFILE_CC = "Edit Vendor's Profile";

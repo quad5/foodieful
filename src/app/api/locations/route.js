@@ -11,7 +11,7 @@ import {
 import {
     DB_ACTIVE,
     DB_LOGO_FILE_ID,
-    DB_MENU_FILENAME,
+    DB_MENU_FILE_ID,
     DB_NAME,
     DB_PHONE_NUMBER,
     DB_ZIP_CODE
@@ -57,8 +57,6 @@ export async function GET(request) {
                             [DB_ACTIVE]: {
                                 equals: true
                             }
-
-
                         }
                     },
 
@@ -67,7 +65,7 @@ export async function GET(request) {
                         vendorProfile: {
                             select: {
                                 [DB_LOGO_FILE_ID]: true,
-                                [DB_MENU_FILENAME]: true,
+                                [DB_MENU_FILE_ID]: true,
                                 [DB_NAME]: true,
                                 [DB_PHONE_NUMBER]: true,
                             },
