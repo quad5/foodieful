@@ -31,6 +31,7 @@ ENV NEW_RELIC_LOG=stdout
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+COPY credential.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Set the correct permission for prerender cache

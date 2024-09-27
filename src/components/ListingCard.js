@@ -2,6 +2,8 @@
 
 import { Fragment, useState } from "react";
 
+import Image from 'next/image'
+
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import PhoneIcon from '@mui/icons-material/Phone';
 import PlaceIcon from '@mui/icons-material/Place';
