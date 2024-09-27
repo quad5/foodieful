@@ -6,7 +6,7 @@ import { Container } from '@mui/material'
 import Menu from "@/components/Menu";
 import Script from 'next/script'
 import { SessionProvider } from 'next-auth/react';
-import theme from '../theme';
+import theme from '@/theme';
 import CssBaseline from '@mui/material/CssBaseline';
 
 export const metadata = {

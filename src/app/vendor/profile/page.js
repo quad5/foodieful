@@ -1,40 +1,53 @@
 'use client'
 
+import Image from 'next/image'
+import {
+    useRouter,
+    useSearchParams
+} from 'next/navigation'
+
+import { useSession } from 'next-auth/react';
+
 import {
     Fragment,
     useEffect,
     useRef,
     useState
 } from 'react';
-import {
-    useRouter,
-    useSearchParams
-} from 'next/navigation'
+
 import { useForm } from 'react-hook-form';
+
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image'
-import Prompt from '@/components/Prompt';
+
+import {
+    DeleteIcon,
+    FolderOffIcon,
+    ImageNotSupportedIcon,
+    UploadFileIcon
+} from '@mui/icons-material';
+
 import {
     Backdrop,
     Box,
     Button,
     CircularProgress,
-    Collapse,
     Divider,
     FormHelperText,
     IconButton,
-    ImageListItem,
-    ImageListItemBar,
     Stack,
     TextField,
     Typography,
 } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete';
-import FolderOffIcon from '@mui/icons-material/FolderOff';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 
+import { signOutHelperFn } from '@/app/lib/accessHelpers'
+import {
+    createVendor,
+    deleteVendorProfile,
+    getVendorProfileByEmail,
+    getZipCodeDetails,
+    sendLogToNewRelic,
+    updateVendorProfile,
+} from "@/app/lib/apiHelpers";
 import {
     ADDRESS_LINE_1,
     ADDRESS_LINE_2,
@@ -42,28 +55,25 @@ import {
     DELETE_PROFILE_CC,
     EDIT,
     EDIT_VENDOR_PROFILE_CC,
-    EMAIL_CC,
-    FILE_BRACKET,
+    ERROR,
+    FILE,
     FOOD_MENU_CC,
     LOGO_CC,
     LOGO_FILE,
-    LOGO_FILENAME,
+    LOGO_FILE_ID,
     MAILING_ADDRESS,
     MENU_FILE,
-    MENU_FILENAME,
+    MENU_FILE_ID,
     MODE,
     NAME_CC,
     NO_ACTION_TAKEN_CC,
-    PDF,
     PHONE_NUMBER_CC,
-    POST,
     SAVE_CC,
     SAVED_FOOD_MENU_CC,
     SAVED_LOGO_CC,
     STATE_CC,
     SUCCESSFULLY_DELETED_PROFILE_CC,
     SUCCESSFULLY_UPDATED_PROFILE_CC,
-    SVG,
     TECHNICAL_DIFFICULTIES,
     UPDATED_LOGO_CC,
     UPDATED_MENU_CC,
@@ -76,34 +86,31 @@ import {
     VIEW,
     ZIP_CODE_CC,
 } from "@/app/lib/constants";
-
 import {
     DB_ADDRESS_LINE_1,
     DB_ADDRESS_LINE_2,
     DB_CITY,
     DB_EMAIL,
     DB_ID,
-    DB_LOGO_FILENAME,
-    DB_MENU_FILENAME,
+    DB_LOGO_FILE_ID,
+    DB_MENU_FILE_ID,
     DB_NAME,
     DB_PHONE_NUMBER,
     DB_STATE,
     DB_ZIP_CODE
 } from '@/app/lib/dbFieldConstants';
-import { tempSchema, vendorSchema } from '@/app/lib/validation-schema'
-
+import { uploadToGoogleDrive } from '@/app/lib/google';
 import {
-    createVendor,
-    deleteVendorProfile,
-    getVendorProfileByEmail,
-    getZipCodeDetails,
-    updateVendorProfile,
-    upload
-} from "@/app/lib/apiHelpers";
+    constructFileUrl,
+    constructImageFileUrl,
+    generateRandomUUID,
+    isEmpty,
+} from '@/app/lib/utils';
+import { tempSchema } from '@/app/lib/validation-schema'
+
 import GenericErrorAlert from '@/components/GenericErrorAlert'
 import GenericSuccessAlert from '@/components/GenericSuccessAlert';
-import { signOutHelperFn } from '@/app/lib/accessHelpers'
-import { isEmpty } from '@/app/lib/utils';
+import Prompt from '@/components/Prompt';
 
 
 export default function VendorProfile() {
@@ -120,9 +127,9 @@ export default function VendorProfile() {
     const [isFetching, setIsFetching] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
     const [logoFile, setLogoFile] = useState(null)
-    const [logoFilename, setLogoFilename] = useState('')
+    const [logoFileId, setLogoFileId] = useState('')
     const [menuFile, setMenuFile] = useState(null)
-    const [menuFilename, setMenuFilename] = useState('')
+    const [menuFileId, setMenuFileId] = useState('')
     const [mode, setMode] = useState('')
     const [openErrorAlert, setOpenErrorAlert] = useState(false)
     const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false)
@@ -240,63 +247,73 @@ export default function VendorProfile() {
         }
     }
 
-    const uploadFile = async () => {
-        const data = new FormData()
-        if (logoFile) {
-            data.append(FILE_BRACKET, logoFile);
-        }
-        if (menuFile) {
-            data.append(FILE_BRACKET, menuFile);
-        }
-
-        return await upload({
-            method: POST,
-            body: data
-        })
-    }
-
     async function onSubmit(data, e) {
         e.preventDefault()
 
         if (formHasChanged) {
-            if (logoFile || menuFile) {
+            if (logoFile && !openErrorAlert) {
                 setIsSaving(true)
-                const uploadResp = await uploadFile()
-                if (uploadResp.success) {
-                    if (uploadResp.message.hasOwnProperty(SVG)) {
-                        setLogoFilename(uploadResp.message[SVG])
-                        data[LOGO_FILENAME] = uploadResp.message[SVG]
-                    }
+                const formData = new FormData()
+                formData.append(FILE, logoFile)
+                const fileMetadata = {
+                    name: `${generateRandomUUID()}.svg`,
+                    mimeType: "image/svg+xml",
+                };
 
-                    if (uploadResp.message.hasOwnProperty(PDF)) {
-                        setMenuFilename(uploadResp.message[PDF])
-                        data[MENU_FILENAME] = uploadResp.message[PDF]
-                    }
+                await uploadToGoogleDrive(formData, fileMetadata)
+                    .then(docId => {
+                        setLogoFileId(docId)
+                        data[LOGO_FILE_ID] = docId
+                    })
+                    .catch((error) => {
+                        sendLogToNewRelic(ERROR, `On upload logo file, ${error}`)
+                        setIsSaving(false)
+                        setOpenErrorAlert(true)
+                        setOpenSuccessAlert(false)
+                    })
+            }
+
+            if (menuFile && !openErrorAlert) {
+                setIsSaving(true)
+                const formData = new FormData()
+                formData.append(FILE, menuFile)
+                const fileMetadata = {
+                    name: `${generateRandomUUID()}.pdf`,
+                    mimeType: "application/pdf",
+                };
+                await uploadToGoogleDrive(formData, fileMetadata)
+                    .then(docId => {
+                        setMenuFileId(docId)
+                        data[MENU_FILE_ID] = docId
+                    }).catch((error) => {
+                        sendLogToNewRelic(ERROR, `On upload menu file, ${error}`)
+                        setIsSaving(false)
+                        setOpenErrorAlert(true)
+                        setOpenSuccessAlert(false)
+                    })
+            }
+
+            if (!openErrorAlert) {
+                let response = {}
+                data[CITY_CC] = city
+                data[STATE_CC] = state
+                if (mode === EDIT) {
+                    data[VENDOR_ID] = vendorProfile[DB_ID]
+                    response = await updateVendorProfile(data)
+                } else {
+                    response = await createVendor(data)
+                }
+
+                if (response.success) {
+                    setAlertMessage(SUCCESSFULLY_UPDATED_PROFILE_CC)
+                    setLogoFile(null)
+                    setMenuFile(null)
+                    setOpenSuccessAlert(true)
                 } else {
                     setIsSaving(false)
                     setOpenErrorAlert(true)
                 }
-            }
-
-            let response = {}
-            data[CITY_CC] = city
-            data[STATE_CC] = state
-            if (mode === EDIT) {
-                data[VENDOR_ID] = vendorProfile[DB_ID]
-                response = await updateVendorProfile(data)
-            } else {
-                response = await createVendor(data)
-            }
-
-            setIsSaving(false)
-            if (response.success) {
-                setAlertMessage(SUCCESSFULLY_UPDATED_PROFILE_CC)
-                setLogoFile(null)
-                setMenuFile(null)
-                setOpenSuccessAlert(true)
-            } else {
                 setIsSaving(false)
-                setOpenErrorAlert(true)
             }
         } else {
             setAlertMessage(NO_ACTION_TAKEN_CC)
@@ -372,14 +389,17 @@ export default function VendorProfile() {
                             {EDIT_VENDOR_PROFILE_CC}
                         </Button>}
 
-                        {mode === VIEW && vendorProfile[DB_LOGO_FILENAME] && <ImageListItem className='profile-saved-logo'>
-                            <Image
-                                alt="saved-logo"
-                                height={400}
-                                loading="lazy"
-                                src={`/svg/${vendorProfile[DB_LOGO_FILENAME]}`}
-                                width={400} />
-                        </ImageListItem>}
+                        {mode === VIEW && vendorProfile[DB_LOGO_FILE_ID] &&
+                            <Box className='profile-saved-logo' sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <Image
+                                    alt="saved-logo"
+                                    height={200}
+                                    loading="lazy"
+                                    quality={100}
+                                    src={constructImageFileUrl(vendorProfile[DB_LOGO_FILE_ID], 400)}
+                                    width={200}
+                                />
+                            </Box>}
 
                         <TextField
                             className='profile-name'
@@ -447,61 +467,74 @@ export default function VendorProfile() {
                                 <DeleteIcon fontSize='large' />
                             </IconButton>
 
-                            <ImageListItem
-                                className='profile-preview-logo-image-wrapper'>
+                            <Box
+                                className='profile-preview-logo-image-wrapper'
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}>
                                 <Image
                                     alt="preview-logo"
                                     className='profile-preview-image'
-                                    height={400}
+                                    height={200}
                                     loading="lazy"
                                     src={URL.createObjectURL(logoFile)}
-                                    width={400} />
-
-                                <Typography
-                                    className='profile-selected-logo-filename'
-                                    sx={{ textAlign: 'center' }}>
-                                    {`Preview of selected file: ${logoFile?.name}`}
-                                </Typography>
-                            </ImageListItem>
+                                    width={200} />
+                            </Box>
+                            <Typography
+                                className='profile-selected-logo-filename'
+                                sx={{ textAlign: 'center' }}>
+                                {`Preview of selected file: ${logoFile?.name}`}
+                            </Typography>
                         </Box>}
 
                         {mode === EDIT &&
-                            (!openSuccessAlert && vendorProfile[DB_LOGO_FILENAME] || (openSuccessAlert && !logoFilename)) &&
-                            <ImageListItem
+                            (!openSuccessAlert && vendorProfile[DB_LOGO_FILE_ID] || (openSuccessAlert && !logoFileId)) &&
+                            <Box
                                 className='profile-saved-logo-wrapper'
                                 sx={{ border: 'solid' }}>
-                                <Image
-                                    alt="saved-logo"
-                                    className='profile-saved-logo-image'
-                                    height={400}
-                                    loading="lazy"
-                                    src={`/svg/${vendorProfile[DB_LOGO_FILENAME]}`}
-                                    width={400} />
-                                <ImageListItemBar
+                                <Box
+                                    sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Image
+                                        alt="saved-logo"
+                                        className='profile-saved-logo-image'
+                                        height={200}
+                                        loading="lazy"
+                                        src={constructImageFileUrl(vendorProfile[DB_LOGO_FILE_ID], 400)}
+                                        width={200} />
+                                </Box>
+                                <Typography
                                     className='profiled-saved-logo-text'
-                                    position="below"
-                                    sx={{ textAlign: 'center' }}
-                                    title={SAVED_LOGO_CC} />
-                            </ImageListItem>}
+                                    sx={{ textAlign: 'center' }}>
+                                    {SAVED_LOGO_CC}
+                                </Typography>
+                            </Box>
+                        }
 
-                        {mode == EDIT && openSuccessAlert && logoFilename && <ImageListItem
-                            className='profile-updated-logo-wrapper'
-                            sx={{ border: 'solid' }}>
-                            <Image
-                                alt="updated-logo"
-                                className='profile-updated-logo-image'
-                                height={400}
-                                loading="lazy"
-                                src={`/svg/${logoFilename}`}
-                                width={400} />
-                            <ImageListItemBar
-                                className='profile-updated-logo-text'
-                                position="below"
-                                sx={{ textAlign: 'center' }}
-                                title={UPDATED_LOGO_CC} />
-                        </ImageListItem>}
+                        {mode == EDIT && openSuccessAlert && logoFileId &&
+                            <Box
+                                className='profile-updated-logo-wrapper'
+                                sx={{ border: 'solid' }}>
+                                <Box
 
-                        {mode === EDIT && !vendorProfile[DB_LOGO_FILENAME] && <IconButton
+                                    sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Image
+                                        alt="updated-logo"
+                                        className='profile-updated-logo-image'
+                                        height={200}
+                                        loading="lazy"
+                                        src={constructImageFileUrl(logoFileId, 400)}
+                                        width={200} />
+                                </Box>
+                                <Typography
+                                    className='profile-updated-logo-text'
+                                    sx={{ textAlign: 'center' }}>
+                                    {UPDATED_LOGO_CC}
+                                </Typography>
+                            </Box>
+                        }
+
+                        {mode === EDIT && !vendorProfile[DB_LOGO_FILE_ID] && <IconButton
                             className='profile-no-image'
                             disabled
                             sx={{
@@ -554,33 +587,32 @@ export default function VendorProfile() {
                                 sx={{ marginBottom: 2 }}
                                 target="_blank"
                                 variant='contained'>
-                                {`Preview selected file ${menuFile?.name}`}
-
+                                {`Preview selected file: ${menuFile?.name}`}
                             </Button>
                         </Box>}
 
-                        {!openSuccessAlert && vendorProfile[DB_MENU_FILENAME] && <Button
+                        {!openSuccessAlert && vendorProfile[DB_MENU_FILE_ID] && <Button
                             className='profile-menu'
                             disabled={isSaving}
                             fullWidth
-                            href={`/pdf/${vendorProfile[DB_MENU_FILENAME]}`}
+                            href={constructFileUrl(vendorProfile[DB_MENU_FILE_ID])}
                             size='small'
                             target="_blank"
                             variant="contained">
                             {mode === EDIT ? SAVED_FOOD_MENU_CC : FOOD_MENU_CC}
                         </Button>}
 
-                        {openSuccessAlert && menuFilename && <Button
+                        {openSuccessAlert && menuFileId && <Button
                             className='profile-updated-menu'
                             fullWidth
-                            href={`/pdf/${menuFilename}`}
+                            href={constructFileUrl(menuFileId)}
                             size='small'
                             target="_blank"
                             variant="contained">
                             {UPDATED_MENU_CC}
                         </Button>}
 
-                        {mode === EDIT && !vendorProfile[DB_MENU_FILENAME] && <IconButton
+                        {mode === EDIT && !vendorProfile[DB_MENU_FILE_ID] && <IconButton
                             className='profile-no-menu'
                             disabled
                             sx={{

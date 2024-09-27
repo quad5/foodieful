@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/app/lib/prisma";
+
 import { sendLogToNewRelic } from "@/app/lib/apiHelpers";
 import {
     ADDRESS_LINE_1,
@@ -9,8 +9,8 @@ import {
     EMAIL_CC,
     ERROR,
     ID,
-    LOGO_FILENAME,
-    MENU_FILENAME,
+    LOGO_FILE_ID,
+    MENU_FILE_ID,
     NAME_CC,
     PHONE_NUMBER_CC,
     STATE_CC,
@@ -23,13 +23,15 @@ import {
     DB_CITY,
     DB_EMAIL,
     DB_ID,
-    DB_LOGO_FILENAME,
-    DB_MENU_FILENAME,
+    DB_LOGO_FILE_ID,
+    DB_MENU_FILE_ID,
     DB_NAME,
     DB_PHONE_NUMBER,
     DB_STATE,
     DB_ZIP_CODE
 } from "@/app/lib/dbFieldConstants";
+import prisma from "@/app/lib/prisma";
+
 
 export async function DELETE(request) {
     const id = parseInt(request.nextUrl.searchParams.get(ID), 10)
@@ -85,8 +87,8 @@ export async function POST(request) {
                 [DB_ADDRESS_LINE_2]: data[ADDRESS_LINE_2],
                 [DB_CITY]: data[CITY_CC],
                 [DB_EMAIL]: data[EMAIL_CC],
-                [DB_LOGO_FILENAME]: data[LOGO_FILENAME],
-                [DB_MENU_FILENAME]: data[MENU_FILENAME],
+                [DB_LOGO_FILE_ID]: data[LOGO_FILE_ID],
+                [DB_MENU_FILE_ID]: data[MENU_FILE_ID],
                 [DB_NAME]: data[NAME_CC],
                 [DB_PHONE_NUMBER]: data[PHONE_NUMBER_CC],
                 [DB_STATE]: data[STATE_CC],
@@ -112,8 +114,8 @@ export async function PUT(request) {
                 [DB_ADDRESS_LINE_1]: data[ADDRESS_LINE_1],
                 [DB_ADDRESS_LINE_2]: data[ADDRESS_LINE_2],
                 [DB_CITY]: data[CITY_CC],
-                [DB_LOGO_FILENAME]: data[LOGO_FILENAME],
-                [DB_MENU_FILENAME]: data[MENU_FILENAME],
+                [DB_LOGO_FILE_ID]: data[LOGO_FILE_ID],
+                [DB_MENU_FILE_ID]: data[MENU_FILE_ID],
                 [DB_NAME]: data[NAME_CC],
                 [DB_PHONE_NUMBER]: data[PHONE_NUMBER_CC],
                 [DB_STATE]: data[STATE_CC],

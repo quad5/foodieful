@@ -1,5 +1,12 @@
-import { Box, List, ListItem, Stack, Typography } from '@mui/material';
 import { Fragment } from 'react';
+
+import {
+    Box,
+    List,
+    ListItem,
+    Stack,
+    Typography
+} from '@mui/material';
 
 
 export default function Privacy() {

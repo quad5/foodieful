@@ -1,5 +1,9 @@
 'use client'
 
+import { Fragment } from 'react';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import {
     Accordion,
     AccordionDetails,
@@ -8,14 +12,14 @@ import {
     Typography
 } from '@mui/material';
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     ANSWER_CC,
     FREQUENTLY_ASKED_QUESTIONS_CC,
     QUESTION_CC,
 } from '@/app/lib/constants'
+
 import theme from '@/theme';
-import { Fragment } from 'react';
+
 
 export default function FAQ() {
 

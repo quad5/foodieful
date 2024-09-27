@@ -1,5 +1,5 @@
-import prisma from "../../lib/prisma";
 import { NextResponse } from "next/server";
+
 import { sendLogToNewRelic } from "@/app/lib/apiHelpers";
 import {
     ACTIVE_LISTING,
@@ -9,7 +9,6 @@ import {
     PIT_STOP_ADDRESS,
     SCHEDULES,
 } from "@/app/lib/constants"
-
 import {
     DB_ACTIVE,
     DB_ADDRESS_LINE_1,
@@ -18,7 +17,7 @@ import {
     DB_STATE,
     DB_ZIP_CODE,
 } from "@/app/lib/dbFieldConstants";
-
+import prisma from "@/app/lib/prisma"
 
 
 export async function DELETE(request) {

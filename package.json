@@ -28,6 +28,7 @@
     "@mui/icons-material": "^5.16.4",
     "@mui/material-nextjs": "^5.16.4",
     "@prisma/client": "^5.18.0",
+    "googleapis": "^144.0.0",
     "next": "latest",
     "next-auth": "beta",
     "pg": "^8.11.5",

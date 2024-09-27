@@ -1,5 +1,5 @@
-import prisma from "../../lib/prisma";
 import { NextResponse } from "next/server";
+
 import { sendLogToNewRelic } from "@/app/lib/apiHelpers";
 import {
     CODE,
@@ -10,12 +10,14 @@ import {
 } from "@/app/lib/constants";
 import {
     DB_ACTIVE,
-    DB_LOGO_FILENAME,
+    DB_LOGO_FILE_ID,
     DB_MENU_FILENAME,
     DB_NAME,
     DB_PHONE_NUMBER,
     DB_ZIP_CODE
 } from "@/app/lib/dbFieldConstants";
+import prisma from "@/app/lib/prisma";
+
 
 export async function GET(request) {
     const limit = parseInt(request.nextUrl.searchParams.get(LIMIT), 10)
@@ -64,7 +66,7 @@ export async function GET(request) {
                         schedule: true,
                         vendorProfile: {
                             select: {
-                                [DB_LOGO_FILENAME]: true,
+                                [DB_LOGO_FILE_ID]: true,
                                 [DB_MENU_FILENAME]: true,
                                 [DB_NAME]: true,
                                 [DB_PHONE_NUMBER]: true,

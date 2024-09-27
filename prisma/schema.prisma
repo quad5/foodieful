@@ -18,8 +18,8 @@ model VendorProfile {
   name           String
   email          String           @unique
   active         Boolean          @default(true)
-  logoFilename   String?
-  menuFilename   String?
+  logoFileId     String?
+  menuFileId     String?
   phoneNumber    String?
   addressLine1   String
   addressLine2   String?

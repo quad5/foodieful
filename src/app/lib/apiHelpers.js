@@ -88,32 +88,6 @@ export async function updateListingByAddressId(body, id) {
     return await genericAPICall(url, PUT, body)
 }
 
-export async function upload(body) {
-    const url = `${host}/api/upload`
-    const response = await fetch(url, body)
-    return await response.json()
-}
-/*
- *  External API calls 
- * 
- * 
- */
-
-export async function getUserLocation() {
-    return await genericAPICall('https://geolocation-db.com/json/', GET)
-}
-
-export async function sendLogToNewRelic(logLevel, data) {
-    fetch("https://log-api.newrelic.com/log/v1", {
-        body: JSON.stringify({ level: logLevel, message: `${data}` }),
-        headers: {
-            'Api-Key': process.env.NEW_RELIC_LICENSE_KEY,
-            "Content-Type": "application/json",
-        },
-        method: POST
-    })
-}
-
 export async function genericAPICall(url, method, body = {}) {
     let response = {}
     if (method === GET) {
@@ -129,4 +103,25 @@ export async function genericAPICall(url, method, body = {}) {
     }
 
     return await response.json()
+}
+
+/******************************************************************************
+ *  External API calls 
+ * 
+ * 
+ *****************************************************************************/
+
+export async function getUserLocation() {
+    return await genericAPICall('https://geolocation-db.com/json/', GET)
+}
+
+export async function sendLogToNewRelic(logLevel, data) {
+    fetch("https://log-api.newrelic.com/log/v1", {
+        body: JSON.stringify({ level: logLevel, message: `${data}` }),
+        headers: {
+            'Api-Key': process.env.NEW_RELIC_LICENSE_KEY,
+            "Content-Type": "application/json",
+        },
+        method: POST
+    })
 }

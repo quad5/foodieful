@@ -1,18 +1,13 @@
-export function isEmpty(obj) {
-    for (var x in obj) { return false; }
-    return true;
+export function constructImageFileUrl(id, size) {
+    return `https://drive.google.com/thumbnail?id=${id}&sz=s${size}`
+}
+
+export function constructFileUrl(id) {
+    return `https://drive.google.com/file/d/${id}/view`
 }
 
 export function generateRandomUUID() {
     return crypto.randomUUID();
-}
-
-export function getFileExtension(filename) {
-    return !filename ? '' : filename.split('.').pop();
-}
-
-export const createUUIDFilename = (filename) => {
-    return `${generateRandomUUID()}.${getFileExtension(filename)}`
 }
 
 export const hyphenatePhoneNumber = (phoneNumber) => {
@@ -25,4 +20,9 @@ export const hyphenateText = (text) => {
         return splitted.join('-')
     }
     return text;
+}
+
+export function isEmpty(obj) {
+    for (var x in obj) { return false; }
+    return true;
 }

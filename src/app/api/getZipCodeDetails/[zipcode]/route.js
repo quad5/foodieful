@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import prisma from "@/app/lib/prisma";
+
 import { DB_ZIP_CODE } from "@/app/lib/dbFieldConstants";
+import prisma from "@/app/lib/prisma";
+
 
 export async function GET(request, { params }) {
   try {

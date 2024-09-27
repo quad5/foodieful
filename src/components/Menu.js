@@ -1,15 +1,23 @@
 'use client'
 
+import { usePathname, useRouter } from 'next/navigation'
+
+import {
+    signOut,
+    useSession
+} from 'next-auth/react';
+
 import {
     Fragment,
     useEffect,
     useState,
 } from 'react';
-import {
-    signOut,
-    useSession
-} from 'next-auth/react';
-import { usePathname, useRouter } from 'next/navigation'
+
+import { ClickAwayListener } from '@mui/base/ClickAwayListener';
+
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MenuIcon from '@mui/icons-material/Menu';
+
 import {
     AppBar,
     Card,
@@ -19,11 +27,7 @@ import {
     IconButton,
     Stack,
 } from '@mui/material'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import MenuIcon from '@mui/icons-material/Menu';
-import { ClickAwayListener } from '@mui/base/ClickAwayListener';
-import DropDownMenu from "@/components/DropDownMenu"
-import SignIn from "./SignIn";
+
 import { signInHelperFn } from '@/app/lib/accessHelpers'
 import {
     ABOUT_CC,
@@ -35,6 +39,10 @@ import {
     VIEW
 } from "@/app/lib/constants";
 import { aboutMenu } from "@/app/lib/menus";
+
+import DropDownMenu from "@/components/DropDownMenu"
+import SignIn from "@/components/SignIn";
+
 import theme from '@/theme';
 
 

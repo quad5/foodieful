@@ -4,8 +4,6 @@ services:
     container_name: nextjs
     ports:
       - "3000:3000"
-    volumes:
-     - nextjs:/app/public
     restart: always
     depends_on:
       db_postgres:
@@ -48,8 +46,3 @@ services:
 
 volumes:
   db_postgres:
-  nextjs:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind

@@ -1,5 +1,8 @@
 "use client"
 
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+
 import {
     Fragment,
     useEffect,
@@ -7,39 +10,48 @@ import {
     useState
 } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation'
+
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+
 import {
     Backdrop,
+    Box,
     Button,
     CircularProgress,
     Divider,
     FormHelperText,
+    IconButton,
     Stack,
     TextField,
     Typography,
 } from '@mui/material';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import GenericErrorAlert from '@/components/GenericErrorAlert';
-import GenericSuccessAlert from '@/components/GenericSuccessAlert';
+
+import {
+    createVendor,
+    getZipCodeDetails,
+    sendLogToNewRelic
+} from '@/app/lib/apiHelpers';
 import {
     ADDRESS_LINE_1,
     ADDRESS_LINE_2,
     CITY_CC,
     EMAIL_CC,
-    FILE_BRACKET,
+    ERROR,
+    FILE,
     LOGO_FILE,
-    LOGO_FILENAME,
+    LOGO_FILE_ID,
     MAILING_ADDRESS,
     MENU_FILE,
-    MENU_FILENAME,
+    MENU_FILE_ID,
     NAME_CC,
-    PDF,
     PHONE_NUMBER_CC,
-    POST,
+    SAVED_FOOD_MENU_CC,
+    SAVED_LOGO_CC,
     SIGN_UP_CC,
     STATE_CC,
-    SVG,
     TECHNICAL_DIFFICULTIES,
     UPLOAD_LOGO_CC,
     UPLOAD_FOOD_MENU_CC,
@@ -48,9 +60,17 @@ import {
     VENDOR_SIGN_UP_CC,
     ZIP_CODE_CC,
 } from "@/app/lib/constants";
+import { uploadToGoogleDrive } from '@/app/lib/google';
+import {
+    constructFileUrl,
+    constructImageFileUrl,
+    generateRandomUUID,
+    isEmpty
+} from '@/app/lib/utils';
 import { vendorSchema } from '@/app/lib/validation-schema'
-import { createVendor, getZipCodeDetails, upload } from '@/app/lib/apiHelpers';
-import { isEmpty } from '../lib/utils';
+
+import GenericErrorAlert from '@/components/GenericErrorAlert';
+import GenericSuccessAlert from '@/components/GenericSuccessAlert';
 
 
 export default function CreateVendor() {
@@ -62,7 +82,9 @@ export default function CreateVendor() {
     const [disableElement, setDisableElement] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
     const [logoFile, setLogoFile] = useState(null)
+    const [logoFileId, setLogoFileId] = useState('')
     const [menuFile, setMenuFile] = useState(null)
+    const [menuFileId, setMenuFileId] = useState('')
     const [openErrorAlert, setOpenErrorAlert] = useState(false)
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false)
     const [processingZipcode, setProcessingZipcode] = useState(false)
@@ -70,15 +92,18 @@ export default function CreateVendor() {
     const [zipCode, setZipCode] = useState('')
     const [zipCodeError, setZipCodeError] = useState('')
 
-    const methods = useForm({
-        resolver: yupResolver(vendorSchema),
-    });
+    // const methods = useForm({
+    //     resolver: yupResolver(vendorSchema),
+    // });
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = methods
+    } = useForm({
+        resolver: yupResolver(vendorSchema),
+        mode: 'onChange',
+    });
 
     useEffect(() => {
         if (isSaving && inProgressRef.current) {
@@ -92,6 +117,14 @@ export default function CreateVendor() {
     const handleAlertClose = () => {
         setOpenErrorAlert(false)
         setDisableElement(false)
+    }
+
+    const handleCancelLogoUpload = () => {
+        setLogoFile(null)
+    }
+
+    const handleCancelMenuUpload = () => {
+        setMenuFile(null)
     }
 
     const handleZipCode = async (e) => {
@@ -115,57 +148,68 @@ export default function CreateVendor() {
         }
     }
 
-    const uploadFile = async () => {
-        const data = new FormData()
-        if (logoFile) {
-            data.append(FILE_BRACKET, logoFile);
-        }
-        if (menuFile) {
-            data.append(FILE_BRACKET, menuFile);
-        }
-
-        return await upload({
-            method: POST,
-            body: data
-        })
-    }
-
     async function onSubmit(data, e) {
         e.preventDefault()
         setOpenErrorAlert(false)
         setDisableElement(true)
 
-        if (logoFile || menuFile) {
+        if (logoFile && !openErrorAlert) {
             setIsSaving(true)
+            const formData = new FormData()
+            formData.append(FILE, logoFile)
+            const fileMetadata = {
+                name: `${generateRandomUUID()}.svg`,
+                mimeType: "image/svg+xml",
+            };
 
-            const uploadResp = await uploadFile()
-            if (uploadResp.success) {
-                if (uploadResp.message.hasOwnProperty(SVG)) {
-                    data[LOGO_FILENAME] = uploadResp.message[SVG]
-                }
-
-                if (uploadResp.message.hasOwnProperty(PDF)) {
-                    data[MENU_FILENAME] = uploadResp.message[PDF]
-                }
-            } else {
-                setIsSaving(false)
-                setOpenErrorAlert(true)
-            }
+            await uploadToGoogleDrive(formData, fileMetadata)
+                .then(docId => {
+                    setLogoFileId(docId)
+                    data[LOGO_FILE_ID] = docId
+                })
+                .catch((error) => {
+                    sendLogToNewRelic(ERROR, `On upload logo file, ${error}`)
+                    setIsSaving(false)
+                    setOpenErrorAlert(true)
+                    setOpenSuccessAlert(false)
+                })
         }
 
-        setIsSaving(false)
-        data[CITY_CC] = city
-        data[STATE_CC] = state
+        if (menuFile && !openErrorAlert) {
+            setIsSaving(true)
+            const formData = new FormData()
+            formData.append(FILE, menuFile)
+            const fileMetadata = {
+                name: `${generateRandomUUID()}.pdf`,
+                mimeType: "application/pdf",
+            };
+            await uploadToGoogleDrive(formData, fileMetadata)
+                .then(docId => {
+                    setMenuFileId(docId)
+                    data[MENU_FILE_ID] = docId
+                }).catch((error) => {
+                    sendLogToNewRelic(ERROR, `On upload menu file, ${error}`)
+                    setIsSaving(false)
+                    setOpenErrorAlert(true)
+                    setOpenSuccessAlert(false)
+                })
+        }
 
-        const response = await createVendor(data)
-        if (response.success) {
-            setAlertMessage('Vendor profile successfully created. Please sign in using provided email.')
-            setLogoFile(null)
-            setMenuFile(null)
-            setOpenSuccessAlert(true)
-        } else {
-            setDisableElement(false)
-            setOpenErrorAlert(true)
+        if (!openErrorAlert) {
+            data[CITY_CC] = city
+            data[STATE_CC] = state
+
+            const response = await createVendor(data)
+            if (response.success) {
+                setAlertMessage('Vendor profile successfully created. Please sign in using provided email.')
+                setLogoFile(null)
+                setMenuFile(null)
+                setOpenSuccessAlert(true)
+            } else {
+                setDisableElement(false)
+                setOpenErrorAlert(true)
+            }
+            setIsSaving(false)
         }
     }
 
@@ -273,11 +317,59 @@ export default function CreateVendor() {
                             error={errors[LOGO_FILE]}>{errors[LOGO_FILE]?.message}
                         </FormHelperText>}
 
-                        {logoFile && <FormHelperText
-                            className='create-vendor-selected-logo'
-                            sx={{ overflowWrap: 'break-word' }}>
-                            {`Selected logo file ${logoFile.name}`}
-                        </FormHelperText>}
+                        {!errors[LOGO_FILE] && logoFile && <Box
+                            className='create-vendor-preview-logo-wrapper'
+                            sx={{ border: 'solid' }}>
+
+                            <IconButton
+                                className='create-vendor-preview-delete-logo-icon'
+                                onClick={handleCancelLogoUpload}
+                                sx={{ display: 'flex', ml: 'auto' }}>
+                                <DeleteIcon fontSize='large' />
+                            </IconButton>
+
+                            <Box
+                                className='create-vendor-preview-logo-image-wrapper'
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}>
+                                <Image
+                                    alt="preview-logo"
+                                    className='create-vendor-preview-image'
+                                    height={200}
+                                    loading="lazy"
+                                    src={URL.createObjectURL(logoFile)}
+                                    width={200} />
+                            </Box>
+                            <Typography
+                                className='create-vendor-selected-logo-filename'
+                                sx={{ textAlign: 'center' }}>
+                                {`Preview of selected file: ${logoFile?.name}`}
+                            </Typography>
+                        </Box>}
+
+                        {openSuccessAlert && logoFileId &&
+                            <Box
+                                className='create-vendor-saved-logo-wrapper'
+                                sx={{ border: 'solid' }}>
+                                <Box
+
+                                    sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Image
+                                        alt="saved-logo"
+                                        className='create-vendor-saved-logo-image'
+                                        height={200}
+                                        loading="lazy"
+                                        src={constructImageFileUrl(logoFileId, 400)}
+                                        width={200} />
+                                </Box>
+                                <Typography
+                                    className='create-vendor-saved-logo-text'
+                                    sx={{ textAlign: 'center' }}>
+                                    {SAVED_LOGO_CC}
+                                </Typography>
+                            </Box>}
 
                         <Button
                             className='create-vendor-upload-menu'
@@ -299,10 +391,39 @@ export default function CreateVendor() {
                             error={errors[MENU_FILE]}>{errors[MENU_FILE]?.message}
                         </FormHelperText>}
 
-                        {menuFile && <FormHelperText
-                            className='create-vendor-selected-menu'
-                            sx={{ overflowWrap: 'break-word' }}>{`Selected menu file ${menuFile.name}`}
-                        </FormHelperText>}
+                        {!errors[MENU_FILE] && menuFile && <Box
+                            className='create-vendor-preview-menu-wrapper'
+                            sx={{ border: 'solid' }}>
+
+                            <IconButton
+                                className='create-vendor-preview-delete-menu-icon'
+                                onClick={handleCancelMenuUpload}
+                                sx={{ display: 'flex', ml: 'auto' }}>
+                                <DeleteIcon fontSize='large' />
+                            </IconButton>
+
+                            <Button
+                                className='create-vendor-preview-menu'
+                                disabled={isSaving}
+                                fullWidth
+                                href={URL.createObjectURL(menuFile)}
+                                size='small'
+                                sx={{ marginBottom: 2 }}
+                                target="_blank"
+                                variant='contained'>
+                                {`Preview selected file: ${menuFile?.name}`}
+                            </Button>
+                        </Box>}
+
+                        {openSuccessAlert && menuFileId && <Button
+                            className='create-vendor-saved-menu'
+                            fullWidth
+                            href={constructFileUrl(menuFileId)}
+                            size='small'
+                            target="_blank"
+                            variant="contained">
+                            {SAVED_FOOD_MENU_CC}
+                        </Button>}
 
                         <Divider className='create-vendor-divider-address'>{MAILING_ADDRESS}</Divider>
 

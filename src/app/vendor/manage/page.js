@@ -1,17 +1,28 @@
 "use client"
 
 import {
+    useRouter,
+    useSearchParams
+} from 'next/navigation'
+
+import { useSession } from 'next-auth/react';
+
+import {
     Fragment,
     useEffect,
     useRef,
     useState
 } from 'react';
+
 import { useForm } from 'react-hook-form';
-import {
-    useRouter,
-    useSearchParams
-} from 'next/navigation'
-import { useSession } from 'next-auth/react';
+
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from "@fullcalendar/interaction"
+import FullCalendar from '@fullcalendar/react'
+import timeGridPlugin from '@fullcalendar/timegrid'
+
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import {
     Backdrop,
     Box,
@@ -27,15 +38,12 @@ import {
     Typography
 } from '@mui/material';
 
-import { yupResolver } from '@hookform/resolvers/yup';
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from "@fullcalendar/interaction"
-import FullCalendar from '@fullcalendar/react'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import GenericErrorAlert from '@/components/GenericErrorAlert'
-import GenericSuccessAlert from '@/components/GenericSuccessAlert';
-import { generateRandomUUID } from '@/app/lib/utils';
-
+import {
+    createListing,
+    getListingByAddressId,
+    getZipCodeDetails,
+    updateListingByAddressId
+} from '@/app/lib/apiHelpers';
 import {
     ACTIVE_LISTING,
     ACTIVE_LISTING_CC,
@@ -59,9 +67,6 @@ import {
     TECHNICAL_DIFFICULTIES,
     ZIP_CODE_CC,
 } from "@/app/lib/constants";
-
-import { isEmpty } from '@/app/lib/utils';
-
 import {
     DB_ACTIVE,
     DB_ADDRESS_LINE_1,
@@ -69,17 +74,12 @@ import {
     DB_STATE,
     DB_ZIP_CODE
 } from '@/app/lib/dbFieldConstants';
-
-import { listingSchema } from '@/app/lib/validation-schema'
-import {
-    createListing,
-    getListingByAddressId,
-    getZipCodeDetails,
-    updateListingByAddressId
-} from '@/app/lib/apiHelpers';
-
 import { convertToFullCalendarEvent } from '@/app/lib/fullCalendar/event-utils';
+import { generateRandomUUID, isEmpty } from '@/app/lib/utils';
+import { listingSchema } from '@/app/lib/validation-schema'
 
+import GenericErrorAlert from '@/components/GenericErrorAlert'
+import GenericSuccessAlert from '@/components/GenericSuccessAlert';
 
 
 export default function Listings() {

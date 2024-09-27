@@ -1,6 +1,14 @@
 'use client'
 
 import { Fragment, useState } from "react";
+
+import {
+    ImageNotSupportedIcon,
+    PhoneIcon,
+    PlaceIcon,
+    ScheduleIcon
+} from '@mui/icons-material';
+
 import {
     Box,
     Button,
@@ -17,11 +25,7 @@ import {
     Stack,
     Typography
 } from '@mui/material';
-import PhoneIcon from '@mui/icons-material/Phone';
-import PlaceIcon from '@mui/icons-material/Place';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
-import { getFileExtension, hyphenatePhoneNumber } from "@/app/lib/utils";
+
 import {
     FOOD_MENU_CC,
     OPERATING_HOURS_CC,
@@ -31,17 +35,21 @@ import {
 import {
     DB_ADDRESS_LINE_1,
     DB_CITY,
-    DB_LOGO_FILENAME,
-    DB_MENU_FILENAME,
+    DB_LOGO_FILE_ID,
+    DB_MENU_FILE_ID,
     DB_NAME,
     DB_PHONE_NUMBER,
     DB_STATE,
     DB_VENDOR_PROFILE,
     DB_ZIP_CODE
 } from "@/app/lib/dbFieldConstants"
-
-
 import { convertToOperatingHours } from '@/app/lib/fullCalendar/event-utils'
+import {
+    constructFileUrl,
+    constructImageFileUrl,
+    hyphenatePhoneNumber
+} from "@/app/lib/utils";
+
 
 export default function ListingCard(props) {
     const [open, setOpen] = useState(false)
@@ -67,15 +75,16 @@ export default function ListingCard(props) {
                             display={'flex'}
                             spacing={2}>
 
-                            {getFileExtension(data[DB_VENDOR_PROFILE][DB_LOGO_FILENAME]) ? <CardMedia
-                                alt="vendor-logo"
-                                component="img"
-                                image={`/${getFileExtension(data[DB_VENDOR_PROFILE][DB_LOGO_FILENAME])}/${data[DB_VENDOR_PROFILE][DB_LOGO_FILENAME]}`}
-                                sx={{
-                                    height: 50,
-                                    objectFit: 'contain',
-                                    width: 50
-                                }} /> :
+                            {data[DB_VENDOR_PROFILE][DB_LOGO_FILE_ID] ?
+                                <CardMedia
+                                    alt="vendor-logo"
+                                    component="img"
+                                    image={constructImageFileUrl(data[DB_VENDOR_PROFILE][DB_LOGO_FILE_ID], 100)}
+                                    sx={{
+                                        height: 50,
+                                        objectFit: 'contain',
+                                        width: 50
+                                    }} /> :
                                 <Icon
                                     className="listing-card-no-logo"
                                     sx={{
@@ -146,9 +155,9 @@ export default function ListingCard(props) {
                 </CardActionArea>
                 <Button
                     className="listing-card-menu"
-                    disabled={!data[DB_VENDOR_PROFILE][DB_MENU_FILENAME]}
+                    disabled={!data[DB_VENDOR_PROFILE][DB_MENU_FILE_ID]}
                     fullWidth
-                    href={data[DB_VENDOR_PROFILE][DB_MENU_FILENAME] && `/${getFileExtension(data[DB_VENDOR_PROFILE][DB_MENU_FILENAME])}/${data[DB_VENDOR_PROFILE][DB_MENU_FILENAME]}`}
+                    href={constructFileUrl(data[DB_VENDOR_PROFILE][DB_MENU_FILE_ID])}
                     size='small'
                     sx={{ marginBottom: 3 }}
                     target="_blank"

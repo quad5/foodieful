@@ -6,13 +6,17 @@ import {
     useRef,
     useState
 } from "react";
+
 import MPagination from '@mui/material/Pagination';
 import {
     Box,
     Grid,
     Typography
 } from '@mui/material'
-import GenericErrorAlert from "./GenericErrorAlert";
+
+import GenericErrorAlert from "@/components/GenericErrorAlert";
+
+import { genericAPICall } from "@/app/lib/apiHelpers";
 
 import {
     GET,
@@ -22,7 +26,7 @@ import {
     TECHNICAL_DIFFICULTIES,
     TOTAL_COUNT,
 } from "@/app/lib/constants"
-import { genericAPICall } from "@/app/lib/apiHelpers";
+
 
 export default function Pagination(props) {
 

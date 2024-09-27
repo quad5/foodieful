@@ -1,5 +1,5 @@
 
-import MenuButton from "./MenuButton"
+import MenuButton from "@app/components/MenuButton"
 
 /* 
 TODO -  https://github.com/nextauthjs/next-auth/issues/8976

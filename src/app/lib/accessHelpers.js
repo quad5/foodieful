@@ -1,7 +1,8 @@
 "use server"
 
-import { signIn, signOut } from "@/auth"
 import { AUTH0 } from "@/app/lib/constants"
+import { signIn, signOut } from "@/auth"
+
 
 export async function signInHelperFn() {
     await signIn(AUTH0, {
@@ -9,7 +10,6 @@ export async function signInHelperFn() {
     })
 }
 
-
-export const signOutHelperFn = async () => {
+export async function signOutHelperFn() {
     await signOut()
 }

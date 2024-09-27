@@ -1,8 +1,9 @@
 import NextAuth from "next-auth"
 import Auth0 from "next-auth/providers/auth0"
-import { getVendorProfileByEmail } from "@/app/lib/apiHelpers"
-import { sendLogToNewRelic } from "@/app/lib/apiHelpers"
-import { ERROR } from "./app/lib/constants"
+
+import { getVendorProfileByEmail, sendLogToNewRelic } from "@/app/lib/apiHelpers"
+import { ERROR } from "@/app/lib/constants"
+
 
 const authOptions = {
   // Configure one or more authentication providers
