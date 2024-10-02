@@ -37,6 +37,10 @@ export default function FAQ() {
             [ANSWER_CC]: "Please understand that this is a new website. We are building out our database by reaching out to food truck vendors to sign up and list on our website."
         },
         {
+            [QUESTION_CC]: "Is there a sample listing?",
+            [ANSWER_CC]: "Yes, please enter zip code \'12345\' to view the sample listing."
+        },
+        {
             [QUESTION_CC]: "How can food truck vendors get started listing their pit stop addresses?",
             [ANSWER_CC]: "First, they need to sign up by providing their food truck’s business name and a valid Google or Yahoo email address. Then, they use said email address to login and begin creating pit stop locations."
         },

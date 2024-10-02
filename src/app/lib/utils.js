@@ -1,3 +1,10 @@
+import {
+    JPEG,
+    JPG,
+    PNG,
+    SVG
+} from "@/app/lib/constants";
+
 export function constructImageFileUrl(id, size) {
     return `https://drive.google.com/thumbnail?id=${id}&sz=s${size}`
 }
@@ -8,6 +15,19 @@ export function constructFileUrl(id) {
 
 export function generateRandomUUID() {
     return crypto.randomUUID();
+}
+
+export function getFileExtension(filename) {
+    return !filename ? '' : filename.split('.').pop();
+}
+
+export function getLogoMimeType(ext) {
+    return {
+        [JPEG]: "image/jpeg",
+        [JPG]: "image/jpeg",
+        [PNG]: "image/png",
+        [SVG]: "image/svg+xml",
+    }[ext]
 }
 
 export const hyphenatePhoneNumber = (phoneNumber) => {

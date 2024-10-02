@@ -63,6 +63,7 @@ import {
     MENU_FILE,
     MENU_FILE_ID,
     MODE,
+    NAME,
     NAME_CC,
     NO_ACTION_TAKEN_CC,
     PHONE_NUMBER_CC,
@@ -105,6 +106,8 @@ import {
     constructFileUrl,
     constructImageFileUrl,
     generateRandomUUID,
+    getFileExtension,
+    getLogoMimeType,
     isEmpty,
 } from '@/app/lib/utils';
 import { tempSchema } from '@/app/lib/validation-schema'
@@ -250,15 +253,18 @@ export default function VendorProfile() {
 
     async function onSubmit(data, e) {
         e.preventDefault()
+        data[LOGO_FILE_ID] = ""
+        data[MENU_FILE_ID] = ""
 
         if (formHasChanged) {
             if (logoFile && !openErrorAlert) {
                 setIsSaving(true)
                 const formData = new FormData()
                 formData.append(FILE, logoFile)
+                const ext = getFileExtension(logoFile[NAME])
                 const fileMetadata = {
-                    mimeType: "image/svg+xml",
-                    name: `${generateRandomUUID()}.svg`,
+                    mimeType: getLogoMimeType[ext],
+                    name: `${generateRandomUUID()}.${ext}`,
                     parents: [process.env.NEXT_PUBLIC_FOLDER_ID]
                 };
 

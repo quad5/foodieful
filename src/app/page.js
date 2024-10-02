@@ -129,6 +129,7 @@ export default function HomePage() {
                     marginTop: { sm: '15%', xs: '40%' },
                     mx: 'auto',
                     paddingX: 1,
+                    textAlign: 'center',
                     width: { xs: '100%', sm: '60%' }
                 }}>
 

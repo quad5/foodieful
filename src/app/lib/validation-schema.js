@@ -16,6 +16,9 @@ import {
 
 // Thoughts of separating out address so it can be merged but vendor's address can be optional while listing isn't.
 
+const acceptedLogoTypes = ["image/jpeg", "image/png", "image/svg+xml"]
+const twoMB = 2097152
+
 export const tempSchema = object().shape({
     [ADDRESS_LINE_1]: string().max(40).notRequired(),
 
@@ -29,15 +32,16 @@ export const tempSchema = object().shape({
             name: 'logoUpload',
             skipAbsent: false,
             test(value, ctx) {
-                if (value && value[0] && value[0].size >= 200000) {
+                console.log("__type",)
+                if (value && value[0] && value[0].size > twoMB) {
                     return ctx.createError({
                         message: "The file is too large. Limit 2MB"
                     })
                 }
 
-                if (value && value[0] && !(/image\/svg*/.test(value[0].type))) {
+                if (value && value[0] && !(acceptedLogoTypes.includes(value[0].type))) {
                     return ctx.createError({
-                        message: "We only support SVG file format."
+                        message: "We only support JPG/JPEG/PNG/SVG file format."
                     })
                 }
 
@@ -51,7 +55,7 @@ export const tempSchema = object().shape({
             name: 'menuUpload',
             skipAbsent: false,
             test(value, ctx) {
-                if (value && value[0] && value[0].size >= 2000000) {
+                if (value && value[0] && value[0].size > twoMB) {
                     return ctx.createError({
                         message: "The file is too large. Limit 2MB"
                     })
@@ -136,15 +140,15 @@ export const vendorSchema = object().shape({
             name: 'logoUpload',
             skipAbsent: false,
             test(value, ctx) {
-                if (value && value[0] && value[0].size >= 200000) {
+                if (value && value[0] && value[0].size > twoMB) {
                     return ctx.createError({
                         message: "The file is too large. Limit 2MB"
                     })
                 }
 
-                if (value && value[0] && !(/image\/svg*/.test(value[0].type))) {
+                if (value && value[0] && !(acceptedLogoTypes.includes(value[0].type))) {
                     return ctx.createError({
-                        message: "We only support SVG file format."
+                        message: "We only support JPG/JPEG/PNG/SVG file format."
                     })
                 }
 
@@ -158,7 +162,7 @@ export const vendorSchema = object().shape({
             name: 'menuUpload',
             skipAbsent: false,
             test(value, ctx) {
-                if (value && value[0] && value[0].size >= 2000000) {
+                if (value && value[0] && value[0].size > twoMB) {
                     return ctx.createError({
                         message: "The file is too large. Limit 2MB"
                     })

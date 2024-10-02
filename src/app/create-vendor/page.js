@@ -46,6 +46,7 @@ import {
     MAILING_ADDRESS,
     MENU_FILE,
     MENU_FILE_ID,
+    NAME,
     NAME_CC,
     PHONE_NUMBER_CC,
     SAVED_FOOD_MENU_CC,
@@ -65,6 +66,8 @@ import {
     constructFileUrl,
     constructImageFileUrl,
     generateRandomUUID,
+    getFileExtension,
+    getLogoMimeType,
     isEmpty
 } from '@/app/lib/utils';
 import { vendorSchema } from '@/app/lib/validation-schema'
@@ -92,10 +95,6 @@ export default function CreateVendor() {
     const [zipCode, setZipCode] = useState('')
     const [zipCodeError, setZipCodeError] = useState('')
 
-    // const methods = useForm({
-    //     resolver: yupResolver(vendorSchema),
-    // });
-
     const {
         register,
         handleSubmit,
@@ -104,6 +103,7 @@ export default function CreateVendor() {
         resolver: yupResolver(vendorSchema),
         mode: 'onChange',
     });
+
 
     useEffect(() => {
         if (isSaving && inProgressRef.current) {
@@ -150,17 +150,21 @@ export default function CreateVendor() {
 
     async function onSubmit(data, e) {
         e.preventDefault()
-        setOpenErrorAlert(false)
         setDisableElement(true)
+        setOpenErrorAlert(false)
+
+        data[LOGO_FILE_ID] = ""
+        data[MENU_FILE_ID] = ""
 
         if (logoFile && !openErrorAlert) {
             setIsSaving(true)
             const formData = new FormData()
             formData.append(FILE, logoFile)
+            const ext = getFileExtension(logoFile[NAME])
             const fileMetadata = {
+                mimeType: getLogoMimeType[ext],
+                name: `${generateRandomUUID()}.${ext}`,
                 parents: [process.env.DRIVE_FOLDER_ID],
-                name: `${generateRandomUUID()}.svg`,
-                mimeType: "image/svg+xml",
             };
 
             await uploadToGoogleDrive(formData, fileMetadata)
@@ -273,6 +277,7 @@ export default function CreateVendor() {
                             helperText={errors[NAME_CC]?.message}
                             InputLabelProps={{ shrink: true }}
                             label={VENDOR_BUSINESS_NAME_CC}
+                            required
                             size='small'
                             variant='outlined'
                             {...register(NAME_CC)} />
@@ -284,6 +289,7 @@ export default function CreateVendor() {
                             helperText={errors[EMAIL_CC]?.message}
                             InputLabelProps={{ shrink: true }}
                             label={VENDOR_EMAIL_CC}
+                            required
                             size='small'
                             variant='outlined'
                             {...register(EMAIL_CC)} />
