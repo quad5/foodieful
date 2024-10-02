@@ -54,7 +54,7 @@ export default function Menu() {
     const [open, setOpen] = useState(false);
 
     // This useEffect is set to close menu when user jumps to different page.
-    // TODO: BUG - doesn't close menu when user selects an option on the menu that is of current/same path/page.
+    // TODO: BUG - FOOD-5 - doesn't close menu when user selects an option on the menu that is of current/same path/page.
     useEffect(() => {
         setOpen(false)
     }, [pathname])

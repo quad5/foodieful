@@ -12,7 +12,7 @@ import {
     ZIP_CODE_CC
 } from "./constants";
 
-// TODO - DRY (don't repeat yourself)
+// TODO - FOOD-4 - DRY (don't repeat yourself)
 
 // Thoughts of separating out address so it can be merged but vendor's address can be optional while listing isn't.
 
